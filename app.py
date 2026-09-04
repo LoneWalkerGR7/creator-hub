@@ -82,13 +82,13 @@ SEED_COMPETITORS_INTL = [
 ]
 
 # ==========================================
-# ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ & BADGES (GLOBAL)
+# ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ & BADGES
 # ==========================================
 def blank_stats():
     return {"subs": 0, "totalViews": 0, "videos": 0, "avgViews": 0, "viewsPerSub": 0.0, "efficiency": 0.0, "growth": 0.0}
 
 def fmt(n):
-    return "—" if not n else f"{n:,}".replace(",", ".")
+    return "—" if (n is None or n == "") else f"{n:,}".replace(",", ".")
 
 def score_badge(score):
     if score is None or score == "" or score == 0:
@@ -96,14 +96,11 @@ def score_badge(score):
     try:
         val = int(score)
         if val >= 65:
-            color = "#10b981"
-            bg = "rgba(16, 185, 129, 0.2)"
+            color, bg = "#10b981", "rgba(16, 185, 129, 0.2)"
         elif val >= 45:
-            color = "#facc15"
-            bg = "rgba(250, 204, 21, 0.2)"
+            color, bg = "#facc15", "rgba(250, 204, 21, 0.2)"
         else:
-            color = "#ef4444"
-            bg = "rgba(239, 68, 68, 0.2)"
+            color, bg = "#ef4444", "rgba(239, 68, 68, 0.2)"
         return f'<span style="background:{bg}; color:{color}; padding:3px 10px; border-radius:12px; font-weight:800; border:1px solid {color}50;">📊 {val}/100</span>'
     except Exception:
         return str(score)
@@ -266,7 +263,7 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS: ΚΑΤΑΛΕΥΚΑ & BOLD */
+/* TABS */
 [data-testid="stTabs"] [data-baseweb="tab-list"],
 div[role="tablist"] {
     display: flex !important;
@@ -928,35 +925,49 @@ with tabs[8]:
     
     with st.expander("➕ Καταγραφή Στατιστικών Βίντεο"):
         with st.form("an_form_add", clear_on_submit=True):
-            a_c1, a_c2 = st.columns(2)
+            a_c1, a_c2, a_c3 = st.columns(3)
             with a_c1:
                 t = st.text_input("Τίτλος Βίντεο")
                 typ = st.selectbox("Τύπος Βίντεο", ["Long-form (16:9)", "Shorts (9:16)"])
+                views = st.number_input("👁️ Προβολές (Views)", min_value=0, step=100)
+                unique_viewers = st.number_input("👥 Μοναδικοί Θεατές", min_value=0, step=50)
+
+            with a_c2:
                 ctr = st.number_input("CTR (%)", min_value=0.0, max_value=100.0, step=0.1)
                 ret = st.number_input("Retention / Avg Viewed (%)", min_value=0.0, max_value=100.0, step=0.1)
-            with a_c2:
-                wt = st.number_input("Watch Time (Ώρες)", min_value=0.0, step=0.1)
-                st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:4px;'>📊 Πηγές Επισκεψιμότητας (Traffic Sources)</p>", unsafe_allow_html=True)
+                avd = st.text_input("⏱️ Μέση Διάρκεια (AVD)", placeholder="π.χ. 03:45")
+                new_subs = st.number_input("➕ New Subs", step=1)
+
+            with a_c3:
+                wt = st.number_input("Συνολικό Watch Time (Ώρες)", min_value=0.0, step=0.1)
+                st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:4px;'>📊 Πηγές Επισκεψιμότητας & Ώρες</p>", unsafe_allow_html=True)
                 src_1 = st.selectbox("1η Κύρια Πηγή:", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src1")
-                pct_1 = st.number_input("Ποσοστό 1ης Πηγής (%)", min_value=0.0, max_value=100.0, step=0.1, key="an_pct1")
+                hours_1 = st.number_input("Ώρες 1ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h1")
                 src_2 = st.selectbox("2η Πηγή (προαιρετικά):", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src2")
-                pct_2 = st.number_input("Ποσοστό 2ης Πηγής (%)", min_value=0.0, max_value=100.0, step=0.1, key="an_pct2")
+                hours_2 = st.number_input("Ώρες 2ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h2")
 
             if st.form_submit_button("➕ Αποθήκευση Analytics Βίντεο", use_container_width=True):
                 if t:
                     if "analytics" not in st.session_state.db:
                         st.session_state.db["analytics"] = []
                     
-                    # Κατασκευή Traffic Sources String
+                    # Αυτόματος υπολογισμός ποσοστών βάσει του συνολικού Watch Time
                     sources_list = []
-                    if src_1 != "— Καμία —" and pct_1 > 0:
-                        sources_list.append(f"{src_1} {pct_1}%")
-                    elif src_1 != "— Καμία —":
-                        sources_list.append(src_1)
-                    if src_2 != "— Καμία —" and pct_2 > 0:
-                        sources_list.append(f"{src_2} {pct_2}%")
-                    elif src_2 != "— Καμία —":
-                        sources_list.append(src_2)
+                    if wt > 0:
+                        if src_1 != "— Καμία —" and hours_1 > 0:
+                            pct_1 = round((hours_1 / wt) * 100, 1)
+                            sources_list.append(f"{src_1}: {hours_1}h ({pct_1}%)")
+                        elif src_1 != "— Καμία —":
+                            sources_list.append(src_1)
+                        
+                        if src_2 != "— Καμία —" and hours_2 > 0:
+                            pct_2 = round((hours_2 / wt) * 100, 1)
+                            sources_list.append(f"{src_2}: {hours_2}h ({pct_2}%)")
+                        elif src_2 != "— Καμία —":
+                            sources_list.append(src_2)
+                    else:
+                        if src_1 != "— Καμία —": sources_list.append(src_1)
+                        if src_2 != "— Καμία —": sources_list.append(src_2)
                     
                     sources_str = ", ".join(sources_list) if sources_list else "—"
 
@@ -964,14 +975,18 @@ with tabs[8]:
                         "id": str(datetime.datetime.now().timestamp()),
                         "title": t,
                         "type": typ,
+                        "views": int(views),
+                        "unique_viewers": int(unique_viewers),
                         "ctr": float(ctr),
                         "retention": float(ret),
+                        "avd": avd or "—",
+                        "new_subs": int(new_subs),
                         "watchTime": float(wt),
                         "sources": sources_str,
                         "date": str(datetime.date.today())
                     })
                     save_data(st.session_state.db)
-                    st.success("✅ Τα στατιστικά του βίντεο αποθηκεύτηκαν!")
+                    st.success("✅ Τα αναλυτικά στατιστικά του βίντεο αποθηκεύτηκαν!")
                     st.rerun()
                 else:
                     st.warning("⚠️ Συμπληρώστε τον τίτλο του βίντεο.")
@@ -990,18 +1005,24 @@ with tabs[8]:
     # Ταξινόμηση Analytics
     col_asort1, col_asort2, _ = st.columns([2, 1.8, 1.5])
     with col_asort1:
-        sort_by_an = st.selectbox("📊 Ταξινόμηση κατά:", ["Watch Time", "CTR (%)", "Retention (%)", "Τίτλος (Α-Ω)", "Ημερομηνία"], key="sort_by_an")
+        sort_by_an = st.selectbox("📊 Ταξινόμηση κατά:", ["Προβολές (Views)", "Watch Time", "CTR (%)", "Retention (%)", "New Subs", "Μοναδικοί Θεατές", "Τίτλος (Α-Ω)", "Ημερομηνία"], key="sort_by_an")
     with col_asort2:
         sort_dir_an = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_an")
 
     is_a_desc = "Φθίνουσα" in sort_dir_an
     sorted_analytics = list(analytics_list)
-    if sort_by_an == "Watch Time":
+    if "Προβολές" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("views", 0), reverse=is_a_desc)
+    elif "Watch Time" in sort_by_an:
         sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("watchTime", 0.0), reverse=is_a_desc)
     elif "CTR" in sort_by_an:
         sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("ctr", 0.0), reverse=is_a_desc)
     elif "Retention" in sort_by_an:
         sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("retention", 0.0), reverse=is_a_desc)
+    elif "New Subs" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("new_subs", 0), reverse=is_a_desc)
+    elif "Μοναδικοί" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("unique_viewers", 0), reverse=is_a_desc)
     elif "Τίτλος" in sort_by_an:
         sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("title", "").lower(), reverse=not is_a_desc)
     elif "Ημερομηνία" in sort_by_an:
@@ -1020,7 +1041,9 @@ with tabs[8]:
             ret_val = a.get("retention", 0.0)
             ret_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>' if ret_val >= 40.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>'
 
-            # Sources formatting
+            subs_count = a.get("new_subs", 0)
+            subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8;">{subs_count}</span>'
+
             src_str = a.get("sources", "—")
             src_html = f'<span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 10px; border-radius:8px; font-weight:700;">{src_str}</span>' if src_str != "—" else '<span style="color:#94a3b8;">—</span>'
 
@@ -1028,8 +1051,12 @@ with tabs[8]:
                 f'<tr>'
                 f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem;">{a.get("title", "—")}</td>'
                 f'<td style="text-align:center;">{typ_badge}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(a.get("views", 0))}</td>'
+                f'<td style="text-align:right; font-weight:700; color:#cbd5e1;">{fmt(a.get("unique_viewers", 0))}</td>'
                 f'<td style="text-align:center;">{ctr_badge}</td>'
                 f'<td style="text-align:center;">{ret_badge}</td>'
+                f'<td style="text-align:center; font-weight:700; color:#38bdf8;">{a.get("avd", "—")}</td>'
+                f'<td style="text-align:center;">{subs_badge}</td>'
                 f'<td style="text-align:right; font-weight:800; color:#38bdf8;">{a.get("watchTime", 0.0)} h</td>'
                 f'<td>{src_html}</td>'
                 f'</tr>'
@@ -1042,10 +1069,14 @@ with tabs[8]:
             '<thead><tr>'
             '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th>'
             '<th style="text-align:center;">ΤΥΠΟΣ</th>'
+            '<th style="text-align:right;">ΠΡΟΒΟΛΕΣ</th>'
+            '<th style="text-align:right;">ΜΟΝ. ΘΕΑΤΕΣ</th>'
             '<th style="text-align:center;">CTR (%)</th>'
-            '<th style="text-align:center;">RETENTION / AVG VIEWED (%)</th>'
+            '<th style="text-align:center;">RETENTION (%)</th>'
+            '<th style="text-align:center;">ΜΕΣΗ ΔΙΑΡΚΕΙΑ (AVD)</th>'
+            '<th style="text-align:center;">NEW SUBS</th>'
             '<th style="text-align:right;">WATCH TIME</th>'
-            '<th style="text-align:left;">ΠΗΓΕΣ ΕΠΙΣΚΕΨΙΜΟΤΗΤΑΣ (TRAFFIC SOURCES)</th>'
+            '<th style="text-align:left;">ΠΗΓΕΣ (ΩΡΕΣ & %)</th>'
             '</tr></thead>'
             '<tbody>' + "".join(rows_an_list) + '</tbody>'
             '</table>'

@@ -10,8 +10,9 @@ import requests
 import streamlit as st
 
 # ==========================================
-# ΕΝΣΩΜΑΤΩΜΕΝΟ YOUTUBE DATA API KEY
+# ΑΣΦΑΛΗΣ ΑΝΑΚΤΗΣΗ YOUTUBE API KEY
 # ==========================================
+
 YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
 
 # ==========================================
@@ -25,6 +26,25 @@ st.set_page_config(
 )
 
 DATA_FILE = "creator_hub_data.json"
+
+# ==========================================
+# ΕΠΙΛΟΓΕΣ ΠΗΓΩΝ ΕΠΙΣΚΕΨΙΜΟΤΗΤΑΣ YOUTUBE
+# ==========================================
+TRAFFIC_SOURCE_OPTIONS = [
+    "Λειτουργίες περιήγησης",
+    "Αναζήτηση YouTube",
+    "Προτεινόμενα βίντεο",
+    "Σελίδες καναλιών",
+    "Εξωτερικές",
+    "Απευθείας πληκτρολόγηση ή άγνωστη πηγή",
+    "Ειδοποιήσεις",
+    "Διαφημίσεις YouTube",
+    "Άλλες λειτουργίες του YouTube",
+    "Τελικές οθόνες",
+    "Σχετικά Short",
+    "Λίστα αναπαραγωγής",
+    "Σελίδες hashtag (#)"
+]
 
 # ==========================================
 # SEED DATA
@@ -206,6 +226,7 @@ def load_data():
             if "strategies" not in data: data["strategies"] = get_default_data()["strategies"]
             if "competitors_intl" not in data: data["competitors_intl"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL]
             if "keywords" not in data: data["keywords"] = []
+            if "analytics" not in data: data["analytics"] = []
             return data
     except Exception:
         return get_default_data()
@@ -312,7 +333,7 @@ button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 
-/* LABELS: ΘΑΛΑΣΣΙ & BOLD */
+/* LABELS */
 label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
     color: #38bdf8 !important;
     font-weight: 800 !important;
@@ -900,32 +921,139 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS
+# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
+    
     with st.expander("➕ Καταγραφή Στατιστικών Βίντεο"):
         with st.form("an_form_add", clear_on_submit=True):
-            t = st.text_input("Τίτλος Βίντεο")
-            typ = st.selectbox("Τύπος", ["Long-form", "Shorts"])
-            c1, c2 = st.columns(2)
-            with c1:
-                ctr = st.number_input("CTR (%)", step=0.1)
-                ret = st.number_input("Retention (%)", step=0.1)
-            with c2:
-                wt = st.number_input("Watch Time (h)", step=0.1)
-                src = st.text_input("Traffic Sources")
-            if st.form_submit_button("Αποθήκευση"):
+            a_c1, a_c2 = st.columns(2)
+            with a_c1:
+                t = st.text_input("Τίτλος Βίντεο")
+                typ = st.selectbox("Τύπος Βίντεο", ["Long-form (16:9)", "Shorts (9:16)"])
+                ctr = st.number_input("CTR (%)", min_value=0.0, max_value=100.0, step=0.1)
+                ret = st.number_input("Retention / Avg Viewed (%)", min_value=0.0, max_value=100.0, step=0.1)
+            with a_c2:
+                wt = st.number_input("Watch Time (Ώρες)", min_value=0.0, step=0.1)
+                st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:4px;'>📊 Πηγές Επισκεψιμότητας (Traffic Sources)</p>", unsafe_allow_html=True)
+                src_1 = st.selectbox("1η Κύρια Πηγή:", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src1")
+                pct_1 = st.number_input("Ποσοστό 1ης Πηγής (%)", min_value=0.0, max_value=100.0, step=0.1, key="an_pct1")
+                src_2 = st.selectbox("2η Πηγή (προαιρετικά):", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src2")
+                pct_2 = st.number_input("Ποσοστό 2ης Πηγής (%)", min_value=0.0, max_value=100.0, step=0.1, key="an_pct2")
+
+            if st.form_submit_button("➕ Αποθήκευση Analytics Βίντεο", use_container_width=True):
                 if t:
                     if "analytics" not in st.session_state.db:
                         st.session_state.db["analytics"] = []
-                    st.session_state.db["analytics"].append({"title": t, "type": typ, "ctr": ctr, "retention": ret, "watchTime": wt, "sources": src})
-                    save_data(st.session_state.db)
-                    st.rerun()
+                    
+                    # Κατασκευή Traffic Sources String
+                    sources_list = []
+                    if src_1 != "— Καμία —" and pct_1 > 0:
+                        sources_list.append(f"{src_1} {pct_1}%")
+                    elif src_1 != "— Καμία —":
+                        sources_list.append(src_1)
+                    if src_2 != "— Καμία —" and pct_2 > 0:
+                        sources_list.append(f"{src_2} {pct_2}%")
+                    elif src_2 != "— Καμία —":
+                        sources_list.append(src_2)
+                    
+                    sources_str = ", ".join(sources_list) if sources_list else "—"
 
-    an = st.session_state.db.get("analytics", [])
-    if an:
-        st.dataframe(pd.DataFrame(an), use_container_width=True, hide_index=True)
+                    st.session_state.db["analytics"].append({
+                        "id": str(datetime.datetime.now().timestamp()),
+                        "title": t,
+                        "type": typ,
+                        "ctr": float(ctr),
+                        "retention": float(ret),
+                        "watchTime": float(wt),
+                        "sources": sources_str,
+                        "date": str(datetime.date.today())
+                    })
+                    save_data(st.session_state.db)
+                    st.success("✅ Τα στατιστικά του βίντεο αποθηκεύτηκαν!")
+                    st.rerun()
+                else:
+                    st.warning("⚠️ Συμπληρώστε τον τίτλο του βίντεο.")
+
+    analytics_list = st.session_state.db.get("analytics", [])
+    if analytics_list:
+        with st.expander("🗑️ Διαγραφή Εγγραφής Analytics"):
+            an_titles = [a.get("title", "Βίντεο") for a in analytics_list]
+            selected_an_del = st.selectbox("Επιλέξτε βίντεο για διαγραφή:", an_titles, key="sel_del_an")
+            if st.button("🗑️ Διαγραφή Επιλεγμένου Βίντεο", key="btn_del_an", type="primary"):
+                st.session_state.db["analytics"] = [a for a in analytics_list if a.get("title") != selected_an_del]
+                save_data(st.session_state.db)
+                st.success(f"Η εγγραφή '{selected_an_del}' διαγράφηκε!")
+                st.rerun()
+
+    # Ταξινόμηση Analytics
+    col_asort1, col_asort2, _ = st.columns([2, 1.8, 1.5])
+    with col_asort1:
+        sort_by_an = st.selectbox("📊 Ταξινόμηση κατά:", ["Watch Time", "CTR (%)", "Retention (%)", "Τίτλος (Α-Ω)", "Ημερομηνία"], key="sort_by_an")
+    with col_asort2:
+        sort_dir_an = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_an")
+
+    is_a_desc = "Φθίνουσα" in sort_dir_an
+    sorted_analytics = list(analytics_list)
+    if sort_by_an == "Watch Time":
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("watchTime", 0.0), reverse=is_a_desc)
+    elif "CTR" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("ctr", 0.0), reverse=is_a_desc)
+    elif "Retention" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("retention", 0.0), reverse=is_a_desc)
+    elif "Τίτλος" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("title", "").lower(), reverse=not is_a_desc)
+    elif "Ημερομηνία" in sort_by_an:
+        sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("date", ""), reverse=is_a_desc)
+
+    # HTML Table Rendering
+    if sorted_analytics:
+        rows_an_list = []
+        for a in sorted_analytics:
+            typ_label = a.get("type", "Long-form")
+            typ_badge = '<span style="background:rgba(244,63,94,0.25); color:#f43f5e; padding:3px 9px; border-radius:12px; font-weight:800;">Shorts</span>' if "Shorts" in typ_label else '<span style="background:rgba(59,130,246,0.25); color:#60a5fa; padding:3px 9px; border-radius:12px; font-weight:800;">Long-form</span>'
+            
+            ctr_val = a.get("ctr", 0.0)
+            ctr_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">{ctr_val}%</span>' if ctr_val >= 5.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800;">{ctr_val}%</span>'
+
+            ret_val = a.get("retention", 0.0)
+            ret_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>' if ret_val >= 40.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>'
+
+            # Sources formatting
+            src_str = a.get("sources", "—")
+            src_html = f'<span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 10px; border-radius:8px; font-weight:700;">{src_str}</span>' if src_str != "—" else '<span style="color:#94a3b8;">—</span>'
+
+            row_an = (
+                f'<tr>'
+                f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem;">{a.get("title", "—")}</td>'
+                f'<td style="text-align:center;">{typ_badge}</td>'
+                f'<td style="text-align:center;">{ctr_badge}</td>'
+                f'<td style="text-align:center;">{ret_badge}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#38bdf8;">{a.get("watchTime", 0.0)} h</td>'
+                f'<td>{src_html}</td>'
+                f'</tr>'
+            )
+            rows_an_list.append(row_an)
+
+        table_an_html = (
+            '<div class="data-table-container">'
+            '<table class="custom-table">'
+            '<thead><tr>'
+            '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th>'
+            '<th style="text-align:center;">ΤΥΠΟΣ</th>'
+            '<th style="text-align:center;">CTR (%)</th>'
+            '<th style="text-align:center;">RETENTION / AVG VIEWED (%)</th>'
+            '<th style="text-align:right;">WATCH TIME</th>'
+            '<th style="text-align:left;">ΠΗΓΕΣ ΕΠΙΣΚΕΨΙΜΟΤΗΤΑΣ (TRAFFIC SOURCES)</th>'
+            '</tr></thead>'
+            '<tbody>' + "".join(rows_an_list) + '</tbody>'
+            '</table>'
+            '</div>'
+        )
+        st.markdown(table_an_html, unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει στατιστικά βίντεο ακόμα. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 10. KEYWORDS & TAG SCORE INTELLIGENCE

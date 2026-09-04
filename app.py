@@ -12,7 +12,8 @@ import streamlit as st
 # ==========================================
 # ΕΝΣΩΜΑΤΩΜΕΝΟ YOUTUBE DATA API KEY
 # ==========================================
-YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
+
+YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
 
 # ==========================================
 # ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ

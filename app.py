@@ -10,6 +10,11 @@ import requests
 import streamlit as st
 
 # ==========================================
+# ΕΝΣΩΜΑΤΩΜΕΝΟ YOUTUBE DATA API KEY
+# ==========================================
+YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
+
+# ==========================================
 # ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ
 # ==========================================
 st.set_page_config(
@@ -264,7 +269,6 @@ def blank_stats():
 def get_default_data():
     return {
         "password_hash": hashlib.sha256("1234".encode()).hexdigest(),
-        "api_key": "",
         "my_channel": {
             "name": "Tsouros Marine",
             "handle": "UC5cxxXjrQcHnWqh_KtiCpDg",
@@ -394,25 +398,12 @@ if not check_password():
     st.stop()
 
 # ==========================================
-# SIDEBAR
+# SIDEBAR (ΧΩΡΙΣ ΠΕΔΙΟ API KEY)
 # ==========================================
 with st.sidebar:
     st.markdown("<h2 style='color:#38bdf8;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.subheader("🔑 YouTube Data API Key")
-    api_key_input = st.text_input(
-        "API Key (v3)",
-        value=st.session_state.db.get("api_key", ""),
-        type="password",
-        help="Απαιτείται για τον συγχρονισμό στατιστικών."
-    )
-    if st.button("💾 Αποθήκευση Key", use_container_width=True):
-        st.session_state.db["api_key"] = api_key_input
-        save_data(st.session_state.db)
-        st.success("Το API Key αποθηκεύτηκε!")
-
-    st.markdown("---")
     st.subheader("💾 Backup & Επαναφορά")
     
     json_str = json.dumps(st.session_state.db, ensure_ascii=False, indent=2)
@@ -444,7 +435,7 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS (ΑΚΡΙΒΗΣ ΣΕΙΡΑ HTML)
+# ΚΥΡΙΩΣ TABS
 # ==========================================
 st.markdown("<h1 style='text-align: center; color:#ffffff; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
@@ -512,7 +503,7 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
-# 2-5. STRATEGY TABS (ΠΛΗΡΩΣ ΛΕΙΤΟΥΡΓΙΚΗ ΠΡΟΣΘΗΚΗ ΒΗΜΑΤΩΝ)
+# 2-5. STRATEGY TABS
 # ------------------------------------------
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
@@ -581,37 +572,33 @@ with tabs[5]:
 with tabs[6]:
     comps = st.session_state.db.get("competitors_gr", [])
     st.subheader(f"🇬🇷 Έλληνες Competitors ({len(comps)} Κανάλια)")
-    api_key = st.session_state.db.get("api_key", "")
     
     col_btn1, col_btn2 = st.columns([1, 4])
     with col_btn1:
         if st.button("🔄 Ανανέωση Όλων (Sync API)", use_container_width=True):
-            if not api_key:
-                st.error("Βάλτε πρώτα το YouTube API Key στη Sidebar!")
-            else:
-                ids = []
-                for c in comps:
-                    cid = resolve_handle(api_key, c["handle"])
-                    c["resolvedId"] = cid
-                    if cid: ids.append(cid)
+            ids = []
+            for c in comps:
+                cid = resolve_handle(YOUTUBE_API_KEY, c["handle"])
+                c["resolvedId"] = cid
+                if cid: ids.append(cid)
+            
+            stats_map = fetch_channel_stats(YOUTUBE_API_KEY, ids)
+            for c in comps:
+                cid = c.get("resolvedId")
+                if cid and cid in stats_map:
+                    old_subs = c.get("subs", 0)
+                    c.update(stats_map[cid])
+                    new_subs = c.get("subs", 0)
+                    c["growth"] = round(((new_subs - old_subs) / old_subs) * 100, 2) if old_subs > 0 else 0.0
+            
+            my_c = st.session_state.db["my_channel"]
+            my_id = resolve_handle(YOUTUBE_API_KEY, my_c["handle"])
+            if my_id and my_id in stats_map:
+                my_c.update(stats_map[my_id])
                 
-                stats_map = fetch_channel_stats(api_key, ids)
-                for c in comps:
-                    cid = c.get("resolvedId")
-                    if cid and cid in stats_map:
-                        old_subs = c.get("subs", 0)
-                        c.update(stats_map[cid])
-                        new_subs = c.get("subs", 0)
-                        c["growth"] = round(((new_subs - old_subs) / old_subs) * 100, 2) if old_subs > 0 else 0.0
-                
-                my_c = st.session_state.db["my_channel"]
-                my_id = resolve_handle(api_key, my_c["handle"])
-                if my_id and my_id in stats_map:
-                    my_c.update(stats_map[my_id])
-                    
-                save_data(st.session_state.db)
-                st.success("✅ Όλα τα κανάλια ανανεώθηκαν!")
-                st.rerun()
+            save_data(st.session_state.db)
+            st.success("✅ Όλα τα κανάλια ανανεώθηκαν!")
+            st.rerun()
 
     col_add, col_del = st.columns(2)
     with col_add:
@@ -805,7 +792,7 @@ with tabs[11]:
         st.dataframe(pd.DataFrame(gls), use_container_width=True, hide_index=True)
 
 # ------------------------------------------
-# 13. PROMPTS LIBRARY (ΑΚΡΙΒΩΣ ΟΠΩΣ ΤΟ SCREENSHOT)
+# 13. PROMPTS LIBRARY
 # ------------------------------------------
 with tabs[12]:
     st.markdown("<h2>📜 Prompts Library</h2>", unsafe_allow_html=True)

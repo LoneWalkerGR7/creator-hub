@@ -41,6 +41,13 @@ html, body, .stApp {
     background-attachment: fixed !important;
     color: #f8fafc !important;
 }
+from colorama import Fore, Style, init
+
+# Αρχικοποίηση για να λειτουργεί σωστά και στα Windows
+init()
+
+# Εκτύπωση με χρώμα
+print("Αυτή η λέξη είναι " + Fore.RED + "κόκκινη" + Style.RESET_ALL + " και αυτή κανονική.")
 
 [data-testid="stSidebar"] {
     background-color: #111827 !important;

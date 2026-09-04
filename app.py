@@ -471,13 +471,14 @@ if not check_password():
     st.stop()
 
 # ==========================================
+# ==========================================
 # SIDEBAR
 # ==========================================
 with st.sidebar:
     st.markdown("<h2 style='color:#38bdf8; font-weight:800;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>💾 Backup & Επαναφορά</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>💾 Backup & Επαναφορά</h4>", unsafe_allow_html=True)
     
     json_str = json.dumps(st.session_state.db, ensure_ascii=False, indent=2)
     st.download_button(
@@ -892,12 +893,11 @@ with tabs[8]:
         st.dataframe(pd.DataFrame(an), use_container_width=True, hide_index=True)
 
 # ------------------------------------------
-# 10. KEYWORDS & TAG SCORE INTELLIGENCE (UPGRADED)
+# 10. KEYWORDS & TAG SCORE INTELLIGENCE
 # ------------------------------------------
 with tabs[9]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 YouTube Keywords & Tag Score Intelligence</h3>", unsafe_allow_html=True)
     
-    # 1. Quick Search Tools
     col_q1, col_q2, col_q3 = st.columns([2.5, 1.2, 1.2])
     with col_q1:
         quick_kw = st.text_input("🔎 Γρήγορη Έρευνα Tag / Keyword:", placeholder="π.χ. Spinning για Λαβράκια...")
@@ -918,7 +918,6 @@ with tabs[9]:
             else:
                 st.warning("Γράψτε πρώτα μια λέξη.")
 
-    # 2. Add Keyword Form with TubeBuddy & SEO metrics
     with st.expander("➕ Προσθήκη Νέου Tag με Σκορ & Κατάταξη (TubeBuddy / SEO)"):
         with st.form("kw_advanced_form", clear_on_submit=True):
             k_c1, k_c2 = st.columns(2)
@@ -963,7 +962,6 @@ with tabs[9]:
                 else:
                     st.warning("⚠️ Συμπληρώστε τη λέξη-κλειδί.")
 
-    # 3. Delete Keyword Expander
     keywords_list = st.session_state.db.get("keywords", [])
     if keywords_list:
         with st.expander("🗑️ Διαγραφή Tag / Keyword"):
@@ -975,7 +973,6 @@ with tabs[9]:
                 st.success(f"Το Tag '{selected_kw_del}' διαγράφηκε!")
                 st.rerun()
 
-    # 4. Sorting Controls
     col_ksort1, col_ksort2, _ = st.columns([2, 1.8, 1.5])
     with col_ksort1:
         sort_by_kw = st.selectbox(
@@ -986,7 +983,6 @@ with tabs[9]:
     with col_ksort2:
         sort_dir_kw = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_kw")
 
-    # Sorting logic
     is_k_desc = "Φθίνουσα" in sort_dir_kw
     sorted_keywords = list(keywords_list)
     if sort_by_kw == "Overall Score":
@@ -1002,7 +998,6 @@ with tabs[9]:
     elif "Status" in sort_by_kw:
         sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("status", ""), reverse=is_k_desc)
 
-    # 5. Full HTML Table Rendering
     if sorted_keywords:
         rows_kw_list = []
         for k in sorted_keywords:

@@ -895,7 +895,7 @@ with tabs[8]:
 # 10. KEYWORDS
 # ------------------------------------------
 with tabs[9]:
-    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 Keywords</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#bac425; font-weight:800;'>🔑 Keywords</h3>", unsafe_allow_html=True)
     with st.expander("➕ Προσθήκη Keyword"):
         with st.form("kw_form_add", clear_on_submit=True):
             kw = st.text_input("Keyword")

@@ -45,7 +45,7 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   TABS BAR (ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ ΜΕ ΧΡΩΜΑΤΑ ΑΝΑ ΚΑΡΤΕΛΑ)
+   TABS BAR (ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ ΜΕ ΦΩΤΕΙΝΑ ΓΡΑΜΜΑΤΑ & GRADIENTS)
    ======================================================== */
 [data-baseweb="tab-list"] {
     display: flex !important;
@@ -53,28 +53,36 @@ html, body, [class*="css"], .stApp {
     margin-bottom: 25px !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    background: rgba(21, 28, 44, 0.6) !important;
+    background: rgba(21, 28, 44, 0.75) !important;
     padding: 8px !important;
     border-radius: 16px !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     backdrop-filter: blur(12px) !important;
     width: 100% !important;
 }
 
 button[data-baseweb="tab"] {
     background: transparent !important;
-    color: #94a3b8 !important;
     border: 1px solid transparent !important;
     padding: 10px 18px !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
-    font-size: 0.88rem !important;
+    font-size: 0.9rem !important;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+button[data-baseweb="tab"] p, 
+button[data-baseweb="tab"] span, 
+button[data-baseweb="tab"] div {
+    color: #cbd5e1 !important;
+    font-weight: 600 !important;
+}
+
 button[data-baseweb="tab"]:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+button[data-baseweb="tab"]:hover p {
     color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.05) !important;
 }
 
 [data-baseweb="tab-highlight"] {
@@ -82,20 +90,26 @@ button[data-baseweb="tab"]:hover {
 }
 
 /* Χρώματα Active Tabs */
-button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; color:#fff !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4) !important; }
-button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; color:#fff !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important; }
-button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; color:#fff !important; }
-button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; color:#fff !important; }
+button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4) !important; }
+button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; }
+button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; }
+button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; }
+button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; }
+button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; }
+button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; }
+button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; }
+button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important; }
+button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; }
+button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; }
+button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; }
+button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; }
+button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; }
+
+button[data-baseweb="tab"][aria-selected="true"] p,
+button[data-baseweb="tab"][aria-selected="true"] span {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
 
 /* ========================================================
    ΠΙΝΑΚΑΣ COMPETITORS (INDEX.HTML STYLE)
@@ -104,6 +118,7 @@ button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: l
     background: #151c2c;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 15px;
     margin-bottom: 30px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
     overflow-x: auto;
@@ -157,7 +172,7 @@ button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: l
 .growth-down { color: #ef4444; font-weight: 600; }
 .growth-flat { color: #94a3b8; }
 
-/* Buttons & Inputs */
+/* Widgets Styling */
 [data-testid="stDownloadButton"] > button {
     background-color: #7c3aed !important;
     border: 1px solid #8b5cf6 !important;
@@ -195,6 +210,16 @@ div.stButton > button:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
     color: #38bdf8 !important;
+}
+input, textarea, select {
+    background-color: #0d1322 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+label, [data-testid="stWidgetLabel"] p {
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
 }
 </style>
 """
@@ -283,8 +308,7 @@ def load_data():
         return data
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data
+            return json.load(f)
     except Exception:
         return get_default_data()
 
@@ -508,7 +532,7 @@ with tabs[7]:
         st.dataframe(pd.DataFrame(sched)[["date", "time", "platform", "title", "status"]], use_container_width=True, hide_index=True)
 
 # ------------------------------------------
-# 9. GREEK COMPETITORS (FULL HTML TABLE - EXACT INDEX.HTML)
+# 9. GREEK COMPETITORS (FULL HTML TABLE - FIXED RENDERING)
 # ------------------------------------------
 with tabs[8]:
     comps = st.session_state.db.get("competitors_gr", [])
@@ -579,8 +603,8 @@ with tabs[8]:
     # ΤΑΞΙΝΟΜΗΣΗ ΚΑΤΑ SUBSCRIBERS
     sorted_comps = sorted(comps, key=lambda x: x.get("subs", 0), reverse=True)
 
-    # ΚΑΤΑΣΚΕΥΗ ΑΥΘΕΝΤΙΚΟΥ HTML ΠΙΝΑΚΑ
-    rows_html = ""
+    # ΣΩΣΤΗ ΚΑΤΑΣΚΕΥΗ HTML ΧΩΡΙΣ INDENTATION (ΓΙΑ ΝΑ ΜΗΝ ΕΜΦΑΝΙΖΕΤΑΙ ΣΑΝ CODEBLOCK)
+    rows_list = []
     for c in sorted_comps:
         is_my = "tsouros" in c["name"].lower()
         row_cls = "my-row" if is_my else ""
@@ -594,40 +618,37 @@ with tabs[8]:
         else:
             growth_html = '<span class="growth-flat">0%</span>'
 
-        rows_html += f"""
-        <tr class="{row_cls}">
-            <td style="font-weight:600;">{c['name']} {badge}</td>
-            <td style="text-align:right; font-weight:700; color:#ffffff;">{fmt(c.get('subs', 0))}</td>
-            <td style="text-align:right;">{fmt(c.get('totalViews', 0))}</td>
-            <td style="text-align:right;">{fmt(c.get('videos', 0))}</td>
-            <td style="text-align:right;">{fmt(c.get('avgViews', 0))}</td>
-            <td style="text-align:right;">{c.get('viewsPerSub', 0.0)}</td>
-            <td style="text-align:right;">{c.get('efficiency', 0.0)}</td>
-            <td style="text-align:center;">{growth_html}</td>
-        </tr>
-        """
+        row = (
+            f'<tr class="{row_cls}">'
+            f'<td style="font-weight:600;">{c["name"]} {badge}</td>'
+            f'<td style="text-align:right; font-weight:700; color:#ffffff;">{fmt(c.get("subs", 0))}</td>'
+            f'<td style="text-align:right;">{fmt(c.get("totalViews", 0))}</td>'
+            f'<td style="text-align:right;">{fmt(c.get("videos", 0))}</td>'
+            f'<td style="text-align:right;">{fmt(c.get("avgViews", 0))}</td>'
+            f'<td style="text-align:right;">{c.get("viewsPerSub", 0.0)}</td>'
+            f'<td style="text-align:right;">{c.get("efficiency", 0.0)}</td>'
+            f'<td style="text-align:center;">{growth_html}</td>'
+            f'</tr>'
+        )
+        rows_list.append(row)
 
-    table_html = f"""
-    <div class="data-table-container">
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th style="text-align:left;">CHANNEL</th>
-                    <th style="text-align:right;">SUBSCRIBERS (ΑΚΡΙΒΗΣ)</th>
-                    <th style="text-align:right;">TOTAL VIEWS</th>
-                    <th style="text-align:right;">VIDEOS</th>
-                    <th style="text-align:right;">AVG VIEWS</th>
-                    <th style="text-align:right;">VIEWS/SUB</th>
-                    <th style="text-align:right;">EFFICIENCY</th>
-                    <th style="text-align:center;">GROWTH</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows_html}
-            </tbody>
-        </table>
-    </div>
-    """
+    table_html = (
+        '<div class="data-table-container">'
+        '<table class="custom-table">'
+        '<thead><tr>'
+        '<th style="text-align:left;">CHANNEL</th>'
+        '<th style="text-align:right;">SUBSCRIBERS (ΑΚΡΙΒΗΣ)</th>'
+        '<th style="text-align:right;">TOTAL VIEWS</th>'
+        '<th style="text-align:right;">VIDEOS</th>'
+        '<th style="text-align:right;">AVG VIEWS</th>'
+        '<th style="text-align:right;">VIEWS/SUB</th>'
+        '<th style="text-align:right;">EFFICIENCY</th>'
+        '<th style="text-align:center;">GROWTH</th>'
+        '</tr></thead>'
+        '<tbody>' + "".join(rows_list) + '</tbody>'
+        '</table>'
+        '</div>'
+    )
     st.markdown(table_html, unsafe_allow_html=True)
 
 # ------------------------------------------
@@ -637,39 +658,37 @@ with tabs[9]:
     comps_intl = st.session_state.db.get("competitors_intl", [])
     st.subheader(f"🌐 Ξένοι Competitors ({len(comps_intl)} Κανάλια)")
     sorted_intl = sorted(comps_intl, key=lambda x: x.get("subs", 0), reverse=True)
-    rows_intl_html = ""
+    rows_intl_list = []
     for c in sorted_intl:
-        rows_intl_html += f"""
-        <tr>
-            <td style="font-weight:600;">{c['name']}</td>
-            <td>{c.get('country', '—')}</td>
-            <td style="text-align:right; font-weight:700;">{fmt(c.get('subs', 0))}</td>
-            <td style="text-align:right;">{fmt(c.get('totalViews', 0))}</td>
-            <td style="text-align:right;">{fmt(c.get('videos', 0))}</td>
-            <td style="text-align:right;">{fmt(c.get('avgViews', 0))}</td>
-            <td style="text-align:right;">{c.get('efficiency', 0.0)}</td>
-        </tr>
-        """
-    table_intl_html = f"""
-    <div class="data-table-container">
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>CHANNEL</th>
-                    <th>ΧΩΡΑ</th>
-                    <th style="text-align:right;">SUBSCRIBERS</th>
-                    <th style="text-align:right;">TOTAL VIEWS</th>
-                    <th style="text-align:right;">VIDEOS</th>
-                    <th style="text-align:right;">AVG VIEWS</th>
-                    <th style="text-align:right;">EFFICIENCY</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows_intl_html}
-            </tbody>
-        </table>
-    </div>
-    """
+        row_intl = (
+            f'<tr>'
+            f'<td style="font-weight:600;">{c["name"]}</td>'
+            f'<td>{c.get("country", "—")}</td>'
+            f'<td style="text-align:right; font-weight:700;">{fmt(c.get("subs", 0))}</td>'
+            f'<td style="text-align:right;">{fmt(c.get("totalViews", 0))}</td>'
+            f'<td style="text-align:right;">{fmt(c.get("videos", 0))}</td>'
+            f'<td style="text-align:right;">{fmt(c.get("avgViews", 0))}</td>'
+            f'<td style="text-align:right;">{c.get("efficiency", 0.0)}</td>'
+            f'</tr>'
+        )
+        rows_intl_list.append(row_intl)
+
+    table_intl_html = (
+        '<div class="data-table-container">'
+        '<table class="custom-table">'
+        '<thead><tr>'
+        '<th>CHANNEL</th>'
+        '<th>ΧΩΡΑ</th>'
+        '<th style="text-align:right;">SUBSCRIBERS</th>'
+        '<th style="text-align:right;">TOTAL VIEWS</th>'
+        '<th style="text-align:right;">VIDEOS</th>'
+        '<th style="text-align:right;">AVG VIEWS</th>'
+        '<th style="text-align:right;">EFFICIENCY</th>'
+        '</tr></thead>'
+        '<tbody>' + "".join(rows_intl_list) + '</tbody>'
+        '</table>'
+        '</div>'
+    )
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------

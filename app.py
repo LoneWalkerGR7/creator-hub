@@ -238,7 +238,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 # ==========================================
-# ULTRA HIGH CONTRAST & BOLD CSS
+# ΕΠΑΓΓΕΛΜΑΤΙΚΟ DARK THEME CSS
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -263,7 +263,9 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS */
+/* ========================================================
+   1. ΑΝΑΚΑΤΑΣΚΕΥΗ ΜΕΝΟΥ: ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
+   ======================================================== */
 [data-testid="stTabs"] [data-baseweb="tab-list"],
 div[role="tablist"] {
     display: flex !important;
@@ -272,49 +274,63 @@ div[role="tablist"] {
     overflow-x: visible !important;
     white-space: normal !important;
     justify-content: center !important;
+    align-items: center !important;
     gap: 8px !important;
-    background: rgba(21, 28, 44, 0.85) !important;
-    padding: 12px !important;
-    border-radius: 16px !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(14px) !important;
+    background: #151c2c !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5) !important;
     width: 100% !important;
     margin-bottom: 25px !important;
 }
 
-[data-testid="stTabs"] button[aria-label="Scroll right"],
-[data-testid="stTabs"] button[aria-label="Scroll left"],
-[data-baseweb="tab-highlight"],
-[data-baseweb="tab-border"] {
+[data-testid="stTabs"] button[aria-label*="Scroll"],
+[data-testid="stTabs"] [data-baseweb="tab-highlight"],
+[data-testid="stTabs"] [data-baseweb="tab-border"] {
     display: none !important;
 }
 
+/* Κάθε Tab ως ξεχωριστό φωτεινό κουμπί */
+[data-testid="stTabs"] button[data-baseweb="tab"],
 button[data-baseweb="tab"] {
-    background: rgba(13, 19, 34, 0.7) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
     padding: 10px 18px !important;
-    border-radius: 10px !important;
-    flex: 0 1 auto !important;
+    border-radius: 12px !important;
+    margin: 2px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35) !important;
     transition: all 0.2s ease !important;
 }
 
-button[data-baseweb="tab"] p, 
-button[data-baseweb="tab"] span, 
+/* ΕΠΙΒΟΛΗ ΚΑΤΑΛΕΥΚΟΥ BOLD ΧΡΩΜΑΤΟΣ ΣΕ ΟΛΑ ΤΑ ΓΡΑΜΜΑΤΑ ΤΟΥ ΜΕΝΟΥ */
+[data-testid="stTabs"] button[data-baseweb="tab"] *,
+[data-testid="stTabs"] button[data-baseweb="tab"] p,
+[data-testid="stTabs"] button[data-baseweb="tab"] span,
+[data-testid="stTabs"] button[data-baseweb="tab"] div,
+button[data-baseweb="tab"] p,
+button[data-baseweb="tab"] span,
 button[data-baseweb="tab"] div,
 button[data-baseweb="tab"] {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    font-size: 0.92rem !important;
+    color: #ffffff !important; /* ΚΑΤΑΛΕΥΚΟ */
+    font-weight: 800 !important; /* BOLD */
+    font-size: 0.95rem !important;
     opacity: 1 !important;
     text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
 }
 
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover,
 button[data-baseweb="tab"]:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
+    background-color: #334155 !important;
     border-color: #38bdf8 !important;
-    transform: translateY(-1px) !important;
+    transform: translateY(-2px) !important;
+}
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover * {
+    color: #38bdf8 !important;
 }
 
+/* Χρώματα Active Tabs */
 button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border: 2px solid #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border: 2px solid #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border: 2px solid #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.6) !important; }
@@ -330,7 +346,15 @@ button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 
-/* LABELS */
+button[data-baseweb="tab"][aria-selected="true"] * {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7) !important;
+}
+
+/* ========================================================
+   2. LABELS & INPUTS
+   ======================================================== */
 label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
     color: #38bdf8 !important;
     font-weight: 800 !important;
@@ -918,7 +942,7 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
+# 9. ANALYTICS & VIDEO HISTORY
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
@@ -951,7 +975,6 @@ with tabs[8]:
                     if "analytics" not in st.session_state.db:
                         st.session_state.db["analytics"] = []
                     
-                    # Αυτόματος υπολογισμός ποσοστών βάσει του συνολικού Watch Time
                     sources_list = []
                     if wt > 0:
                         if src_1 != "— Καμία —" and hours_1 > 0:
@@ -1002,7 +1025,6 @@ with tabs[8]:
                 st.success(f"Η εγγραφή '{selected_an_del}' διαγράφηκε!")
                 st.rerun()
 
-    # Ταξινόμηση Analytics
     col_asort1, col_asort2, _ = st.columns([2, 1.8, 1.5])
     with col_asort1:
         sort_by_an = st.selectbox("📊 Ταξινόμηση κατά:", ["Προβολές (Views)", "Watch Time", "CTR (%)", "Retention (%)", "New Subs", "Μοναδικοί Θεατές", "Τίτλος (Α-Ω)", "Ημερομηνία"], key="sort_by_an")
@@ -1028,7 +1050,6 @@ with tabs[8]:
     elif "Ημερομηνία" in sort_by_an:
         sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("date", ""), reverse=is_a_desc)
 
-    # HTML Table Rendering
     if sorted_analytics:
         rows_an_list = []
         for a in sorted_analytics:

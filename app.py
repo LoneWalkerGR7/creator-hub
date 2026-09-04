@@ -20,13 +20,13 @@ st.set_page_config(
 )
 
 # ==========================================
-# ΑΠΟΛΥΤΗ ΔΙΟΡΘΩΣΗ CSS (CONTRAST & DARK THEME)
+# ΠΛΗΡΕΣ ΚΑΙ ΔΙΟΡΘΩΜΕΝΟ CSS
 # ==========================================
 CUSTOM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-/* Κεντρικό Φόντο & Γραμματοσειρά */
+/* Κεντρικό Φόντο */
 html, body, [class*="css"], .stApp {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
     background-color: #0b0f19 !important;
@@ -37,18 +37,110 @@ html, body, [class*="css"], .stApp {
     color: #f8fafc !important;
 }
 
-/* Sidebar Styling & Text Fix */
+/* Sidebar */
 [data-testid="stSidebar"] {
     background-color: #111827 !important;
     border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
-[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3,
-[data-testid="stSidebar"] h4, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span,
-[data-testid="stSidebar"] label, [data-testid="stSidebar"] .stMarkdown {
+[data-testid="stSidebar"] * {
     color: #f8fafc !important;
 }
 
-/* Διόρθωση Expanders (Όχι λευκές μπάρες, καθαρό Dark Card) */
+/* ========================================================
+   1. ΔΙΟΡΘΩΣΗ ΚΑΡΤΕΛΩΝ (TABS - MODERN PILL BAR)
+   ======================================================== */
+[data-baseweb="tab-list"] {
+    background: rgba(21, 28, 44, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 14px !important;
+    padding: 6px !important;
+    gap: 6px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    margin-bottom: 25px !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+button[data-baseweb="tab"] {
+    background: transparent !important;
+    color: #94a3b8 !important;
+    border-radius: 10px !important;
+    padding: 8px 16px !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    border: 1px solid transparent !important;
+    transition: all 0.2s ease !important;
+}
+
+button[data-baseweb="tab"]:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+button[data-baseweb="tab"][aria-selected="true"] {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #a855f7 !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
+}
+
+[data-baseweb="tab-highlight"] {
+    display: none !important;
+}
+
+/* ========================================================
+   2. ΔΙΟΡΘΩΣΗ DOWNLOAD BUTTON (EXPORT BACKUP)
+   ======================================================== */
+[data-testid="stDownloadButton"] > button,
+[data-testid="stDownloadButton"] button,
+.stDownloadButton button {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 10px 16px !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+}
+[data-testid="stDownloadButton"] > button:hover {
+    background: #334155 !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+}
+
+/* ========================================================
+   3. ΔΙΟΡΘΩΣΗ FILE UPLOADER (IMPORT BACKUP)
+   ======================================================== */
+[data-testid="stFileUploader"] {
+    background-color: transparent !important;
+}
+[data-testid="stFileUploader"] section {
+    background-color: #151c2c !important;
+    border: 2px dashed rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+}
+[data-testid="stFileUploader"] section * {
+    color: #94a3b8 !important;
+}
+[data-testid="stFileUploader"] section button {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+[data-testid="stFileUploader"] section button:hover {
+    background-color: #334155 !important;
+    border-color: #38bdf8 !important;
+}
+
+/* ========================================================
+   4. ΔΙΟΡΘΩΣΗ EXPANDERS (ΣΚΟΥΡΟ CARD ΑΝΤΙ ΓΙΑ ΛΕΥΚΟ)
+   ======================================================== */
 [data-testid="stExpander"] {
     background-color: #151c2c !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
@@ -57,56 +149,24 @@ html, body, [class*="css"], .stApp {
 }
 [data-testid="stExpander"] summary {
     background-color: #1e293b !important;
-    color: #ffffff !important;
     border-radius: 12px !important;
 }
 [data-testid="stExpander"] summary:hover {
-    background-color: #2e3d55 !important;
+    background-color: #2a374d !important;
 }
-[data-testid="stExpander"] summary p, [data-testid="stExpander"] summary span, [data-testid="stExpander"] summary svg {
+[data-testid="stExpander"] summary * {
     color: #38bdf8 !important;
     fill: #38bdf8 !important;
     font-weight: 600 !important;
-    font-size: 1rem !important;
 }
 [data-testid="stExpander"] div[role="region"] {
     background-color: #151c2c !important;
     color: #f8fafc !important;
-    padding: 14px !important;
 }
 
-/* Διόρθωση Labels / Τίτλοι πεδίων */
-label, label p, [data-testid="stWidgetLabel"] p {
-    color: #38bdf8 !important;
-    font-weight: 600 !important;
-    font-size: 0.92rem !important;
-}
-
-/* Πεδία Εισαγωγής (Inputs & Textareas) */
-input, textarea, select {
-    background-color: #0d1322 !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 8px !important;
-}
-input:focus, textarea:focus {
-    border-color: #38bdf8 !important;
-}
-
-/* Tabs */
-button[data-baseweb="tab"] {
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-    padding: 8px 14px !important;
-    color: #94a3b8 !important;
-}
-button[data-baseweb="tab"][aria-selected="true"] {
-    background: linear-gradient(135deg, #2e1065 0%, #7c3aed 100%) !important;
-    color: #ffffff !important;
-    border: 1px solid #c084fc !important;
-}
-
-/* Κουμπιά */
+/* ========================================================
+   5. ΔΙΟΡΘΩΣΗ ΓΕΝΙΚΩΝ ΚΟΥΜΠΙΩΝ & INPUTS
+   ======================================================== */
 div.stButton > button {
     background-color: #1e293b !important;
     color: #f8fafc !important;
@@ -120,19 +180,22 @@ div.stButton > button:hover {
     color: #38bdf8 !important;
 }
 
-/* Metrics */
-[data-testid="stMetric"] {
-    background: #151c2c !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 14px !important;
-    padding: 16px !important;
-}
-[data-testid="stMetricLabel"] p {
-    color: #94a3b8 !important;
-}
-[data-testid="stMetricValue"] div {
+input, textarea, select {
+    background-color: #0d1322 !important;
     color: #ffffff !important;
-    font-weight: 700 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+
+label, label p, [data-testid="stWidgetLabel"] p {
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+}
+
+/* Dataframes */
+[data-testid="stDataFrame"] {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
 }
 </style>
 """
@@ -141,7 +204,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 DATA_FILE = "creator_hub_data.json"
 
 # ==========================================
-# ΛΙΣΤΑ: 24 ΕΛΛΗΝΙΚΑ & 2 ΞΕΝΑ ΚΑΝΑΛΙΑ
+# 24 ΕΛΛΗΝΙΚΑ & 2 ΞΕΝΑ ΚΑΝΑΛΙΑ
 # ==========================================
 SEED_COMPETITORS_GR = [
     {"name": "Tsouros Marine", "handle": "UC5cxxXjrQcHnWqh_KtiCpDg"},
@@ -222,7 +285,6 @@ def load_data():
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-            # Έλεγχος & συγχώνευση των 24+2 καναλιών αν λείπουν
             if len(data.get("competitors_gr", [])) < len(SEED_COMPETITORS_GR):
                 existing_gr = {c["name"] for c in data.get("competitors_gr", [])}
                 for c in SEED_COMPETITORS_GR:
@@ -295,7 +357,7 @@ def fetch_channel_stats(api_key, channel_ids):
         return {}
 
 # ==========================================
-# ΟΘΟΝΗ ΚΛΕΙΔΩΜΑΤΟΣ (LOGIN)
+# LOGIN SCREEN
 # ==========================================
 def check_password():
     if st.session_state.authenticated:
@@ -364,17 +426,17 @@ with st.sidebar:
             st.error(f"Σφάλμα αρχείου: {e}")
 
     st.markdown("---")
-    if st.button("🔄 Φόρτωση 24 GR + 2 Intl Competitors", use_container_width=True):
+    if st.button("🔄 Επαναφορά 24 GR + 2 Intl", use_container_width=True):
         st.session_state.db["competitors_gr"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR]
         st.session_state.db["competitors_intl"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL]
         save_data(st.session_state.db)
-        st.success("Φορτώθηκαν και τα 26 κανάλια!")
+        st.success("Φορτώθηκαν όλα τα κανάλια!")
         st.rerun()
 
 # ==========================================
 # ΚΥΡΙΩΣ TABS
 # ==========================================
-st.markdown("<h1 style='color:#ffffff;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#ffffff; margin-bottom: 20px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
 tabs = st.tabs([
     "📊 Dashboard",

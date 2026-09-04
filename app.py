@@ -12,7 +12,7 @@ import streamlit as st
 # ==========================================
 # ΕΝΣΩΜΑΤΩΜΕΝΟ YOUTUBE DATA API KEY
 # ==========================================
-YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
+YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
 
 # ==========================================
 # ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ
@@ -25,7 +25,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# ULTRA HIGH CONTRAST & BOLD CSS
+# ΕΠΑΓΓΕΛΜΑΤΙΚΟ DARK THEME CSS ΜΕ ΔΙΟΡΘΩΣΗ LABELS
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -41,7 +41,6 @@ html, body, [class*="css"], .stApp {
     color: #ffffff !important;
 }
 
-/* Sidebar */
 [data-testid="stSidebar"] {
     background-color: #111827 !important;
     border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
@@ -52,7 +51,20 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   1. ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ: ΦΩΤΕΙΝΟ ΘΑΛΑΣΣΙ & BOLD
+   1. ΔΙΟΡΘΩΣΗ LABELS - ΕΥΑΝΑΓΝΩΣΤΟΙ ΤΙΤΛΟΙ ΠΕΔΙΩΝ
+   ======================================================== */
+label, 
+label p,
+[data-testid="stWidgetLabel"] p,
+.st-emotion-cache-ue6h4q e1i5pmia0 {
+    color: #38bdf8 !important; /* ΦΩΤΕΙΝΟ ΘΑΛΑΣΣΙ */
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    opacity: 1 !important;
+}
+
+/* ========================================================
+   2. ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ
    ======================================================== */
 [data-testid="stTabs"] [data-baseweb="tab-list"],
 div[role="tablist"] {
@@ -63,8 +75,8 @@ div[role="tablist"] {
     white-space: normal !important;
     justify-content: center !important;
     gap: 8px !important;
-    background: rgba(21, 28, 44, 0.85) !important;
-    padding: 12px !important;
+    background: rgba(21, 28, 44, 0.75) !important;
+    padding: 10px !important;
     border-radius: 16px !important;
     border: 1px solid rgba(56, 189, 248, 0.25) !important;
     backdrop-filter: blur(14px) !important;
@@ -79,7 +91,6 @@ div[role="tablist"] {
     display: none !important;
 }
 
-/* Έντονα Θαλασσί Γράμματα (Bold 700) */
 button[data-baseweb="tab"] {
     background: rgba(13, 19, 34, 0.6) !important;
     border: 1px solid rgba(56, 189, 248, 0.3) !important;
@@ -95,36 +106,34 @@ button[data-baseweb="tab"] p,
 button[data-baseweb="tab"] span, 
 button[data-baseweb="tab"] div,
 button[data-baseweb="tab"] {
-    color: #38bdf8 !important; /* ΦΩΤΕΙΝΟ ΘΑΛΑΣΣΙ */
+    color: #38bdf8 !important;
     font-weight: 700 !important;
-    opacity: 1 !important;
     text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
 }
 
 button[data-baseweb="tab"]:hover {
     background: rgba(56, 189, 248, 0.2) !important;
     border-color: #38bdf8 !important;
-    transform: translateY(-1px) !important;
 }
 button[data-baseweb="tab"]:hover p {
     color: #ffffff !important;
 }
 
 /* Χρώματα Active Tabs */
-button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
-button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.45) !important; }
 
 button[data-baseweb="tab"][aria-selected="true"] p,
 button[data-baseweb="tab"][aria-selected="true"] span {
@@ -133,43 +142,11 @@ button[data-baseweb="tab"][aria-selected="true"] span {
 }
 
 /* ========================================================
-   2. METRICS DASHBOARD: ΚΑΤΑΛΕΥΚΟΙ ΑΡΙΘΜΟΙ & ΘΑΛΑΣΣΙ ΤΙΤΛΟΙ
-   ======================================================== */
-[data-testid="stMetric"] {
-    background: #151c2c !important;
-    border: 1px solid rgba(56, 189, 248, 0.25) !important;
-    border-radius: 14px !important;
-    padding: 16px 20px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
-}
-
-[data-testid="stMetricLabel"],
-[data-testid="stMetricLabel"] * {
-    color: #38bdf8 !important; /* ΘΑΛΑΣΣΙ ΤΙΤΛΟΣ */
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-}
-
-[data-testid="stMetricValue"],
-[data-testid="stMetricValue"] * {
-    color: #ffffff !important; /* ΚΑΤΑΛΕΥΚΟΣ ΜΕΓΑΛΟΣ ΑΡΙΘΜΟΣ */
-    font-weight: 800 !important;
-    font-size: 2.3rem !important;
-    text-shadow: 0 2px 10px rgba(255,255,255,0.2) !important;
-}
-
-[data-testid="stMetricDelta"],
-[data-testid="stMetricDelta"] * {
-    font-weight: 700 !important;
-    font-size: 0.9rem !important;
-}
-
-/* ========================================================
    3. EXPANDERS & ΚΟΥΜΠΙΑ
    ======================================================== */
 [data-testid="stExpander"], div[data-testid="stExpander"] {
     background-color: #151c2c !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
@@ -231,7 +208,7 @@ input, textarea, select {
     font-weight: 600 !important;
 }
 input::placeholder, textarea::placeholder {
-    color: #cbd5e1 !important;
+    color: #94a3b8 !important;
     opacity: 0.9 !important;
 }
 
@@ -256,7 +233,7 @@ input::placeholder, textarea::placeholder {
 }
 .custom-table th {
     background: rgba(13, 19, 34, 0.95);
-    color: #38bdf8; /* ΘΑΛΑΣΣΙ HEADERS */
+    color: #38bdf8;
     font-weight: 700;
     font-size: 0.82rem;
     text-transform: uppercase;

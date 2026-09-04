@@ -25,32 +25,34 @@ st.set_page_config(
 )
 
 # ==========================================
-# ΕΠΑΓΓΕΛΜΑΤΙΚΟ DARK THEME CSS
+# ULTRA HIGH CONTRAST & BOLD CSS
 # ==========================================
 CUSTOM_CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 html, body, [class*="css"], .stApp {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
     background-color: #0b0f19 !important;
     background-image: 
-        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.12) 0px, transparent 50%) !important;
+        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%) !important;
     background-attachment: fixed !important;
-    color: #f8fafc !important;
+    color: #ffffff !important;
 }
 
+/* Sidebar */
 [data-testid="stSidebar"] {
     background-color: #111827 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 [data-testid="stSidebar"] * {
-    color: #f8fafc !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
 }
 
 /* ========================================================
-   1. ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ (ΘΑΛΑΣΣΙ ΓΡΑΜΜΑΤΑ & 2 ΣΕΙΡΕΣ)
+   1. ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ: ΦΩΤΕΙΝΟ ΘΑΛΑΣΣΙ & BOLD
    ======================================================== */
 [data-testid="stTabs"] [data-baseweb="tab-list"],
 div[role="tablist"] {
@@ -61,10 +63,10 @@ div[role="tablist"] {
     white-space: normal !important;
     justify-content: center !important;
     gap: 8px !important;
-    background: rgba(21, 28, 44, 0.75) !important;
-    padding: 10px !important;
+    background: rgba(21, 28, 44, 0.85) !important;
+    padding: 12px !important;
     border-radius: 16px !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
     backdrop-filter: blur(14px) !important;
     width: 100% !important;
     margin-bottom: 25px !important;
@@ -77,13 +79,14 @@ div[role="tablist"] {
     display: none !important;
 }
 
+/* Έντονα Θαλασσί Γράμματα (Bold 700) */
 button[data-baseweb="tab"] {
-    background: transparent !important;
-    border: 1px solid rgba(56, 189, 248, 0.15) !important;
-    padding: 9px 16px !important;
+    background: rgba(13, 19, 34, 0.6) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    padding: 10px 16px !important;
     border-radius: 10px !important;
-    font-weight: 600 !important;
-    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    font-size: 0.92rem !important;
     flex: 0 1 auto !important;
     transition: all 0.2s ease !important;
 }
@@ -92,46 +95,81 @@ button[data-baseweb="tab"] p,
 button[data-baseweb="tab"] span, 
 button[data-baseweb="tab"] div,
 button[data-baseweb="tab"] {
-    color: #38bdf8 !important;
-    font-weight: 600 !important;
+    color: #38bdf8 !important; /* ΦΩΤΕΙΝΟ ΘΑΛΑΣΣΙ */
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
 }
 
 button[data-baseweb="tab"]:hover {
-    background: rgba(56, 189, 248, 0.12) !important;
+    background: rgba(56, 189, 248, 0.2) !important;
     border-color: #38bdf8 !important;
+    transform: translateY(-1px) !important;
 }
 button[data-baseweb="tab"]:hover p {
     color: #ffffff !important;
 }
 
 /* Χρώματα Active Tabs */
-button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.45) !important; }
+button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 
 button[data-baseweb="tab"][aria-selected="true"] p,
 button[data-baseweb="tab"][aria-selected="true"] span {
     color: #ffffff !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
 }
 
 /* ========================================================
-   2. EXPANDERS & ΚΟΥΜΠΙΑ
+   2. METRICS DASHBOARD: ΚΑΤΑΛΕΥΚΟΙ ΑΡΙΘΜΟΙ & ΘΑΛΑΣΣΙ ΤΙΤΛΟΙ
+   ======================================================== */
+[data-testid="stMetric"] {
+    background: #151c2c !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    border-radius: 14px !important;
+    padding: 16px 20px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+}
+
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] * {
+    color: #38bdf8 !important; /* ΘΑΛΑΣΣΙ ΤΙΤΛΟΣ */
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+}
+
+[data-testid="stMetricValue"],
+[data-testid="stMetricValue"] * {
+    color: #ffffff !important; /* ΚΑΤΑΛΕΥΚΟΣ ΜΕΓΑΛΟΣ ΑΡΙΘΜΟΣ */
+    font-weight: 800 !important;
+    font-size: 2.3rem !important;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.2) !important;
+}
+
+[data-testid="stMetricDelta"],
+[data-testid="stMetricDelta"] * {
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+}
+
+/* ========================================================
+   3. EXPANDERS & ΚΟΥΜΠΙΑ
    ======================================================== */
 [data-testid="stExpander"], div[data-testid="stExpander"] {
     background-color: #151c2c !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
@@ -140,147 +178,121 @@ button[data-baseweb="tab"][aria-selected="true"] span {
     background-color: #1e293b !important;
     background: #1e293b !important;
     border-radius: 12px !important;
-    color: #38bdf8 !important;
-}
-
-[data-testid="stExpander"] summary:hover {
-    background-color: #273549 !important;
 }
 
 [data-testid="stExpander"] summary * {
     color: #38bdf8 !important;
     fill: #38bdf8 !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
 }
 
 [data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
     background-color: #151c2c !important;
-    color: #f8fafc !important;
+    color: #ffffff !important;
     padding: 14px !important;
 }
 
 div.stButton > button, button[kind="secondary"], .stButton button {
     background-color: #1e293b !important;
-    background: #1e293b !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 10px !important;
-    font-weight: 600 !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
-    transition: all 0.2s ease !important;
+    font-weight: 700 !important;
 }
 
 div.stButton > button:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
     color: #38bdf8 !important;
-    transform: translateY(-1px) !important;
 }
 
 button[kind="primary"] {
     background-color: #dc2626 !important;
     border-color: #ef4444 !important;
     color: #ffffff !important;
+    font-weight: 700 !important;
 }
 
 .stForm button {
     background-color: #16a34a !important;
     border: 1px solid #22c55e !important;
     color: #ffffff !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
     border-radius: 10px !important;
     padding: 10px 20px !important;
-}
-.stForm button:hover {
-    background-color: #15803d !important;
-    transform: translateY(-2px) !important;
-}
-
-/* Sidebar Widgets */
-[data-testid="stSidebar"] [data-testid="stDownloadButton"] > button {
-    background: #7c3aed !important;
-    color: #ffffff !important;
-    border: 1px solid #8b5cf6 !important;
-}
-[data-testid="stSidebar"] [data-testid="stFileUploader"] section {
-    background-color: #151c2c !important;
-    border: 2px dashed rgba(255, 255, 255, 0.2) !important;
-    border-radius: 12px !important;
-}
-[data-testid="stSidebar"] [data-testid="stFileUploader"] section button {
-    background: #1e293b !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
 }
 
 input, textarea, select {
     background-color: #0d1322 !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
     border-radius: 8px !important;
+    font-weight: 600 !important;
 }
 input::placeholder, textarea::placeholder {
-    color: #94a3b8 !important;
+    color: #cbd5e1 !important;
     opacity: 0.9 !important;
 }
 
 /* ========================================================
-   3. DATA TABLE STYLING
+   4. DATA TABLE STYLING
    ======================================================== */
 .data-table-container {
     background: #151c2c;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     margin-top: 15px;
     margin-bottom: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
     overflow-x: auto;
     width: 100%;
 }
 .custom-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     text-align: left;
 }
 .custom-table th {
     background: rgba(13, 19, 34, 0.95);
-    color: #94a3b8;
-    font-weight: 600;
-    font-size: 0.8rem;
+    color: #38bdf8; /* ΘΑΛΑΣΣΙ HEADERS */
+    font-weight: 700;
+    font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     padding: 16px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 .custom-table td {
     padding: 14px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    color: #f8fafc;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 600;
 }
 .custom-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 .custom-table tr.my-row {
-    background: linear-gradient(90deg, rgba(168, 85, 247, 0.18) 0%, transparent 100%) !important;
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.22) 0%, transparent 100%) !important;
     border-left: 4px solid #facc15 !important;
 }
 .badge-you {
     background: #facc15;
     color: #000;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     padding: 2px 7px;
     border-radius: 4px;
-    font-weight: 700;
+    font-weight: 800;
     margin-left: 6px;
 }
-.growth-up { color: #10b981; font-weight: 600; }
-.growth-down { color: #ef4444; font-weight: 600; }
-.growth-flat { color: #94a3b8; }
+.growth-up { color: #10b981; font-weight: 700; }
+.growth-down { color: #ef4444; font-weight: 700; }
+.growth-flat { color: #94a3b8; font-weight: 600; }
+
 .prompt-card-box {
     background: #151c2c;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 14px;
     padding: 18px;
     margin-bottom: 14px;
@@ -461,8 +473,8 @@ def check_password():
     if st.session_state.authenticated:
         return True
 
-    st.markdown("<h2 style='text-align: center; margin-top:50px; color:#ffffff;'>🔒 Video Creator Hub</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #94a3b8;'>Βάλτε τον κωδικό πρόσβασης για να ξεκλειδώσετε το εργαλείο.</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; margin-top:50px; color:#ffffff; font-weight:800;'>🔒 Video Creator Hub</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #38bdf8; font-weight:700;'>Βάλτε τον κωδικό πρόσβασης για να ξεκλειδώσετε το εργαλείο.</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
@@ -485,10 +497,10 @@ if not check_password():
 # SIDEBAR
 # ==========================================
 with st.sidebar:
-    st.markdown("<h2 style='color:#38bdf8;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color:#38bdf8; font-weight:800;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.subheader("💾 Backup & Επαναφορά")
+    st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>💾 Backup & Επαναφορά</h4>", unsafe_allow_html=True)
     
     json_str = json.dumps(st.session_state.db, ensure_ascii=False, indent=2)
     st.download_button(
@@ -521,7 +533,7 @@ with st.sidebar:
 # ==========================================
 # ΚΥΡΙΩΣ TABS
 # ==========================================
-st.markdown("<h1 style='text-align: center; color:#ffffff; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color:#ffffff; font-weight:800; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
 tabs = st.tabs([
     "📊 Dashboard",
@@ -544,7 +556,7 @@ tabs = st.tabs([
 # 1. DASHBOARD
 # ------------------------------------------
 with tabs[0]:
-    st.subheader("🏠 Επισκόπηση Καναλιού & Ανταγωνισμού")
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🏠 Επισκόπηση Καναλιού & Ανταγωνισμού</h3>", unsafe_allow_html=True)
     my_ch = st.session_state.db.get("my_channel", {})
     all_comp = st.session_state.db.get("competitors_gr", []) + st.session_state.db.get("competitors_intl", [])
     
@@ -564,7 +576,7 @@ with tabs[0]:
     st.markdown("---")
     col_a, col_b = st.columns(2)
     with col_a:
-        st.subheader("📅 Επόμενα Προγραμματισμένα")
+        st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>📅 Επόμενα Προγραμματισμένα</h4>", unsafe_allow_html=True)
         sched = st.session_state.db.get("schedule", [])
         if sched:
             df_sched = pd.DataFrame(sched)
@@ -573,7 +585,7 @@ with tabs[0]:
             st.info("Δεν υπάρχουν προγραμματισμένα βίντεο.")
 
     with col_b:
-        st.subheader("⚖️ Benchmark vs Ανταγωνιστές")
+        st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>⚖️ Benchmark vs Ανταγωνιστές</h4>", unsafe_allow_html=True)
         my_avg_v = my_ch.get("avgViews", 0)
         if avg_views > 0:
             diff_pct = round(((my_avg_v - avg_views) / avg_views) * 100, 1)
@@ -592,7 +604,7 @@ with tabs[0]:
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
     with t_view:
-        st.subheader(f"{t_title} Strategy")
+        st.markdown(f"<h3 style='color:#38bdf8; font-weight:800;'>{t_title} Strategy</h3>", unsafe_allow_html=True)
         
         items = st.session_state.db.get("strategies", {}).get(key, [])
         for idx, item in enumerate(items):
@@ -607,7 +619,7 @@ for key, t_view, t_title in strat_map:
                     st.rerun()
 
         with st.form(f"add_step_form_{key}", clear_on_submit=True):
-            st.markdown("### ➕ Προσθήκη Νέου Βήματος")
+            st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>➕ Προσθήκη Νέου Βήματος</h4>", unsafe_allow_html=True)
             s_title = st.text_input("Τίτλος Βήματος (π.χ. 4. SEO & Distribution)", key=f"inp_t_{key}")
             s_desc = st.text_area("Περιγραφή Βήματος", height=100, key=f"inp_d_{key}")
             if st.form_submit_button("➕ Προσθήκη Βήματος", use_container_width=True):
@@ -624,10 +636,10 @@ for key, t_view, t_title in strat_map:
                     st.warning("⚠️ Συμπληρώστε τίτλο και περιγραφή.")
 
 # ------------------------------------------
-# 6. SCHEDULE (ΠΡΟΓΡΑΜΜΑ)
+# 6. SCHEDULE
 # ------------------------------------------
 with tabs[5]:
-    st.subheader("📅 Πρόγραμμα Δημοσιεύσεων")
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📅 Πρόγραμμα Δημοσιεύσεων</h3>", unsafe_allow_html=True)
     with st.expander("➕ Προσθήκη Νέου Βίντεο"):
         with st.form("sched_form", clear_on_submit=True):
             c1, c2 = st.columns(2)
@@ -661,7 +673,7 @@ with tabs[5]:
 # ------------------------------------------
 with tabs[6]:
     comps = st.session_state.db.get("competitors_gr", [])
-    st.subheader(f"🇬🇷 Έλληνες Competitors ({len(comps)} Κανάλια)")
+    st.markdown(f"<h3 style='color:#38bdf8; font-weight:800;'>🇬🇷 Έλληνες Competitors ({len(comps)} Κανάλια)</h3>", unsafe_allow_html=True)
     
     col_btn1, col_btn2 = st.columns([1, 4])
     with col_btn1:
@@ -713,7 +725,6 @@ with tabs[6]:
                     st.success(f"Το κανάλι '{selected_del}' διαγράφηκε!")
                     st.rerun()
 
-    # ΜΠΑΡΑ ΤΑΞΙΝΟΜΗΣΗΣ (SORTING)
     col_sort1, col_sort2, _ = st.columns([2, 1.8, 1.5])
     with col_sort1:
         sort_by_gr = st.selectbox(
@@ -737,8 +748,8 @@ with tabs[6]:
 
         row = (
             f'<tr class="{row_cls}">'
-            f'<td style="font-weight:600;">{c["name"]} {badge}</td>'
-            f'<td style="text-align:right; font-weight:700; color:#ffffff;">{fmt(c.get("subs", 0))}</td>'
+            f'<td style="font-weight:700;">{c["name"]} {badge}</td>'
+            f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(c.get("subs", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("totalViews", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("videos", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("avgViews", 0))}</td>'
@@ -773,7 +784,7 @@ with tabs[6]:
 # ------------------------------------------
 with tabs[7]:
     comps_intl = st.session_state.db.get("competitors_intl", [])
-    st.subheader(f"🌐 Ξένοι Competitors ({len(comps_intl)} Κανάλια)")
+    st.markdown(f"<h3 style='color:#38bdf8; font-weight:800;'>🌐 Ξένοι Competitors ({len(comps_intl)} Κανάλια)</h3>", unsafe_allow_html=True)
     
     col_ibtn1, col_ibtn2 = st.columns([1, 4])
     with col_ibtn1:
@@ -823,7 +834,6 @@ with tabs[7]:
                     st.success(f"Το κανάλι '{selected_del_intl}' διαγράφηκε!")
                     st.rerun()
 
-    # ΜΠΑΡΑ ΤΑΞΙΝΟΜΗΣΗΣ (SORTING)
     col_isort1, col_isort2, _ = st.columns([2, 1.8, 1.5])
     with col_isort1:
         sort_by_intl = st.selectbox(
@@ -843,9 +853,9 @@ with tabs[7]:
 
         row_intl = (
             f'<tr>'
-            f'<td style="font-weight:600;">{c["name"]}</td>'
+            f'<td style="font-weight:700;">{c["name"]}</td>'
             f'<td>{c.get("country", "—")}</td>'
-            f'<td style="text-align:right; font-weight:700; color:#ffffff;">{fmt(c.get("subs", 0))}</td>'
+            f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(c.get("subs", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("totalViews", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("videos", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("avgViews", 0))}</td>'
@@ -880,7 +890,7 @@ with tabs[7]:
 # 9. ANALYTICS
 # ------------------------------------------
 with tabs[8]:
-    st.subheader("📈 Analytics & Video History")
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
     with st.expander("➕ Καταγραφή Στατιστικών Βίντεο"):
         with st.form("an_form_add", clear_on_submit=True):
             t = st.text_input("Τίτλος Βίντεο")
@@ -908,7 +918,7 @@ with tabs[8]:
 # 10. KEYWORDS
 # ------------------------------------------
 with tabs[9]:
-    st.subheader("🔑 Keywords")
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 Keywords</h3>", unsafe_allow_html=True)
     with st.expander("➕ Προσθήκη Keyword"):
         with st.form("kw_form_add", clear_on_submit=True):
             kw = st.text_input("Keyword")
@@ -930,7 +940,7 @@ with tabs[9]:
 # 11. IDEAS
 # ------------------------------------------
 with tabs[10]:
-    st.subheader("💡 Ιδέες για Βίντεο")
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>💡 Ιδέες για Βίντεο</h3>", unsafe_allow_html=True)
     with st.form("idea_form_add", clear_on_submit=True):
         txt = st.text_area("Ιδέα", height=90)
         tags = st.text_input("Tags")
@@ -955,7 +965,7 @@ with tabs[10]:
 # 12. GOALS
 # ------------------------------------------
 with tabs[11]:
-    st.subheader("🎯 Μηνιαίοι Στόχοι")
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🎯 Μηνιαίοι Στόχοι</h3>", unsafe_allow_html=True)
     with st.form("goal_form_add", clear_on_submit=True):
         m = st.text_input("Μήνας (π.χ. 2026-10)")
         s = st.number_input("Στόχος Subs", step=10)
@@ -977,7 +987,7 @@ with tabs[11]:
 # 13. PROMPTS LIBRARY
 # ------------------------------------------
 with tabs[12]:
-    st.markdown("<h2>📜 Prompts Library</h2>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📜 Prompts Library</h3>", unsafe_allow_html=True)
     
     with st.form("add_prompt_main_form", clear_on_submit=True):
         p_title = st.text_input("Τίτλος Prompt", placeholder="Τίτλος Prompt (π.χ. Midjourney Fishing Action)", label_visibility="collapsed")
@@ -1010,13 +1020,13 @@ with tabs[12]:
                     save_data(st.session_state.db)
                     st.rerun()
     else:
-        st.markdown("<div style='text-align: center; color: #94a3b8; padding: 40px 0;'>Δεν υπάρχουν αποθηκευμένα prompts. Πρόσθεσε ένα παραπάνω.</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:700; padding: 40px 0;'>Δεν υπάρχουν αποθηκευμένα prompts. Πρόσθεσε ένα παραπάνω.</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 14. THUMBNAIL AI EDITOR
 # ------------------------------------------
 with tabs[13]:
-    st.markdown("<h2>🖼️ Thumbnail AI Editor</h2>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🖼️ Thumbnail AI Editor</h3>", unsafe_allow_html=True)
     img_file = st.file_uploader("Ανεβάστε thumbnail ανταγωνιστή", type=["png", "jpg", "jpeg", "webp"])
     if img_file:
         st.image(img_file, caption="Competitor Thumbnail", width=400)

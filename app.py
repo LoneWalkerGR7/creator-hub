@@ -508,7 +508,7 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS
+# ΚΥΡΙΩΣ TABS (14 TABS)
 # ==========================================
 st.markdown("<h1 style='text-align: center; color:#ffffff; font-weight:800; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
@@ -553,7 +553,7 @@ with tabs[0]:
     st.markdown("---")
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>📅 Επόμενα Προγραμματισμένα</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>📅 Επόμενα Προγραμματισμένα</h4>", unsafe_allow_html=True)
         sched = st.session_state.db.get("schedule", [])
         if sched:
             df_sched = pd.DataFrame(sched)
@@ -562,7 +562,7 @@ with tabs[0]:
             st.info("Δεν υπάρχουν προγραμματισμένα βίντεο.")
 
     with col_b:
-        st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>⚖️ Benchmark vs Ανταγωνιστές</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>⚖️ Benchmark vs Ανταγωνιστές</h4>", unsafe_allow_html=True)
         my_avg_v = my_ch.get("avgViews", 0)
         if avg_views > 0:
             diff_pct = round(((my_avg_v - avg_views) / avg_views) * 100, 1)
@@ -596,7 +596,7 @@ for key, t_view, t_title in strat_map:
                     st.rerun()
 
         with st.form(f"add_step_form_{key}", clear_on_submit=True):
-            st.markdown("<h4 style='color:#38bdf8; font-weight:700;'>➕ Προσθήκη Νέου Βήματος</h4>", unsafe_allow_html=True)
+            st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>➕ Προσθήκη Νέου Βήματος</h4>", unsafe_allow_html=True)
             s_title = st.text_input("Τίτλος Βήματος (π.χ. 4. SEO & Distribution)", key=f"inp_t_{key}")
             s_desc = st.text_area("Περιγραφή Βήματος", height=100, key=f"inp_d_{key}")
             if st.form_submit_button("➕ Προσθήκη Βήματος", use_container_width=True):
@@ -997,7 +997,7 @@ with tabs[12]:
                     save_data(st.session_state.db)
                     st.rerun()
     else:
-        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:700; padding: 40px 0;'>Δεν υπάρχουν αποθηκευμένα prompts. Πρόσθεσε ένα παραπάνω.</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν υπάρχουν αποθηκευμένα prompts. Πρόσθεσε ένα παραπάνω.</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 14. THUMBNAIL AI EDITOR

@@ -20,13 +20,13 @@ st.set_page_config(
 )
 
 # ==========================================
-# ΠΛΗΡΕΣ ΚΑΙ ΔΙΟΡΘΩΜΕΝΟ CSS
+# ΠΛΗΡΕΣ CSS ΜΕ ΤΑ ΑΥΘΕΝΤΙΚΑ ΧΡΩΜΑΤΑ ΑΝΑ ΚΑΡΤΕΛΑ
 # ==========================================
 CUSTOM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-/* Κεντρικό Φόντο */
+/* Κεντρικό Φόντο & Γραμματοσειρά */
 html, body, [class*="css"], .stApp {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
     background-color: #0b0f19 !important;
@@ -47,82 +47,181 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   1. ΔΙΟΡΘΩΣΗ ΚΑΡΤΕΛΩΝ (TABS - MODERN PILL BAR)
+   ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ (TABS BAR)
    ======================================================== */
 [data-baseweb="tab-list"] {
-    background: rgba(21, 28, 44, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 14px !important;
-    padding: 6px !important;
-    gap: 6px !important;
     display: flex !important;
+    gap: 8px !important;
+    margin-bottom: 30px !important;
     flex-wrap: wrap !important;
-    margin-bottom: 25px !important;
-    backdrop-filter: blur(10px) !important;
+    justify-content: center !important;
+    background: rgba(21, 28, 44, 0.6) !important;
+    padding: 8px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(12px) !important;
+    width: 100% !important;
 }
 
 button[data-baseweb="tab"] {
     background: transparent !important;
     color: #94a3b8 !important;
-    border-radius: 10px !important;
-    padding: 8px 16px !important;
-    font-size: 0.88rem !important;
-    font-weight: 600 !important;
     border: 1px solid transparent !important;
-    transition: all 0.2s ease !important;
+    padding: 10px 18px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 button[data-baseweb="tab"]:hover {
     color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
 }
 
-button[data-baseweb="tab"][aria-selected="true"] {
-    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
-    color: #ffffff !important;
-    border: 1px solid #a855f7 !important;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
-}
-
+/* Απενεργοποίηση της default κόκκινης γραμμής */
 [data-baseweb="tab-highlight"] {
     display: none !important;
 }
 
 /* ========================================================
-   2. ΔΙΟΡΘΩΣΗ DOWNLOAD BUTTON (EXPORT BACKUP)
+   ΞΕΧΩΡΙΣΤΟ ΧΡΩΜΑ / GRADIENT ΓΙΑ ΚΑΘΕ ACTIVE ΚΑΡΤΕΛΑ
    ======================================================== */
-[data-testid="stDownloadButton"] > button,
-[data-testid="stDownloadButton"] button,
-.stDownloadButton button {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
-    color: #f8fafc !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 10px !important;
-    padding: 10px 16px !important;
-    font-weight: 600 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+/* 1. 📊 Dashboard */
+button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] {
+    background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important;
+    border-color: #c084fc !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4) !important;
 }
-[data-testid="stDownloadButton"] > button:hover {
-    background: #334155 !important;
-    border-color: #38bdf8 !important;
-    color: #38bdf8 !important;
+
+/* 2. 🎬 Long-Form */
+button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] {
+    background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important;
+    border-color: #fca5a5 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* 3. 📱 Shorts */
+button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] {
+    background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important;
+    border-color: #fecdd3 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;
+}
+
+/* 4. 📸 Reels */
+button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] {
+    background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important;
+    border-color: #fbcfe8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4) !important;
+}
+
+/* 5. 🎵 TikTok */
+button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] {
+    background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important;
+    border-color: #a5f3fc !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(6, 182, 212, 0.4) !important;
+}
+
+/* 6. 📜 Prompts */
+button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] {
+    background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important;
+    border-color: #818cf8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4) !important;
+}
+
+/* 7. 🖼️ Thumbnail AI */
+button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] {
+    background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important;
+    border-color: #f472b6 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(219, 39, 119, 0.4) !important;
+}
+
+/* 8. 📅 Πρόγραμμα */
+button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] {
+    background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important;
+    border-color: #bfdbfe !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* 9. 🇬🇷 Competitors GR */
+button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] {
+    background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important;
+    border-color: #a7f3d0 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* 10. 🌐 Competitors Intl */
+button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] {
+    background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important;
+    border-color: #fed7aa !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4) !important;
+}
+
+/* 11. 📈 Analytics */
+button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] {
+    background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important;
+    border-color: #c7d2fe !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* 12. 🔑 Keywords */
+button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] {
+    background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important;
+    border-color: #a5f3fc !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(34, 211, 238, 0.4) !important;
+}
+
+/* 13. 💡 Ιδέες */
+button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] {
+    background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important;
+    border-color: #fef08a !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(202, 138, 4, 0.4) !important;
+}
+
+/* 14. 🎯 Στόχοι */
+button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] {
+    background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important;
+    border-color: #fecdd3 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4) !important;
 }
 
 /* ========================================================
-   3. ΔΙΟΡΘΩΣΗ FILE UPLOADER (IMPORT BACKUP)
+   DOWNLOAD BUTTON (EXPORT BACKUP)
    ======================================================== */
-[data-testid="stFileUploader"] {
-    background-color: transparent !important;
+[data-testid="stDownloadButton"] > button,
+[data-testid="stDownloadButton"] button {
+    background-color: #7c3aed !important;
+    border: 1px solid #8b5cf6 !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
 }
+[data-testid="stDownloadButton"] > button:hover {
+    background-color: #6d28d9 !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ========================================================
+   FILE UPLOADER (IMPORT BACKUP)
+   ======================================================== */
 [data-testid="stFileUploader"] section {
     background-color: #151c2c !important;
-    border: 2px dashed rgba(255, 255, 255, 0.2) !important;
+    border: 2px dashed rgba(255, 255, 255, 0.15) !important;
     border-radius: 12px !important;
-    padding: 15px !important;
 }
 [data-testid="stFileUploader"] section * {
     color: #94a3b8 !important;
@@ -133,17 +232,13 @@ button[data-baseweb="tab"][aria-selected="true"] {
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 8px !important;
 }
-[data-testid="stFileUploader"] section button:hover {
-    background-color: #334155 !important;
-    border-color: #38bdf8 !important;
-}
 
 /* ========================================================
-   4. ΔΙΟΡΘΩΣΗ EXPANDERS (ΣΚΟΥΡΟ CARD ΑΝΤΙ ΓΙΑ ΛΕΥΚΟ)
+   EXPANDERS
    ======================================================== */
 [data-testid="stExpander"] {
     background-color: #151c2c !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
@@ -151,12 +246,8 @@ button[data-baseweb="tab"][aria-selected="true"] {
     background-color: #1e293b !important;
     border-radius: 12px !important;
 }
-[data-testid="stExpander"] summary:hover {
-    background-color: #2a374d !important;
-}
 [data-testid="stExpander"] summary * {
     color: #38bdf8 !important;
-    fill: #38bdf8 !important;
     font-weight: 600 !important;
 }
 [data-testid="stExpander"] div[role="region"] {
@@ -164,38 +255,31 @@ button[data-baseweb="tab"][aria-selected="true"] {
     color: #f8fafc !important;
 }
 
-/* ========================================================
-   5. ΔΙΟΡΘΩΣΗ ΓΕΝΙΚΩΝ ΚΟΥΜΠΙΩΝ & INPUTS
-   ======================================================== */
+/* Buttons */
 div.stButton > button {
-    background-color: #1e293b !important;
+    background-color: #151c2c !important;
     color: #f8fafc !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
+    transition: all 0.2s ease !important;
 }
 div.stButton > button:hover {
-    background-color: #334155 !important;
-    border-color: #38bdf8 !important;
-    color: #38bdf8 !important;
+    background-color: #1e293b !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-2px) !important;
 }
 
+/* Inputs & Labels */
 input, textarea, select {
     background-color: #0d1322 !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 8px !important;
 }
-
-label, label p, [data-testid="stWidgetLabel"] p {
+label, [data-testid="stWidgetLabel"] p {
     color: #38bdf8 !important;
     font-weight: 600 !important;
-}
-
-/* Dataframes */
-[data-testid="stDataFrame"] {
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 12px !important;
 }
 </style>
 """
@@ -434,9 +518,9 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS
+# ΚΥΡΙΩΣ TABS ΜΕ ΤΑ ΑΥΘΕΝΤΙΚΑ ΧΡΩΜΑΤΑ
 # ==========================================
-st.markdown("<h1 style='color:#ffffff; margin-bottom: 20px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color:#ffffff; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
 tabs = st.tabs([
     "📊 Dashboard",

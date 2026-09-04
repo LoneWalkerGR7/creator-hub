@@ -25,7 +25,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# CSS ΓΙΑ 2 ΣΕΙΡΕΣ ΜΕΝΟΥ, ΛΕΥΚΑ ΓΡΑΜΜΑΤΑ & PLACEHOLDERS
+# ΕΠΑΓΓΕΛΜΑΤΙΚΟ DARK THEME CSS
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -50,7 +50,7 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   1. ΜΕΝΟΥ ΣΕ 2 ΓΡΑΜΜΕΣ - ΧΩΡΙΣ ΒΕΛΑΚΙΑ SCROLL
+   1. ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ (ΘΑΛΑΣΣΙ ΓΡΑΜΜΑΤΑ & 2 ΣΕΙΡΕΣ)
    ======================================================== */
 [data-testid="stTabs"] [data-baseweb="tab-list"],
 div[role="tablist"] {
@@ -60,17 +60,16 @@ div[role="tablist"] {
     overflow-x: visible !important;
     white-space: normal !important;
     justify-content: center !important;
-    gap: 6px 8px !important;
-    background: rgba(21, 28, 44, 0.7) !important;
+    gap: 8px !important;
+    background: rgba(21, 28, 44, 0.75) !important;
     padding: 10px !important;
     border-radius: 16px !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(14px) !important;
     width: 100% !important;
     margin-bottom: 25px !important;
 }
 
-/* Απόκρυψη βελών scroll & περιττών γραμμών */
 [data-testid="stTabs"] button[aria-label="Scroll right"],
 [data-testid="stTabs"] button[aria-label="Scroll left"],
 [data-baseweb="tab-highlight"],
@@ -78,13 +77,11 @@ div[role="tablist"] {
     display: none !important;
 }
 
-/* ========================================================
-   2. ΚΑΤΑΛΕΥΚΑ & ΕΥΑΝΑΓΝΩΣΤΑ ΓΡΑΜΜΑΤΑ ΣΤΑ TABS
-   ======================================================== */
+/* Θαλασσί Γράμματα στα μη επιλεγμένα Tabs */
 button[data-baseweb="tab"] {
     background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    padding: 8px 14px !important;
+    border: 1px solid rgba(56, 189, 248, 0.15) !important;
+    padding: 9px 16px !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.88rem !important;
@@ -96,19 +93,16 @@ button[data-baseweb="tab"] p,
 button[data-baseweb="tab"] span, 
 button[data-baseweb="tab"] div,
 button[data-baseweb="tab"] {
-    color: #ffffff !important;
+    color: #38bdf8 !important; /* ΘΑΛΑΣΣΙ */
     font-weight: 600 !important;
-    opacity: 0.95 !important;
 }
 
 button[data-baseweb="tab"]:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
-    transform: translateY(-1px) !important;
+    background: rgba(56, 189, 248, 0.12) !important;
+    border-color: #38bdf8 !important;
 }
 button[data-baseweb="tab"]:hover p {
     color: #ffffff !important;
-    opacity: 1 !important;
 }
 
 /* Χρώματα Active Tabs */
@@ -134,104 +128,80 @@ button[data-baseweb="tab"][aria-selected="true"] span {
 }
 
 /* ========================================================
-   3. ΛΕΥΚΑ ΓΡΑΜΜΑΤΑ ΚΑΙ PLACEHOLDERS ΜΕΣΑ ΣΤΑ ΠΕΔΙΑ
+   2. ΔΙΟΡΘΩΣΗ EXPANDERS (ΟΧΙ ΑΣΠΡΕΣ ΜΠΑΡΕΣ)
    ======================================================== */
-input, textarea, select {
-    background-color: #0d1322 !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 8px !important;
-    font-size: 0.95rem !important;
-}
-input:focus, textarea:focus {
-    border-color: #38bdf8 !important;
-    box-shadow: 0 0 8px rgba(56, 189, 248, 0.3) !important;
+[data-testid="stExpander"],
+div[data-testid="stExpander"] {
+    background-color: #151c2c !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
 }
 
-/* Φωτεινά Placeholders */
-input::placeholder, textarea::placeholder {
-    color: #cbd5e1 !important;
-    opacity: 0.85 !important;
+[data-testid="stExpander"] details,
+[data-testid="stExpander"] summary {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    border-radius: 12px !important;
+    color: #38bdf8 !important;
 }
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-    color: #cbd5e1 !important;
-    opacity: 0.85 !important;
+
+[data-testid="stExpander"] summary:hover {
+    background-color: #273549 !important;
 }
-input::-moz-placeholder, textarea::-moz-placeholder {
-    color: #cbd5e1 !important;
-    opacity: 0.85 !important;
+
+[data-testid="stExpander"] summary * {
+    color: #38bdf8 !important;
+    fill: #38bdf8 !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+}
+
+[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
+    background-color: #151c2c !important;
+    color: #f8fafc !important;
+    padding: 14px !important;
 }
 
 /* ========================================================
-   ΚΑΡΤΕΣ & ΠΙΝΑΚΕΣ (HTML STYLE)
+   3. ΔΙΟΡΘΩΣΗ ΟΛΩΝ ΤΩΝ ΚΟΥΜΠΙΩΝ & ΔΙΑΓΡΑΦΗΣ
    ======================================================== */
-.data-table-container {
-    background: #151c2c;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 15px;
-    margin-bottom: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
-    overflow-x: auto;
-    width: 100%;
+div.stButton > button,
+button[kind="secondary"],
+.stButton button {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+    transition: all 0.2s ease !important;
 }
 
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-    text-align: left;
+div.stButton > button p,
+div.stButton > button span {
+    color: #ffffff !important;
 }
 
-.custom-table th {
-    background: rgba(13, 19, 34, 0.95);
-    color: #94a3b8;
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 16px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+div.stButton > button:hover {
+    background-color: #334155 !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+    transform: translateY(-1px) !important;
 }
 
-.custom-table td {
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    color: #f8fafc;
+/* Κόκκινο κουμπί διαγραφής */
+button[kind="primary"] {
+    background-color: #dc2626 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+button[kind="primary"]:hover {
+    background-color: #b91c1c !important;
 }
 
-.custom-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-.custom-table tr.my-row {
-    background: linear-gradient(90deg, rgba(168, 85, 247, 0.18) 0%, transparent 100%) !important;
-    border-left: 4px solid #facc15 !important;
-}
-
-.badge-you {
-    background: #facc15;
-    color: #000;
-    font-size: 0.7rem;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-weight: 700;
-    margin-left: 6px;
-}
-
-.growth-up { color: #10b981; font-weight: 600; }
-.growth-down { color: #ef4444; font-weight: 600; }
-.growth-flat { color: #94a3b8; }
-
-.prompt-card-box {
-    background: #151c2c;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 14px;
-}
-
-/* Πράσινο Κουμπί Προσθήκης */
+/* Πράσινο Κουμπί Φόρμας */
 .stForm button {
     background-color: #16a34a !important;
     border: 1px solid #22c55e !important;
@@ -242,24 +212,95 @@ input::-moz-placeholder, textarea::-moz-placeholder {
 }
 .stForm button:hover {
     background-color: #15803d !important;
-    border-color: #16a34a !important;
     transform: translateY(-2px) !important;
 }
 
-/* Sidebar Widgets Fix */
-[data-testid="stSidebar"] div.stButton > button,
+/* Sidebar Uploader & Download */
 [data-testid="stSidebar"] [data-testid="stDownloadButton"] > button {
-    background: #1e293b !important;
+    background: #7c3aed !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    width: 100% !important;
+    border: 1px solid #8b5cf6 !important;
 }
 [data-testid="stSidebar"] [data-testid="stFileUploader"] section {
     background-color: #151c2c !important;
     border: 2px dashed rgba(255, 255, 255, 0.2) !important;
     border-radius: 12px !important;
+}
+[data-testid="stSidebar"] [data-testid="stFileUploader"] section button {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Inputs & Placeholders */
+input, textarea, select {
+    background-color: #0d1322 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 8px !important;
+}
+input::placeholder, textarea::placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.9 !important;
+}
+
+/* Data Table Container */
+.data-table-container {
+    background: #151c2c;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+    overflow-x: auto;
+    width: 100%;
+}
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+.custom-table th {
+    background: rgba(13, 19, 34, 0.95);
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.custom-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: #f8fafc;
+}
+.custom-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+.custom-table tr.my-row {
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.18) 0%, transparent 100%) !important;
+    border-left: 4px solid #facc15 !important;
+}
+.badge-you {
+    background: #facc15;
+    color: #000;
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-left: 6px;
+}
+.growth-up { color: #10b981; font-weight: 600; }
+.growth-down { color: #ef4444; font-weight: 600; }
+.growth-flat { color: #94a3b8; }
+.prompt-card-box {
+    background: #151c2c;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
 }
 </style>
 """
@@ -474,7 +515,7 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS
+# ΚΥΡΙΩΣ TABS (14 TABS)
 # ==========================================
 st.markdown("<h1 style='text-align: center; color:#ffffff; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
@@ -551,12 +592,12 @@ for key, t_view, t_title in strat_map:
         
         items = st.session_state.db.get("strategies", {}).get(key, [])
         for idx, item in enumerate(items):
-            col_s1, col_s2 = st.columns([5, 1])
+            col_s1, col_s2 = st.columns([5.5, 1])
             with col_s1:
                 with st.expander(f"📌 {item['step']}", expanded=True):
                     st.write(item["desc"])
             with col_s2:
-                if st.button("🗑️ Διαγραφή", key=f"del_step_{key}_{idx}"):
+                if st.button("🗑️ Διαγραφή", key=f"del_step_{key}_{idx}", type="primary"):
                     st.session_state.db["strategies"][key].pop(idx)
                     save_data(st.session_state.db)
                     st.rerun()
@@ -872,11 +913,11 @@ with tabs[12]:
     prompts = st.session_state.db.get("prompts", [])
     if prompts:
         for p in prompts:
-            col_pr1, col_pr2 = st.columns([5, 1])
+            col_pr1, col_pr2 = st.columns([5.5, 1])
             with col_pr1:
                 st.markdown(f"<div class='prompt-card-box'><h4>{p['title']}</h4><p style='font-family:monospace; color:#38bdf8;'>{p['body']}</p><small style='color:#94a3b8;'>📅 {p.get('date', '')}</small></div>", unsafe_allow_html=True)
             with col_pr2:
-                if st.button("🗑️ Διαγραφή", key=f"del_pr_{p['id']}"):
+                if st.button("🗑️ Διαγραφή", key=f"del_pr_{p['id']}", type="primary"):
                     st.session_state.db["prompts"] = [x for x in prompts if x["id"] != p["id"]]
                     save_data(st.session_state.db)
                     st.rerun()

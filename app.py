@@ -12,8 +12,7 @@ import streamlit as st
 # ==========================================
 # ΕΝΣΩΜΑΤΩΜΕΝΟ YOUTUBE DATA API KEY
 # ==========================================
-
-YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
+YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
 
 # ==========================================
 # ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ
@@ -32,7 +31,7 @@ CUSTOM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-html, body, .stApp {
+html, body, [class*="css"], .stApp {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
     background-color: #0b0f19 !important;
     background-image: 
@@ -78,12 +77,7 @@ div[role="tablist"] {
     display: none !important;
 }
 
-/* ========================================================
-   TABS - ΚΑΘΑΡΑ ΓΡΑΜΜΑΤΑ + HOVER
-   ======================================================== */
-
-/* Όλα τα tabs */
-[data-testid="stTabs"] button[data-baseweb="tab"] {
+button[data-baseweb="tab"] {
     background: transparent !important;
     border: 1px solid rgba(56, 189, 248, 0.15) !important;
     padding: 9px 16px !important;
@@ -92,41 +86,22 @@ div[role="tablist"] {
     font-size: 0.88rem !important;
     flex: 0 1 auto !important;
     transition: all 0.2s ease !important;
-    color: #aeb8ca !important;
 }
 
-/* Το κείμενο μέσα στα tabs */
-[data-testid="stTabs"] button[data-baseweb="tab"] p,
-[data-testid="stTabs"] button[data-baseweb="tab"] span,
-[data-testid="stTabs"] button[data-baseweb="tab"] div {
-    color: #aeb8ca !important;
+button[data-baseweb="tab"] p, 
+button[data-baseweb="tab"] span, 
+button[data-baseweb="tab"] div,
+button[data-baseweb="tab"] {
+    color: #38bdf8 !important;
     font-weight: 600 !important;
 }
 
-/* Hover */
-[data-testid="stTabs"] button[data-baseweb="tab"]:hover {
+button[data-baseweb="tab"]:hover {
     background: rgba(56, 189, 248, 0.12) !important;
     border-color: #38bdf8 !important;
-    color: #ffffff !important;
 }
-
-[data-testid="stTabs"] button[data-baseweb="tab"]:hover p,
-[data-testid="stTabs"] button[data-baseweb="tab"]:hover span,
-[data-testid="stTabs"] button[data-baseweb="tab"]:hover div {
+button[data-baseweb="tab"]:hover p {
     color: #ffffff !important;
-}
-
-/* Ενεργό Tab */
-[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
-    color: #ffffff !important;
-}
-
-[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] p,
-[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] span,
-[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] div {
-    color: #ffffff !important;
-    font-weight: 700 !important;
-}
 }
 
 /* Χρώματα Active Tabs */
@@ -152,18 +127,16 @@ button[data-baseweb="tab"][aria-selected="true"] span {
 }
 
 /* ========================================================
-   2. ΔΙΟΡΘΩΣΗ EXPANDERS (ΟΧΙ ΑΣΠΡΕΣ ΜΠΑΡΕΣ)
+   2. EXPANDERS & ΚΟΥΜΠΙΑ
    ======================================================== */
-[data-testid="stExpander"],
-div[data-testid="stExpander"] {
+[data-testid="stExpander"], div[data-testid="stExpander"] {
     background-color: #151c2c !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
 
-[data-testid="stExpander"] details,
-[data-testid="stExpander"] summary {
+[data-testid="stExpander"] details, [data-testid="stExpander"] summary {
     background-color: #1e293b !important;
     background: #1e293b !important;
     border-radius: 12px !important;
@@ -187,12 +160,7 @@ div[data-testid="stExpander"] {
     padding: 14px !important;
 }
 
-/* ========================================================
-   3. ΔΙΟΡΘΩΣΗ ΟΛΩΝ ΤΩΝ ΚΟΥΜΠΙΩΝ & ΔΙΑΓΡΑΦΗΣ
-   ======================================================== */
-div.stButton > button,
-button[kind="secondary"],
-.stButton button {
+div.stButton > button, button[kind="secondary"], .stButton button {
     background-color: #1e293b !important;
     background: #1e293b !important;
     color: #ffffff !important;
@@ -203,11 +171,6 @@ button[kind="secondary"],
     transition: all 0.2s ease !important;
 }
 
-div.stButton > button p,
-div.stButton > button span {
-    color: #ffffff !important;
-}
-
 div.stButton > button:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
@@ -215,17 +178,12 @@ div.stButton > button:hover {
     transform: translateY(-1px) !important;
 }
 
-/* Κόκκινο κουμπί διαγραφής */
 button[kind="primary"] {
     background-color: #dc2626 !important;
     border-color: #ef4444 !important;
     color: #ffffff !important;
 }
-button[kind="primary"]:hover {
-    background-color: #b91c1c !important;
-}
 
-/* Πράσινο Κουμπί Φόρμας */
 .stForm button {
     background-color: #16a34a !important;
     border: 1px solid #22c55e !important;
@@ -239,7 +197,7 @@ button[kind="primary"]:hover {
     transform: translateY(-2px) !important;
 }
 
-/* Sidebar Uploader & Download */
+/* Sidebar Widgets */
 [data-testid="stSidebar"] [data-testid="stDownloadButton"] > button {
     background: #7c3aed !important;
     color: #ffffff !important;
@@ -256,7 +214,6 @@ button[kind="primary"]:hover {
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
 }
 
-/* Inputs & Placeholders */
 input, textarea, select {
     background-color: #0d1322 !important;
     color: #ffffff !important;
@@ -268,7 +225,9 @@ input::placeholder, textarea::placeholder {
     opacity: 0.9 !important;
 }
 
-/* Data Table Container */
+/* ========================================================
+   3. DATA TABLE STYLING
+   ======================================================== */
 .data-table-container {
     background: #151c2c;
     border-radius: 16px;
@@ -333,7 +292,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 DATA_FILE = "creator_hub_data.json"
 
 # ==========================================
-# 24 ΕΛΛΗΝΙΚΑ & 2 ΞΕΝΑ ΚΑΝΑΛΙΑ
+# SEED DATA
 # ==========================================
 SEED_COMPETITORS_GR = [
     {"name": "ZAVRAS FISHING", "handle": "@ZavrasFishing"},
@@ -415,6 +374,7 @@ def load_data():
             data = json.load(f)
             if "prompts" not in data: data["prompts"] = []
             if "strategies" not in data: data["strategies"] = get_default_data()["strategies"]
+            if "competitors_intl" not in data: data["competitors_intl"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL]
             return data
     except Exception:
         return get_default_data()
@@ -473,6 +433,26 @@ def fetch_channel_stats(api_key, channel_ids):
 
 def fmt(n):
     return "—" if not n else f"{n:,}".replace(",", ".")
+
+def sort_channels(channels, sort_by, sort_dir):
+    is_desc = "Φθίνουσα" in sort_dir
+    if sort_by == "Subscribers":
+        return sorted(channels, key=lambda x: x.get("subs", 0), reverse=is_desc)
+    elif sort_by == "Total Views":
+        return sorted(channels, key=lambda x: x.get("totalViews", 0), reverse=is_desc)
+    elif sort_by == "Videos":
+        return sorted(channels, key=lambda x: x.get("videos", 0), reverse=is_desc)
+    elif sort_by == "Avg Views":
+        return sorted(channels, key=lambda x: x.get("avgViews", 0), reverse=is_desc)
+    elif sort_by == "Views/Sub":
+        return sorted(channels, key=lambda x: x.get("viewsPerSub", 0.0), reverse=is_desc)
+    elif sort_by == "Efficiency":
+        return sorted(channels, key=lambda x: x.get("efficiency", 0.0), reverse=is_desc)
+    elif sort_by == "Growth":
+        return sorted(channels, key=lambda x: x.get("growth", 0.0), reverse=is_desc)
+    elif "Όνομα" in sort_by:
+        return sorted(channels, key=lambda x: x.get("name", "").lower(), reverse=not is_desc)
+    return channels
 
 # ==========================================
 # LOGIN SCREEN
@@ -539,7 +519,7 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS (14 TABS)
+# ΚΥΡΙΩΣ TABS
 # ==========================================
 st.markdown("<h1 style='text-align: center; color:#ffffff; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
@@ -677,7 +657,7 @@ with tabs[5]:
         st.info("Δεν υπάρχουν προγραμματισμένα βίντεο.")
 
 # ------------------------------------------
-# 7. GREEK COMPETITORS (FULL HTML TABLE)
+# 7. GREEK COMPETITORS
 # ------------------------------------------
 with tabs[6]:
     comps = st.session_state.db.get("competitors_gr", [])
@@ -685,7 +665,7 @@ with tabs[6]:
     
     col_btn1, col_btn2 = st.columns([1, 4])
     with col_btn1:
-        if st.button("🔄 Ανανέωση Όλων (Sync API)", use_container_width=True):
+        if st.button("🔄 Ανανέωση Όλων (Sync API)", key="sync_gr_btn", use_container_width=True):
             ids = []
             for c in comps:
                 cid = resolve_handle(YOUTUBE_API_KEY, c["handle"])
@@ -726,14 +706,26 @@ with tabs[6]:
         with st.expander("🗑️ Διαγραφή Καναλιού"):
             comp_names = [c["name"] for c in comps]
             if comp_names:
-                selected_del = st.selectbox("Επιλέξτε κανάλι για διαγραφή:", comp_names)
-                if st.button("🗑️ Διαγραφή Επιλεγμένου", type="primary"):
+                selected_del = st.selectbox("Επιλέξτε κανάλι για διαγραφή:", comp_names, key="sel_del_gr")
+                if st.button("🗑️ Διαγραφή Επιλεγμένου", key="btn_del_gr", type="primary"):
                     st.session_state.db["competitors_gr"] = [c for c in comps if c["name"] != selected_del]
                     save_data(st.session_state.db)
                     st.success(f"Το κανάλι '{selected_del}' διαγράφηκε!")
                     st.rerun()
 
-    sorted_comps = sorted(comps, key=lambda x: x.get("subs", 0), reverse=True)
+    # ΜΠΑΡΑ ΤΑΞΙΝΟΜΗΣΗΣ (SORTING)
+    col_sort1, col_sort2, _ = st.columns([2, 1.8, 1.5])
+    with col_sort1:
+        sort_by_gr = st.selectbox(
+            "📊 Ταξινόμηση κατά:",
+            ["Subscribers", "Total Views", "Videos", "Avg Views", "Views/Sub", "Efficiency", "Growth", "Όνομα (Α-Ω)"],
+            key="sort_by_gr"
+        )
+    with col_sort2:
+        sort_dir_gr = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_gr")
+
+    sorted_comps = sort_channels(comps, sort_by_gr, sort_dir_gr)
+
     rows_list = []
     for c in sorted_comps:
         is_my = "tsouros" in c["name"].lower()
@@ -782,18 +774,84 @@ with tabs[6]:
 with tabs[7]:
     comps_intl = st.session_state.db.get("competitors_intl", [])
     st.subheader(f"🌐 Ξένοι Competitors ({len(comps_intl)} Κανάλια)")
-    sorted_intl = sorted(comps_intl, key=lambda x: x.get("subs", 0), reverse=True)
+    
+    col_ibtn1, col_ibtn2 = st.columns([1, 4])
+    with col_ibtn1:
+        if st.button("🔄 Ανανέωση Όλων (Sync API)", key="sync_intl_btn", use_container_width=True):
+            ids = []
+            for c in comps_intl:
+                cid = resolve_handle(YOUTUBE_API_KEY, c["handle"])
+                c["resolvedId"] = cid
+                if cid: ids.append(cid)
+            
+            stats_map = fetch_channel_stats(YOUTUBE_API_KEY, ids)
+            for c in comps_intl:
+                cid = c.get("resolvedId")
+                if cid and cid in stats_map:
+                    old_subs = c.get("subs", 0)
+                    c.update(stats_map[cid])
+                    new_subs = c.get("subs", 0)
+                    c["growth"] = round(((new_subs - old_subs) / old_subs) * 100, 2) if old_subs > 0 else 0.0
+            
+            save_data(st.session_state.db)
+            st.success("✅ Όλοι οι ξένοι competitors ανανεώθηκαν!")
+            st.rerun()
+
+    col_iadd, col_idel = st.columns(2)
+    with col_iadd:
+        with st.expander("➕ Προσθήκη Ξένου Καναλιού"):
+            with st.form("add_comp_intl", clear_on_submit=True):
+                ci_name = st.text_input("Όνομα Καναλιού")
+                ci_country = st.text_input("Χώρα (π.χ. USA, Japan)")
+                ci_handle = st.text_input("@handle ή Channel ID")
+                if st.form_submit_button("➕ Προσθήκη"):
+                    if ci_name and ci_handle:
+                        st.session_state.db["competitors_intl"].append({
+                            "name": ci_name, "country": ci_country, "handle": ci_handle, **blank_stats()
+                        })
+                        save_data(st.session_state.db)
+                        st.rerun()
+
+    with col_idel:
+        with st.expander("🗑️ Διαγραφή Ξένου Καναλιού"):
+            comp_intl_names = [c["name"] for c in comps_intl]
+            if comp_intl_names:
+                selected_del_intl = st.selectbox("Επιλέξτε κανάλι για διαγραφή:", comp_intl_names, key="sel_del_intl")
+                if st.button("🗑️ Διαγραφή Επιλεγμένου", key="btn_del_intl", type="primary"):
+                    st.session_state.db["competitors_intl"] = [c for c in comps_intl if c["name"] != selected_del_intl]
+                    save_data(st.session_state.db)
+                    st.success(f"Το κανάλι '{selected_del_intl}' διαγράφηκε!")
+                    st.rerun()
+
+    # ΜΠΑΡΑ ΤΑΞΙΝΟΜΗΣΗΣ (SORTING)
+    col_isort1, col_isort2, _ = st.columns([2, 1.8, 1.5])
+    with col_isort1:
+        sort_by_intl = st.selectbox(
+            "📊 Ταξινόμηση κατά:",
+            ["Subscribers", "Total Views", "Videos", "Avg Views", "Views/Sub", "Efficiency", "Growth", "Όνομα (Α-Ω)"],
+            key="sort_by_intl"
+        )
+    with col_isort2:
+        sort_dir_intl = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_intl")
+
+    sorted_intl = sort_channels(comps_intl, sort_by_intl, sort_dir_intl)
+
     rows_intl_list = []
     for c in sorted_intl:
+        growth = c.get("growth", 0.0)
+        growth_html = f'<span class="growth-up">+{growth}%</span>' if growth > 0 else (f'<span class="growth-down">{growth}%</span>' if growth < 0 else '<span class="growth-flat">0%</span>')
+
         row_intl = (
             f'<tr>'
             f'<td style="font-weight:600;">{c["name"]}</td>'
             f'<td>{c.get("country", "—")}</td>'
-            f'<td style="text-align:right; font-weight:700;">{fmt(c.get("subs", 0))}</td>'
+            f'<td style="text-align:right; font-weight:700; color:#ffffff;">{fmt(c.get("subs", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("totalViews", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("videos", 0))}</td>'
             f'<td style="text-align:right;">{fmt(c.get("avgViews", 0))}</td>'
+            f'<td style="text-align:right;">{c.get("viewsPerSub", 0.0)}</td>'
             f'<td style="text-align:right;">{c.get("efficiency", 0.0)}</td>'
+            f'<td style="text-align:center;">{growth_html}</td>'
             f'</tr>'
         )
         rows_intl_list.append(row_intl)
@@ -802,9 +860,15 @@ with tabs[7]:
         '<div class="data-table-container">'
         '<table class="custom-table">'
         '<thead><tr>'
-        '<th>CHANNEL</th><th>ΧΩΡΑ</th><th style="text-align:right;">SUBSCRIBERS</th>'
-        '<th style="text-align:right;">TOTAL VIEWS</th><th style="text-align:right;">VIDEOS</th>'
-        '<th style="text-align:right;">AVG VIEWS</th><th style="text-align:right;">EFFICIENCY</th>'
+        '<th style="text-align:left;">CHANNEL</th>'
+        '<th style="text-align:left;">ΧΩΡΑ</th>'
+        '<th style="text-align:right;">SUBSCRIBERS (ΑΚΡΙΒΗΣ)</th>'
+        '<th style="text-align:right;">TOTAL VIEWS</th>'
+        '<th style="text-align:right;">VIDEOS</th>'
+        '<th style="text-align:right;">AVG VIEWS</th>'
+        '<th style="text-align:right;">VIEWS/SUB</th>'
+        '<th style="text-align:right;">EFFICIENCY</th>'
+        '<th style="text-align:center;">GROWTH</th>'
         '</tr></thead>'
         '<tbody>' + "".join(rows_intl_list) + '</tbody>'
         '</table>'

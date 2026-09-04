@@ -24,260 +24,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ==========================================
-# ΕΠΑΓΓΕΛΜΑΤΙΚΟ DARK THEME CSS ΜΕ ΔΙΟΡΘΩΣΗ LABELS
-# ==========================================
-CUSTOM_CSS = """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-
-html, body, [class*="css"], .stApp {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-    background-color: #0b0f19 !important;
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%) !important;
-    background-attachment: fixed !important;
-    color: #ffffff !important;
-}
-
-[data-testid="stSidebar"] {
-    background-color: #111827 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
-}
-[data-testid="stSidebar"] * {
-    color: #ffffff !important;
-    font-weight: 600 !important;
-}
-
-/* ========================================================
-   1. ΔΙΟΡΘΩΣΗ LABELS - ΕΥΑΝΑΓΝΩΣΤΟΙ ΤΙΤΛΟΙ ΠΕΔΙΩΝ
-   ======================================================== */
-label, 
-label p,
-[data-testid="stWidgetLabel"] p,
-.st-emotion-cache-ue6h4q e1i5pmia0 {
-    color: #38bdf8 !important; /* ΦΩΤΕΙΝΟ ΘΑΛΑΣΣΙ */
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-    opacity: 1 !important;
-}
-
-/* ========================================================
-   2. ΜΕΝΟΥ ΚΑΡΤΕΛΩΝ
-   ======================================================== */
-[data-testid="stTabs"] [data-baseweb="tab-list"],
-div[role="tablist"] {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    overflow: visible !important;
-    overflow-x: visible !important;
-    white-space: normal !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    background: rgba(21, 28, 44, 0.75) !important;
-    padding: 10px !important;
-    border-radius: 16px !important;
-    border: 1px solid rgba(56, 189, 248, 0.25) !important;
-    backdrop-filter: blur(14px) !important;
-    width: 100% !important;
-    margin-bottom: 25px !important;
-}
-
-[data-testid="stTabs"] button[aria-label="Scroll right"],
-[data-testid="stTabs"] button[aria-label="Scroll left"],
-[data-baseweb="tab-highlight"],
-[data-baseweb="tab-border"] {
-    display: none !important;
-}
-
-button[data-baseweb="tab"] {
-    background: rgba(13, 19, 34, 0.6) !important;
-    border: 1px solid rgba(56, 189, 248, 0.3) !important;
-    padding: 10px 16px !important;
-    border-radius: 10px !important;
-    font-weight: 700 !important;
-    font-size: 0.92rem !important;
-    flex: 0 1 auto !important;
-    transition: all 0.2s ease !important;
-}
-
-button[data-baseweb="tab"] p, 
-button[data-baseweb="tab"] span, 
-button[data-baseweb="tab"] div,
-button[data-baseweb="tab"] {
-    color: #38bdf8 !important;
-    font-weight: 700 !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
-}
-
-button[data-baseweb="tab"]:hover {
-    background: rgba(56, 189, 248, 0.2) !important;
-    border-color: #38bdf8 !important;
-}
-button[data-baseweb="tab"]:hover p {
-    color: #ffffff !important;
-}
-
-/* Χρώματα Active Tabs */
-button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45) !important; }
-button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.45) !important; }
-
-button[data-baseweb="tab"][aria-selected="true"] p,
-button[data-baseweb="tab"][aria-selected="true"] span {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-}
-
-/* ========================================================
-   3. EXPANDERS & ΚΟΥΜΠΙΑ
-   ======================================================== */
-[data-testid="stExpander"], div[data-testid="stExpander"] {
-    background-color: #151c2c !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 12px !important;
-    margin-bottom: 12px !important;
-}
-
-[data-testid="stExpander"] details, [data-testid="stExpander"] summary {
-    background-color: #1e293b !important;
-    background: #1e293b !important;
-    border-radius: 12px !important;
-}
-
-[data-testid="stExpander"] summary * {
-    color: #38bdf8 !important;
-    fill: #38bdf8 !important;
-    font-weight: 700 !important;
-    font-size: 1rem !important;
-}
-
-[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
-    background-color: #151c2c !important;
-    color: #ffffff !important;
-    padding: 14px !important;
-}
-
-div.stButton > button, button[kind="secondary"], .stButton button {
-    background-color: #1e293b !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 10px !important;
-    font-weight: 700 !important;
-}
-
-div.stButton > button:hover {
-    background-color: #334155 !important;
-    border-color: #38bdf8 !important;
-    color: #38bdf8 !important;
-}
-
-button[kind="primary"] {
-    background-color: #dc2626 !important;
-    border-color: #ef4444 !important;
-    color: #ffffff !important;
-    font-weight: 700 !important;
-}
-
-.stForm button {
-    background-color: #16a34a !important;
-    border: 1px solid #22c55e !important;
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    border-radius: 10px !important;
-    padding: 10px 20px !important;
-}
-
-input, textarea, select {
-    background-color: #0d1322 !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-}
-input::placeholder, textarea::placeholder {
-    color: #94a3b8 !important;
-    opacity: 0.9 !important;
-}
-
-/* ========================================================
-   4. DATA TABLE STYLING
-   ======================================================== */
-.data-table-container {
-    background: #151c2c;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    margin-top: 15px;
-    margin-bottom: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    overflow-x: auto;
-    width: 100%;
-}
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.92rem;
-    text-align: left;
-}
-.custom-table th {
-    background: rgba(13, 19, 34, 0.95);
-    color: #38bdf8;
-    font-weight: 700;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 16px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-.custom-table td {
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-    font-weight: 600;
-}
-.custom-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-.custom-table tr.my-row {
-    background: linear-gradient(90deg, rgba(168, 85, 247, 0.22) 0%, transparent 100%) !important;
-    border-left: 4px solid #facc15 !important;
-}
-.badge-you {
-    background: #facc15;
-    color: #000;
-    font-size: 0.72rem;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-weight: 800;
-    margin-left: 6px;
-}
-.growth-up { color: #10b981; font-weight: 700; }
-.growth-down { color: #ef4444; font-weight: 700; }
-.growth-flat { color: #94a3b8; font-weight: 600; }
-
-.prompt-card-box {
-    background: #151c2c;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 14px;
-}
-</style>
-"""
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
 DATA_FILE = "creator_hub_data.json"
 
 # ==========================================
@@ -315,8 +61,103 @@ SEED_COMPETITORS_INTL = [
     {"name": "BlacktipH", "country": "USA", "handle": "@BlacktipH"}
 ]
 
+# ==========================================
+# ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ & BADGES (GLOBAL)
+# ==========================================
 def blank_stats():
     return {"subs": 0, "totalViews": 0, "videos": 0, "avgViews": 0, "viewsPerSub": 0.0, "efficiency": 0.0, "growth": 0.0}
+
+def fmt(n):
+    return "—" if not n else f"{n:,}".replace(",", ".")
+
+def score_badge(score):
+    if score is None or score == "" or score == 0:
+        return '<span style="color:#94a3b8;">—</span>'
+    try:
+        val = int(score)
+        if val >= 65:
+            color = "#10b981"
+            bg = "rgba(16, 185, 129, 0.2)"
+        elif val >= 45:
+            color = "#facc15"
+            bg = "rgba(250, 204, 21, 0.2)"
+        else:
+            color = "#ef4444"
+            bg = "rgba(239, 68, 68, 0.2)"
+        return f'<span style="background:{bg}; color:{color}; padding:3px 10px; border-radius:12px; font-weight:800; border:1px solid {color}50;">📊 {val}/100</span>'
+    except Exception:
+        return str(score)
+
+def rank_badge(rank, is_my=True):
+    if not rank or str(rank).strip() in ["", "0", "—", "-", "None"]:
+        return '<span style="color:#94a3b8;">—</span>'
+    r_str = str(rank).strip()
+    if not r_str.startswith("#"):
+        r_str = f"#{r_str}"
+    if is_my:
+        return f'<span style="background:rgba(16, 185, 129, 0.25); color:#10b981; padding:3px 9px; border-radius:12px; font-weight:800; border:1px solid rgba(16, 185, 129, 0.5);">🟢 {r_str}</span>'
+    else:
+        return f'<span style="background:rgba(59, 130, 246, 0.25); color:#60a5fa; padding:3px 9px; border-radius:12px; font-weight:800; border:1px solid rgba(59, 130, 246, 0.5);">🔵 {r_str}</span>'
+
+def sort_channels(channels, sort_by, sort_dir):
+    is_desc = "Φθίνουσα" in sort_dir
+    if sort_by == "Subscribers":
+        return sorted(channels, key=lambda x: x.get("subs", 0), reverse=is_desc)
+    elif sort_by == "Total Views":
+        return sorted(channels, key=lambda x: x.get("totalViews", 0), reverse=is_desc)
+    elif sort_by == "Videos":
+        return sorted(channels, key=lambda x: x.get("videos", 0), reverse=is_desc)
+    elif sort_by == "Avg Views":
+        return sorted(channels, key=lambda x: x.get("avgViews", 0), reverse=is_desc)
+    elif sort_by == "Views/Sub":
+        return sorted(channels, key=lambda x: x.get("viewsPerSub", 0.0), reverse=is_desc)
+    elif sort_by == "Efficiency":
+        return sorted(channels, key=lambda x: x.get("efficiency", 0.0), reverse=is_desc)
+    elif sort_by == "Growth":
+        return sorted(channels, key=lambda x: x.get("growth", 0.0), reverse=is_desc)
+    elif "Όνομα" in sort_by:
+        return sorted(channels, key=lambda x: x.get("name", "").lower(), reverse=not is_desc)
+    return channels
+
+def resolve_handle(api_key, handle):
+    if not handle or not api_key:
+        return None
+    if handle.startswith("UC"):
+        return handle
+    clean_handle = handle if handle.startswith("@") else f"@{handle}"
+    url = f"https://www.googleapis.com/youtube/v3/channels?part=id&forHandle={urllib.parse.quote(clean_handle)}&key={api_key}"
+    try:
+        res = requests.get(url, timeout=10).json()
+        if "items" in res and len(res["items"]) > 0:
+            return res["items"][0]["id"]
+    except Exception:
+        pass
+    return None
+
+def fetch_channel_stats(api_key, channel_ids):
+    if not api_key or not channel_ids:
+        return {}
+    url = f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id={','.join(channel_ids)}&key={api_key}"
+    try:
+        res = requests.get(url, timeout=10).json()
+        out = {}
+        if "items" in res:
+            for item in res["items"]:
+                stats = item["statistics"]
+                subs = int(stats.get("subscriberCount", 0))
+                views = int(stats.get("viewCount", 0))
+                videos = int(stats.get("videoCount", 0))
+                avg_views = round(views / videos) if videos > 0 else 0
+                views_per_sub = round(avg_views / subs, 2) if subs > 0 else 0
+                efficiency = round((avg_views / subs) * 1000, 1) if subs > 0 else 0
+                out[item["id"]] = {
+                    "subs": subs, "totalViews": views, "videos": videos,
+                    "avgViews": avg_views, "viewsPerSub": views_per_sub, "efficiency": efficiency
+                }
+        return out
+    except Exception as e:
+        st.error(f"Σφάλμα API: {e}")
+        return {}
 
 def get_default_data():
     return {
@@ -364,6 +205,7 @@ def load_data():
             if "prompts" not in data: data["prompts"] = []
             if "strategies" not in data: data["strategies"] = get_default_data()["strategies"]
             if "competitors_intl" not in data: data["competitors_intl"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL]
+            if "keywords" not in data: data["keywords"] = []
             return data
     except Exception:
         return get_default_data()
@@ -378,70 +220,264 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 # ==========================================
-# YOUTUBE API HELPER
+# ULTRA HIGH CONTRAST & BOLD CSS
 # ==========================================
-def resolve_handle(api_key, handle):
-    if not handle or not api_key:
-        return None
-    if handle.startswith("UC"):
-        return handle
-    clean_handle = handle if handle.startswith("@") else f"@{handle}"
-    url = f"https://www.googleapis.com/youtube/v3/channels?part=id&forHandle={urllib.parse.quote(clean_handle)}&key={api_key}"
-    try:
-        res = requests.get(url, timeout=10).json()
-        if "items" in res and len(res["items"]) > 0:
-            return res["items"][0]["id"]
-    except Exception:
-        pass
-    return None
+CUSTOM_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
-def fetch_channel_stats(api_key, channel_ids):
-    if not api_key or not channel_ids:
-        return {}
-    url = f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id={','.join(channel_ids)}&key={api_key}"
-    try:
-        res = requests.get(url, timeout=10).json()
-        out = {}
-        if "items" in res:
-            for item in res["items"]:
-                stats = item["statistics"]
-                subs = int(stats.get("subscriberCount", 0))
-                views = int(stats.get("viewCount", 0))
-                videos = int(stats.get("videoCount", 0))
-                avg_views = round(views / videos) if videos > 0 else 0
-                views_per_sub = round(avg_views / subs, 2) if subs > 0 else 0
-                efficiency = round((avg_views / subs) * 1000, 1) if subs > 0 else 0
-                out[item["id"]] = {
-                    "subs": subs, "totalViews": views, "videos": videos,
-                    "avgViews": avg_views, "viewsPerSub": views_per_sub, "efficiency": efficiency
-                }
-        return out
-    except Exception as e:
-        st.error(f"Σφάλμα API: {e}")
-        return {}
+html, body, [class*="css"], .stApp {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    background-color: #0b0f19 !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%) !important;
+    background-attachment: fixed !important;
+    color: #ffffff !important;
+}
 
-def fmt(n):
-    return "—" if not n else f"{n:,}".replace(",", ".")
+[data-testid="stSidebar"] {
+    background-color: #111827 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+[data-testid="stSidebar"] * {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
 
-def sort_channels(channels, sort_by, sort_dir):
-    is_desc = "Φθίνουσα" in sort_dir
-    if sort_by == "Subscribers":
-        return sorted(channels, key=lambda x: x.get("subs", 0), reverse=is_desc)
-    elif sort_by == "Total Views":
-        return sorted(channels, key=lambda x: x.get("totalViews", 0), reverse=is_desc)
-    elif sort_by == "Videos":
-        return sorted(channels, key=lambda x: x.get("videos", 0), reverse=is_desc)
-    elif sort_by == "Avg Views":
-        return sorted(channels, key=lambda x: x.get("avgViews", 0), reverse=is_desc)
-    elif sort_by == "Views/Sub":
-        return sorted(channels, key=lambda x: x.get("viewsPerSub", 0.0), reverse=is_desc)
-    elif sort_by == "Efficiency":
-        return sorted(channels, key=lambda x: x.get("efficiency", 0.0), reverse=is_desc)
-    elif sort_by == "Growth":
-        return sorted(channels, key=lambda x: x.get("growth", 0.0), reverse=is_desc)
-    elif "Όνομα" in sort_by:
-        return sorted(channels, key=lambda x: x.get("name", "").lower(), reverse=not is_desc)
-    return channels
+/* TABS: ΚΑΤΑΛΕΥΚΑ & BOLD */
+[data-testid="stTabs"] [data-baseweb="tab-list"],
+div[role="tablist"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    white-space: normal !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: rgba(21, 28, 44, 0.85) !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(14px) !important;
+    width: 100% !important;
+    margin-bottom: 25px !important;
+}
+
+[data-testid="stTabs"] button[aria-label="Scroll right"],
+[data-testid="stTabs"] button[aria-label="Scroll left"],
+[data-baseweb="tab-highlight"],
+[data-baseweb="tab-border"] {
+    display: none !important;
+}
+
+button[data-baseweb="tab"] {
+    background: rgba(13, 19, 34, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 10px 18px !important;
+    border-radius: 10px !important;
+    flex: 0 1 auto !important;
+    transition: all 0.2s ease !important;
+}
+
+button[data-baseweb="tab"] p, 
+button[data-baseweb="tab"] span, 
+button[data-baseweb="tab"] div,
+button[data-baseweb="tab"] {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 0.92rem !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
+}
+
+button[data-baseweb="tab"]:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #38bdf8 !important;
+    transform: translateY(-1px) !important;
+}
+
+button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border: 2px solid #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border: 2px solid #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border: 2px solid #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border: 2px solid #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border: 2px solid #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border: 2px solid #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border: 2px solid #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border: 2px solid #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border: 2px solid #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border: 2px solid #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border: 2px solid #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border: 2px solid #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
+
+/* LABELS: ΘΑΛΑΣΣΙ & BOLD */
+label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
+    color: #38bdf8 !important;
+    font-weight: 800 !important;
+    font-size: 0.96rem !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label * {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 0.92rem !important;
+}
+
+input, textarea, select, [data-baseweb="select"] {
+    background-color: #0d1322 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+}
+input:focus, textarea:focus {
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4) !important;
+}
+input::placeholder, textarea::placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.9 !important;
+    font-weight: 500 !important;
+}
+
+/* METRICS */
+[data-testid="stMetric"] {
+    background: #151c2c !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 14px !important;
+    padding: 16px 20px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+}
+[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * {
+    color: #38bdf8 !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+}
+[data-testid="stMetricValue"], [data-testid="stMetricValue"] * {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 2.3rem !important;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.2) !important;
+}
+
+/* EXPANDERS & BUTTONS */
+[data-testid="stExpander"], div[data-testid="stExpander"] {
+    background-color: #151c2c !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+}
+[data-testid="stExpander"] details, [data-testid="stExpander"] summary {
+    background-color: #1e293b !important;
+    background: #1e293b !important;
+    border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary * {
+    color: #38bdf8 !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+}
+[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
+    background-color: #151c2c !important;
+    color: #ffffff !important;
+    padding: 14px !important;
+}
+
+div.stButton > button, button[kind="secondary"], .stButton button {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    transition: all 0.2s ease !important;
+}
+div.stButton > button:hover {
+    background-color: #334155 !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+}
+button[kind="primary"] {
+    background-color: #dc2626 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+}
+.stForm button {
+    background-color: #16a34a !important;
+    border: 1px solid #22c55e !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+}
+
+/* TABLE */
+.data-table-container {
+    background: #151c2c;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    margin-top: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    overflow-x: auto;
+    width: 100%;
+}
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    text-align: left;
+}
+.custom-table th {
+    background: rgba(13, 19, 34, 0.95);
+    color: #38bdf8;
+    font-weight: 800;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.custom-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 600;
+}
+.custom-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.custom-table tr.my-row {
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.22) 0%, transparent 100%) !important;
+    border-left: 4px solid #facc15 !important;
+}
+.badge-you {
+    background: #facc15;
+    color: #000;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 800;
+    margin-left: 6px;
+}
+.growth-up { color: #10b981; font-weight: 800; }
+.growth-down { color: #ef4444; font-weight: 800; }
+.growth-flat { color: #94a3b8; font-weight: 600; }
+.prompt-card-box {
+    background: #151c2c;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
+}
+</style>
+"""
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ==========================================
 # LOGIN SCREEN
@@ -451,7 +487,7 @@ def check_password():
         return True
 
     st.markdown("<h2 style='text-align: center; margin-top:50px; color:#ffffff; font-weight:800;'>🔒 Video Creator Hub</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #38bdf8; font-weight:700;'>Βάλτε τον κωδικό πρόσβασης για να ξεκλειδώσετε το εργαλείο.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #38bdf8; font-weight:800;'>Βάλτε τον κωδικό πρόσβασης για να ξεκλειδώσετε το εργαλείο.</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
@@ -470,7 +506,6 @@ def check_password():
 if not check_password():
     st.stop()
 
-# ==========================================
 # ==========================================
 # SIDEBAR
 # ==========================================

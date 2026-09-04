@@ -25,7 +25,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# ΠΛΗΡΕΣ CSS (ΑΥΘΕΝΤΙΚΟ HTML LOOK & TABS)
+# ΠΛΗΡΕΣ & ΔΙΟΡΘΩΜΕΝΟ CSS
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -41,6 +41,7 @@ html, body, [class*="css"], .stApp {
     color: #f8fafc !important;
 }
 
+/* Sidebar */
 [data-testid="stSidebar"] {
     background-color: #111827 !important;
     border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -49,8 +50,44 @@ html, body, [class*="css"], .stApp {
     color: #f8fafc !important;
 }
 
+/* Sidebar Buttons & Dropzones (Fix White Blocks) */
+[data-testid="stSidebar"] div.stButton > button,
+[data-testid="stSidebar"] [data-testid="stDownloadButton"] > button,
+[data-testid="stSidebar"] [data-testid="stDownloadButton"] button {
+    background: #1e293b !important;
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+    width: 100% !important;
+}
+[data-testid="stSidebar"] div.stButton > button:hover,
+[data-testid="stSidebar"] [data-testid="stDownloadButton"] > button:hover {
+    background-color: #334155 !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stFileUploader"] section {
+    background-color: #151c2c !important;
+    border: 2px dashed rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+}
+[data-testid="stSidebar"] [data-testid="stFileUploader"] section * {
+    color: #94a3b8 !important;
+}
+[data-testid="stSidebar"] [data-testid="stFileUploader"] section button {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+
 /* ========================================================
-   TABS BAR (ΜΕΝΟΥ 2 ΣΕΙΡΩΝ ΑΚΡΙΒΩΣ ΟΠΩΣ ΤΟ HTML)
+   TABS BAR (ΜΕΝΟΥ 2 ΣΕΙΡΩΝ)
    ======================================================== */
 [data-baseweb="tab-list"] {
     display: flex !important;
@@ -94,34 +131,20 @@ button[data-baseweb="tab"]:hover p {
     display: none !important;
 }
 
-/* ΧΡΩΜΑΤΑ ACTIVE TABS (ΣΕΙΡΑ 1-14) */
-/* 1. Dashboard */
+/* Χρώματα Active Tabs */
 button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border-color: #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4) !important; }
-/* 2. YouTube Long-Form */
 button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border-color: #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4) !important; }
-/* 3. YouTube Shorts */
 button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important; }
-/* 4. FB & IG Reels */
 button[data-baseweb="tab"]:nth-of-type(4)[aria-selected="true"] { background: linear-gradient(135deg, #500724 0%, #ec4899 100%) !important; border-color: #fbcfe8 !important; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4) !important; }
-/* 5. TikTok */
 button[data-baseweb="tab"]:nth-of-type(5)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #06b6d4 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.4) !important; }
-/* 6. Πρόγραμμα */
 button[data-baseweb="tab"]:nth-of-type(6)[aria-selected="true"] { background: linear-gradient(135deg, #172554 0%, #3b82f6 100%) !important; border-color: #bfdbfe !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4) !important; }
-/* 7. Έλληνες Competitors */
 button[data-baseweb="tab"]:nth-of-type(7)[aria-selected="true"] { background: linear-gradient(135deg, #022c22 0%, #10b981 100%) !important; border-color: #a7f3d0 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important; }
-/* 8. Ξένοι Competitors */
 button[data-baseweb="tab"]:nth-of-type(8)[aria-selected="true"] { background: linear-gradient(135deg, #431407 0%, #f97316 100%) !important; border-color: #fed7aa !important; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4) !important; }
-/* 9. Ιστορικό & Analytics */
 button[data-baseweb="tab"]:nth-of-type(9)[aria-selected="true"] { background: linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%) !important; border-color: #c7d2fe !important; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4) !important; }
-/* 10. Keywords */
 button[data-baseweb="tab"]:nth-of-type(10)[aria-selected="true"] { background: linear-gradient(135deg, #083344 0%, #22d3ee 100%) !important; border-color: #a5f3fc !important; box-shadow: 0 4px 14px rgba(34, 211, 238, 0.4) !important; }
-/* 11. Ιδέες */
 button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: linear-gradient(135deg, #422006 0%, #ca8a04 100%) !important; border-color: #fef08a !important; box-shadow: 0 4px 14px rgba(202, 138, 4, 0.4) !important; }
-/* 12. Στόχοι */
 button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border-color: #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4) !important; }
-/* 13. Prompts Library */
 button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border-color: #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4) !important; }
-/* 14. Thumbnail AI Editor */
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border-color: #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.4) !important; }
 
 button[data-baseweb="tab"][aria-selected="true"] p,
@@ -200,7 +223,6 @@ button[data-baseweb="tab"][aria-selected="true"] span {
 }
 
 /* Πράσινο Κουμπί Προσθήκης */
-div.stButton > button[kind="primary"],
 .stForm button {
     background-color: #16a34a !important;
     border: 1px solid #22c55e !important;
@@ -209,7 +231,6 @@ div.stButton > button[kind="primary"],
     border-radius: 10px !important;
     padding: 10px 20px !important;
 }
-div.stButton > button[kind="primary"]:hover,
 .stForm button:hover {
     background-color: #15803d !important;
     border-color: #16a34a !important;
@@ -398,7 +419,7 @@ if not check_password():
     st.stop()
 
 # ==========================================
-# SIDEBAR (ΧΩΡΙΣ ΠΕΔΙΟ API KEY)
+# SIDEBAR
 # ==========================================
 with st.sidebar:
     st.markdown("<h2 style='color:#38bdf8;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
@@ -435,7 +456,7 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS
+# ΚΥΡΙΩΣ TABS (ΑΚΡΙΒΗΣ ΣΕΙΡΑ HTML)
 # ==========================================
 st.markdown("<h1 style='text-align: center; color:#ffffff; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
@@ -510,7 +531,7 @@ for key, t_view, t_title in strat_map:
     with t_view:
         st.subheader(f"{t_title} Strategy")
         
-        items = st.session_state.db["strategies"].get(key, [])
+        items = st.session_state.db.get("strategies", {}).get(key, [])
         for idx, item in enumerate(items):
             col_s1, col_s2 = st.columns([5, 1])
             with col_s1:
@@ -525,9 +546,13 @@ for key, t_view, t_title in strat_map:
         with st.form(f"add_step_form_{key}", clear_on_submit=True):
             st.markdown("### ➕ Προσθήκη Νέου Βήματος")
             s_title = st.text_input("Τίτλος Βήματος (π.χ. 4. SEO & Distribution)", key=f"inp_t_{key}")
-            s_desc = st.text_area("Περιγραφή Βήματος", key=f"inp_d_{key}")
+            s_desc = st.text_area("Περιγραφή Βήματος", height=100, key=f"inp_d_{key}")
             if st.form_submit_button("➕ Προσθήκη Βήματος", use_container_width=True):
                 if s_title and s_desc:
+                    if "strategies" not in st.session_state.db:
+                        st.session_state.db["strategies"] = {}
+                    if key not in st.session_state.db["strategies"]:
+                        st.session_state.db["strategies"][key] = []
                     st.session_state.db["strategies"][key].append({"step": s_title, "desc": s_desc})
                     save_data(st.session_state.db)
                     st.success("Το βήμα προστέθηκε επιτυχώς!")
@@ -552,6 +577,8 @@ with tabs[5]:
                 sc_status = st.selectbox("Status", ["Ιδέα", "Script", "Filming", "Editing", "Ready", "Published"])
             if st.form_submit_button("➕ Προσθήκη Βίντεο"):
                 if sc_title:
+                    if "schedule" not in st.session_state.db:
+                        st.session_state.db["schedule"] = []
                     st.session_state.db["schedule"].append({
                         "id": str(datetime.datetime.now().timestamp()), "date": str(sc_date),
                         "time": str(sc_time)[:5], "platform": sc_plat, "title": sc_title, "status": sc_status
@@ -720,6 +747,8 @@ with tabs[8]:
                 src = st.text_input("Traffic Sources")
             if st.form_submit_button("Αποθήκευση"):
                 if t:
+                    if "analytics" not in st.session_state.db:
+                        st.session_state.db["analytics"] = []
                     st.session_state.db["analytics"].append({"title": t, "type": typ, "ctr": ctr, "retention": ret, "watchTime": wt, "sources": src})
                     save_data(st.session_state.db)
                     st.rerun()
@@ -740,6 +769,8 @@ with tabs[9]:
             stat = st.selectbox("Status", ["Νέα", "Σε χρήση", "Ολοκληρώθηκε"])
             if st.form_submit_button("Αποθήκευση"):
                 if kw:
+                    if "keywords" not in st.session_state.db:
+                        st.session_state.db["keywords"] = []
                     st.session_state.db["keywords"].append({"text": kw, "priority": prio, "status": stat})
                     save_data(st.session_state.db)
                     st.rerun()
@@ -754,10 +785,12 @@ with tabs[9]:
 with tabs[10]:
     st.subheader("💡 Ιδέες για Βίντεο")
     with st.form("idea_form_add", clear_on_submit=True):
-        txt = st.text_area("Ιδέα")
+        txt = st.text_area("Ιδέα", height=90)
         tags = st.text_input("Tags")
         if st.form_submit_button("➕ Προσθήκη"):
             if txt:
+                if "ideas" not in st.session_state.db:
+                    st.session_state.db["ideas"] = []
                 st.session_state.db["ideas"].append({
                     "id": str(datetime.datetime.now().timestamp()),
                     "text": txt, "tags": [t.strip() for t in tags.split(",") if t.strip()],
@@ -783,6 +816,8 @@ with tabs[11]:
         u = st.number_input("Στόχος Uploads", step=1)
         if st.form_submit_button("Αποθήκευση"):
             if m:
+                if "goals" not in st.session_state.db:
+                    st.session_state.db["goals"] = []
                 st.session_state.db["goals"].append({"month": m, "subs": s, "views": v, "uploads": u})
                 save_data(st.session_state.db)
                 st.rerun()
@@ -799,7 +834,7 @@ with tabs[12]:
     
     with st.form("add_prompt_main_form", clear_on_submit=True):
         p_title = st.text_input("Τίτλος Prompt", placeholder="Τίτλος Prompt (π.χ. Midjourney Fishing Action)", label_visibility="collapsed")
-        p_body = st.text_area("Κείμενο Prompt", placeholder="Επικολλήστε το prompt εδώ...", rows=4, label_visibility="collapsed")
+        p_body = st.text_area("Κείμενο Prompt", placeholder="Επικολλήστε το prompt εδώ...", height=120, label_visibility="collapsed")
         submitted = st.form_submit_button("➕ Προσθήκη Prompt", use_container_width=True)
         if submitted:
             if p_title and p_body:

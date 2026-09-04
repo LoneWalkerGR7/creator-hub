@@ -519,7 +519,7 @@ tabs = st.tabs([
     "📸 FB & IG Reels",
     "🎵 TikTok",
     "📅 Πρόγραμμα",
-    "st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🇬🇷 Έλληνες Competitors/h3>", unsafe_allow_html=True)",
+    "<h3 style='color:#38bdf8; font-weight:800;'>🇬🇷 Έλληνες Competitors/h3>",
     "🌐 Ξένοι Competitors",
     "📈 Ιστορικό & Analytics",
     "🔑 Keywords",

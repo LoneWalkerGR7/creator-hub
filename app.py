@@ -892,26 +892,166 @@ with tabs[8]:
         st.dataframe(pd.DataFrame(an), use_container_width=True, hide_index=True)
 
 # ------------------------------------------
-# 10. KEYWORDS
+# 10. KEYWORDS & TAG SCORE INTELLIGENCE (UPGRADED)
 # ------------------------------------------
 with tabs[9]:
-    st.markdown("<h3 style='color:#bac425; font-weight:800;'>🔑 Keywords</h3>", unsafe_allow_html=True)
-    with st.expander("➕ Προσθήκη Keyword"):
-        with st.form("kw_form_add", clear_on_submit=True):
-            kw = st.text_input("Keyword")
-            prio = st.selectbox("Προτεραιότητα", ["Υψηλή", "Μεσαία", "Χαμηλή"])
-            stat = st.selectbox("Status", ["Νέα", "Σε χρήση", "Ολοκληρώθηκε"])
-            if st.form_submit_button("Αποθήκευση"):
-                if kw:
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 YouTube Keywords & Tag Score Intelligence</h3>", unsafe_allow_html=True)
+    
+    # 1. Quick Search Tools
+    col_q1, col_q2, col_q3 = st.columns([2.5, 1.2, 1.2])
+    with col_q1:
+        quick_kw = st.text_input("🔎 Γρήγορη Έρευνα Tag / Keyword:", placeholder="π.χ. Spinning για Λαβράκια...")
+    with col_q2:
+        st.write("")
+        st.write("")
+        if st.button("🔴 YouTube Search", use_container_width=True):
+            if quick_kw:
+                st.markdown(f'<a href="https://www.youtube.com/results?search_query={urllib.parse.quote(quick_kw)}" target="_blank"><button style="width:100%; padding:10px; background:#ef4444; color:#fff; border-radius:8px; border:none; font-weight:700;">Άνοιγμα στο YouTube ↗</button></a>', unsafe_allow_html=True)
+            else:
+                st.warning("Γράψτε πρώτα μια λέξη.")
+    with col_q3:
+        st.write("")
+        st.write("")
+        if st.button("📈 Google Trends", use_container_width=True):
+            if quick_kw:
+                st.markdown(f'<a href="https://trends.google.com/trends/explore?q={urllib.parse.quote(quick_kw)}&geo=GR" target="_blank"><button style="width:100%; padding:10px; background:#3b82f6; color:#fff; border-radius:8px; border:none; font-weight:700;">Άνοιγμα στο Trends ↗</button></a>', unsafe_allow_html=True)
+            else:
+                st.warning("Γράψτε πρώτα μια λέξη.")
+
+    # 2. Add Keyword Form with TubeBuddy & SEO metrics
+    with st.expander("➕ Προσθήκη Νέου Tag με Σκορ & Κατάταξη (TubeBuddy / SEO)"):
+        with st.form("kw_advanced_form", clear_on_submit=True):
+            k_c1, k_c2 = st.columns(2)
+            with k_c1:
+                kw_tag = st.text_input("Λέξη-Κλειδί / Tag (π.χ. LRF τεχνική)")
+                kw_target = st.text_input("Target Βίντεο (προαιρετικό)")
+                kw_my_rank = st.text_input("🟢 Θέση Κατάταξής μου στο YouTube (π.χ. #3)")
+                kw_tb_rank = st.text_input("🔵 TubeBuddy Trending Rank (π.χ. #1)")
+            with k_c2:
+                kw_overall_score = st.number_input("📊 Overall Keyword Score (0 - 100)", min_value=0, max_value=100, value=60, step=1)
+                kw_volume = st.selectbox("📊 Search Volume (Όγκος Αναζήτησης)", ["Πολύ Υψηλός", "Υψηλός", "Μέτριος", "Χαμηλός"])
+                kw_comp = st.selectbox("⚔️ Competition (Ανταγωνισμός)", ["Πολύ Χαμηλός", "Χαμηλός", "Μέτριος", "Υψηλός", "Πολύ Υψηλός"])
+                kw_opt = st.selectbox("🎯 Optimization Strength", ["Εξαιρετική (90-100%)", "Καλή (70-89%)", "Μέτρια (50-69%)", "Χαμηλή (<50%)"])
+
+            k_c3, k_c4 = st.columns(2)
+            with k_c3:
+                kw_priority = st.selectbox("Προτεραιότητα", ["Υψηλή", "Μεσαία", "Χαμηλή"])
+            with k_c4:
+                kw_status = st.selectbox("Status", ["Νέα", "Σε χρήση", "Ολοκληρώθηκε"])
+
+            if st.form_submit_button("➕ Αποθήκευση Tag & Σκορ", use_container_width=True):
+                if kw_tag:
                     if "keywords" not in st.session_state.db:
                         st.session_state.db["keywords"] = []
-                    st.session_state.db["keywords"].append({"text": kw, "priority": prio, "status": stat})
+                    st.session_state.db["keywords"].append({
+                        "id": str(datetime.datetime.now().timestamp()),
+                        "tag": kw_tag,
+                        "target": kw_target or "—",
+                        "my_rank": kw_my_rank or "—",
+                        "tb_rank": kw_tb_rank or "—",
+                        "score": int(kw_overall_score),
+                        "volume": kw_volume,
+                        "competition": kw_comp,
+                        "optimization": kw_opt,
+                        "priority": kw_priority,
+                        "status": kw_status,
+                        "date": str(datetime.date.today())
+                    })
                     save_data(st.session_state.db)
+                    st.success("✅ Το Tag και τα στατιστικά του αποθηκεύτηκαν!")
                     st.rerun()
+                else:
+                    st.warning("⚠️ Συμπληρώστε τη λέξη-κλειδί.")
 
-    kws = st.session_state.db.get("keywords", [])
-    if kws:
-        st.dataframe(pd.DataFrame(kws), use_container_width=True, hide_index=True)
+    # 3. Delete Keyword Expander
+    keywords_list = st.session_state.db.get("keywords", [])
+    if keywords_list:
+        with st.expander("🗑️ Διαγραφή Tag / Keyword"):
+            kw_names = [k.get("tag", "Tag") for k in keywords_list]
+            selected_kw_del = st.selectbox("Επιλέξτε Tag για διαγραφή:", kw_names, key="sel_del_kw")
+            if st.button("🗑️ Διαγραφή Επιλεγμένου Tag", key="btn_del_kw", type="primary"):
+                st.session_state.db["keywords"] = [k for k in keywords_list if k.get("tag") != selected_kw_del]
+                save_data(st.session_state.db)
+                st.success(f"Το Tag '{selected_kw_del}' διαγράφηκε!")
+                st.rerun()
+
+    # 4. Sorting Controls
+    col_ksort1, col_ksort2, _ = st.columns([2, 1.8, 1.5])
+    with col_ksort1:
+        sort_by_kw = st.selectbox(
+            "📊 Ταξινόμηση κατά:",
+            ["Overall Score", "🟢 Θέση μου", "🔵 TubeBuddy #", "Tag (Α-Ω)", "Προτεραιότητα", "Status"],
+            key="sort_by_kw"
+        )
+    with col_ksort2:
+        sort_dir_kw = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_kw")
+
+    # Sorting logic
+    is_k_desc = "Φθίνουσα" in sort_dir_kw
+    sorted_keywords = list(keywords_list)
+    if sort_by_kw == "Overall Score":
+        sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("score", 0), reverse=is_k_desc)
+    elif "🟢" in sort_by_kw:
+        sorted_keywords = sorted(sorted_keywords, key=lambda x: str(x.get("my_rank", "")), reverse=not is_k_desc)
+    elif "🔵" in sort_by_kw:
+        sorted_keywords = sorted(sorted_keywords, key=lambda x: str(x.get("tb_rank", "")), reverse=not is_k_desc)
+    elif "Tag" in sort_by_kw:
+        sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("tag", "").lower(), reverse=not is_k_desc)
+    elif "Προτεραιότητα" in sort_by_kw:
+        sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("priority", ""), reverse=is_k_desc)
+    elif "Status" in sort_by_kw:
+        sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("status", ""), reverse=is_k_desc)
+
+    # 5. Full HTML Table Rendering
+    if sorted_keywords:
+        rows_kw_list = []
+        for k in sorted_keywords:
+            prio = k.get("priority", "Μεσαία")
+            if prio == "Υψηλή":
+                prio_html = '<span style="background:rgba(239,68,68,0.25); color:#fca5a5; padding:3px 9px; border-radius:12px; font-weight:800;">Υψηλή</span>'
+            elif prio == "Μεσαία":
+                prio_html = '<span style="background:rgba(234,179,8,0.25); color:#fde047; padding:3px 9px; border-radius:12px; font-weight:800;">Μεσαία</span>'
+            else:
+                prio_html = '<span style="background:rgba(59,130,246,0.25); color:#93c5fd; padding:3px 9px; border-radius:12px; font-weight:800;">Χαμηλή</span>'
+
+            row_kw = (
+                f'<tr>'
+                f'<td style="font-weight:800; color:#38bdf8; font-size:1rem;">{k.get("tag", "—")}</td>'
+                f'<td style="text-align:center;">{rank_badge(k.get("my_rank"), is_my=True)}</td>'
+                f'<td style="text-align:center;">{rank_badge(k.get("tb_rank"), is_my=False)}</td>'
+                f'<td style="text-align:center;">{score_badge(k.get("score"))}</td>'
+                f'<td style="text-align:center; font-weight:700;">{k.get("volume", "—")}</td>'
+                f'<td style="text-align:center; font-weight:700;">{k.get("competition", "—")}</td>'
+                f'<td style="text-align:center; font-weight:700;">{k.get("optimization", "—")}</td>'
+                f'<td style="font-weight:600; color:#cbd5e1;">{k.get("target", "—")}</td>'
+                f'<td style="text-align:center;">{prio_html}</td>'
+                f'<td style="text-align:center; font-weight:700; color:#ffffff;">{k.get("status", "Νέα")}</td>'
+                f'</tr>'
+            )
+            rows_kw_list.append(row_kw)
+
+        table_kw_html = (
+            '<div class="data-table-container">'
+            '<table class="custom-table">'
+            '<thead><tr>'
+            '<th style="text-align:left;">TAG / KEYWORD</th>'
+            '<th style="text-align:center;">🟢 ΘΕΣΗ ΜΟΥ</th>'
+            '<th style="text-align:center;">🔵 TUBEBUDDY #</th>'
+            '<th style="text-align:center;">📊 OVERALL SCORE</th>'
+            '<th style="text-align:center;">📈 SEARCH VOL.</th>'
+            '<th style="text-align:center;">⚔️ COMPETITION</th>'
+            '<th style="text-align:center;">🎯 OPTIMIZATION</th>'
+            '<th style="text-align:left;">TARGET ΒΙΝΤΕΟ</th>'
+            '<th style="text-align:center;">ΠΡΟΤΕΡΑΙΟΤΗΤΑ</th>'
+            '<th style="text-align:center;">STATUS</th>'
+            '</tr></thead>'
+            '<tbody>' + "".join(rows_kw_list) + '</tbody>'
+            '</table>'
+            '</div>'
+        )
+        st.markdown(table_kw_html, unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει Tags / Keywords ακόμα. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 11. IDEAS

@@ -77,8 +77,12 @@ div[role="tablist"] {
     display: none !important;
 }
 
-/* Θαλασσί Γράμματα στα μη επιλεγμένα Tabs */
-button[data-baseweb="tab"] {
+/* ========================================================
+   TABS - ΚΑΘΑΡΑ ΓΡΑΜΜΑΤΑ + HOVER
+   ======================================================== */
+
+/* Όλα τα tabs */
+[data-testid="stTabs"] button[data-baseweb="tab"] {
     background: transparent !important;
     border: 1px solid rgba(56, 189, 248, 0.15) !important;
     padding: 9px 16px !important;
@@ -87,22 +91,41 @@ button[data-baseweb="tab"] {
     font-size: 0.88rem !important;
     flex: 0 1 auto !important;
     transition: all 0.2s ease !important;
+    color: #aeb8ca !important;
 }
 
-button[data-baseweb="tab"] p, 
-button[data-baseweb="tab"] span, 
-button[data-baseweb="tab"] div,
-button[data-baseweb="tab"] {
-    color: #38bdf8 !important; /* ΘΑΛΑΣΣΙ */
+/* Το κείμενο μέσα στα tabs */
+[data-testid="stTabs"] button[data-baseweb="tab"] p,
+[data-testid="stTabs"] button[data-baseweb="tab"] span,
+[data-testid="stTabs"] button[data-baseweb="tab"] div {
+    color: #aeb8ca !important;
     font-weight: 600 !important;
 }
 
-button[data-baseweb="tab"]:hover {
+/* Hover */
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover {
     background: rgba(56, 189, 248, 0.12) !important;
     border-color: #38bdf8 !important;
-}
-button[data-baseweb="tab"]:hover p {
     color: #ffffff !important;
+}
+
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover p,
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover span,
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover div {
+    color: #ffffff !important;
+}
+
+/* Ενεργό Tab */
+[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] {
+    color: #ffffff !important;
+}
+
+[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] p,
+[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] span,
+[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] div {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
 }
 
 /* Χρώματα Active Tabs */

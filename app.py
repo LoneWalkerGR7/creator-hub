@@ -856,7 +856,15 @@ with tabs[12]:
         for p in prompts:
             col_pr1, col_pr2 = st.columns([5, 1])
             with col_pr1:
-                st.markdown(f"<div class='prompt-card-box'><h4>{p['title']}</h4><p style='font-family:monospace; color:#38bdf8;'>{p['body']}</p><small style='color:#94a3b8;'>📅 {p.get('date', '')}</small></div>", unsafe_allow_html=True)
+                # Εδώ εφαρμόζεται το λευκό bold χρώμα στον τίτλο (h4)
+                st.markdown(
+                    f"<div class='prompt-card-box'>"
+                    f"<h4 style='color: #ffffff; font-weight: bold;'>{p['title']}</h4>"
+                    f"<p style='font-family:monospace; color:#38bdf8;'>{p['body']}</p>"
+                    f"<small style='color:#94a3b8;'>📅 {p.get('date', '')}</small>"
+                    f"</div>", 
+                    unsafe_allow_html=True
+                )
             with col_pr2:
                 if st.button("🗑️ Διαγραφή", key=f"del_pr_{p['id']}"):
                     st.session_state.db["prompts"] = [x for x in prompts if x["id"] != p["id"]]

@@ -10,7 +10,7 @@ import requests
 import streamlit as st
 
 # ==========================================
-# ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ STREAMLIT
+# ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ
 # ==========================================
 st.set_page_config(
     page_title="Video Creator Hub & Competitor Intelligence",
@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# ΕΝΣΩΜΑΤΩΣΗ ΠΛΗΡΟΥΣ CSS ΑΠΟ ΤΟ INDEX.HTML
+# ΑΠΟΛΥΤΗ ΔΙΟΡΘΩΣΗ CSS (CONTRAST & DARK THEME)
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -37,60 +37,67 @@ html, body, [class*="css"], .stApp {
     color: #f8fafc !important;
 }
 
-/* Sidebar Styling */
+/* Sidebar Styling & Text Fix */
 [data-testid="stSidebar"] {
     background-color: #111827 !important;
     border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
-
-/* Κάρτες & Containers */
-.dash-card {
-    background: #151c2c;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 22px;
-    margin-bottom: 16px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
-    transition: all 0.25s ease;
-}
-.dash-card:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-
-.dash-big-number {
-    font-size: 2.3rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.dash-sub {
-    color: #94a3b8;
-    font-size: 0.85rem;
-}
-
-/* Streamlit Metrics */
-[data-testid="stMetricValue"] {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] h4, [data-testid="stSidebar"] p, [data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label, [data-testid="stSidebar"] .stMarkdown {
     color: #f8fafc !important;
 }
-[data-testid="stMetric"] {
-    background: #151c2c !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 14px !important;
-    padding: 16px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+
+/* Διόρθωση Expanders (Όχι λευκές μπάρες, καθαρό Dark Card) */
+[data-testid="stExpander"] {
+    background-color: #151c2c !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+}
+[data-testid="stExpander"] summary {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary:hover {
+    background-color: #2e3d55 !important;
+}
+[data-testid="stExpander"] summary p, [data-testid="stExpander"] summary span, [data-testid="stExpander"] summary svg {
+    color: #38bdf8 !important;
+    fill: #38bdf8 !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+}
+[data-testid="stExpander"] div[role="region"] {
+    background-color: #151c2c !important;
+    color: #f8fafc !important;
+    padding: 14px !important;
 }
 
-/* Tabs Styling */
+/* Διόρθωση Labels / Τίτλοι πεδίων */
+label, label p, [data-testid="stWidgetLabel"] p {
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+}
+
+/* Πεδία Εισαγωγής (Inputs & Textareas) */
+input, textarea, select {
+    background-color: #0d1322 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+}
+input:focus, textarea:focus {
+    border-color: #38bdf8 !important;
+}
+
+/* Tabs */
 button[data-baseweb="tab"] {
     font-weight: 600 !important;
     border-radius: 8px !important;
-    padding: 8px 16px !important;
+    padding: 8px 14px !important;
     color: #94a3b8 !important;
 }
 button[data-baseweb="tab"][aria-selected="true"] {
@@ -99,46 +106,33 @@ button[data-baseweb="tab"][aria-selected="true"] {
     border: 1px solid #c084fc !important;
 }
 
-/* Κουμπιά (Buttons) */
+/* Κουμπιά */
 div.stButton > button {
     background-color: #1e293b !important;
     color: #f8fafc !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
-    transition: all 0.2s ease !important;
 }
 div.stButton > button:hover {
     background-color: #334155 !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    transform: translateY(-1px) !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
 }
 
-/* Input Fields & Textareas */
-input, textarea, select {
-    background-color: #0d1322 !important;
-    color: #f8fafc !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 8px !important;
-}
-
-/* Dataframe / Tables */
-[data-testid="stDataFrame"] {
+/* Metrics */
+[data-testid="stMetric"] {
     background: #151c2c !important;
-    border-radius: 12px !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
 }
-
-/* Status Pill */
-.status-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    background: rgba(168, 85, 247, 0.15);
-    color: #c084fc;
-    border: 1px solid rgba(168, 85, 247, 0.3);
+[data-testid="stMetricLabel"] p {
+    color: #94a3b8 !important;
+}
+[data-testid="stMetricValue"] div {
+    color: #ffffff !important;
+    font-weight: 700 !important;
 }
 </style>
 """
@@ -147,7 +141,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 DATA_FILE = "creator_hub_data.json"
 
 # ==========================================
-# ΟΛΟΙ ΟΙ 12 ΕΛΛΗΝΕΣ COMPETITORS
+# ΛΙΣΤΑ: 24 ΕΛΛΗΝΙΚΑ & 2 ΞΕΝΑ ΚΑΝΑΛΙΑ
 # ==========================================
 SEED_COMPETITORS_GR = [
     {"name": "Tsouros Marine", "handle": "UC5cxxXjrQcHnWqh_KtiCpDg"},
@@ -161,7 +155,24 @@ SEED_COMPETITORS_GR = [
     {"name": "GB Luring", "handle": "@GBLuring"},
     {"name": "SifisFishing", "handle": "@SifisFishing"},
     {"name": "Paraktios Fishing", "handle": "@paraktiosfishing"},
-    {"name": "Giannis Mastrogiannakis", "handle": "@giannismastrogiannakis"}
+    {"name": "Giannis Mastrogiannakis", "handle": "@giannismastrogiannakis"},
+    {"name": "Fishing Time GR", "handle": "@FishingTimeGR"},
+    {"name": "Sea Fishing Greece", "handle": "@seafishinggreece"},
+    {"name": "Captain Hook Fishing", "handle": "@captainhookfishing"},
+    {"name": "Luring Mania", "handle": "@luringmania"},
+    {"name": "Deep Blue Fishing", "handle": "@deepbluefishing"},
+    {"name": "Aegean Anglers", "handle": "@aegeananglers"},
+    {"name": "Rock Fishing Greece", "handle": "@rockfishinggreece"},
+    {"name": "Shore Jigging Hellas", "handle": "@shorejigginghellas"},
+    {"name": "Hellenic Fishing Hunters", "handle": "@hellenicfishinghunters"},
+    {"name": "Fishing Club GR", "handle": "@fishingclubgr"},
+    {"name": "Kalamaria Anglers", "handle": "@kalamariaanglers"},
+    {"name": "Greek Sea Adventures", "handle": "@greekseaadventures"}
+]
+
+SEED_COMPETITORS_INTL = [
+    {"name": "Salt Strong", "country": "USA", "handle": "@SaltStrong"},
+    {"name": "BlacktipH", "country": "USA", "handle": "@BlacktipH"}
 ]
 
 def blank_stats():
@@ -178,7 +189,7 @@ def get_default_data():
             **blank_stats()
         },
         "competitors_gr": [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR],
-        "competitors_intl": [],
+        "competitors_intl": [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL],
         "schedule": [],
         "analytics": [],
         "keywords": [],
@@ -211,13 +222,18 @@ def load_data():
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-            # Αυτόματος έλεγχος αν λείπουν οι 12 competitors
+            # Έλεγχος & συγχώνευση των 24+2 καναλιών αν λείπουν
             if len(data.get("competitors_gr", [])) < len(SEED_COMPETITORS_GR):
-                existing_names = {c["name"] for c in data.get("competitors_gr", [])}
-                for sc in SEED_COMPETITORS_GR:
-                    if sc["name"] not in existing_names:
-                        data["competitors_gr"].append({**sc, **blank_stats()})
-                save_data(data)
+                existing_gr = {c["name"] for c in data.get("competitors_gr", [])}
+                for c in SEED_COMPETITORS_GR:
+                    if c["name"] not in existing_gr:
+                        data["competitors_gr"].append({**c, **blank_stats()})
+            if len(data.get("competitors_intl", [])) < len(SEED_COMPETITORS_INTL):
+                existing_intl = {c["name"] for c in data.get("competitors_intl", [])}
+                for c in SEED_COMPETITORS_INTL:
+                    if c["name"] not in existing_intl:
+                        data["competitors_intl"].append({**c, **blank_stats()})
+            save_data(data)
             return data
     except Exception:
         return get_default_data()
@@ -285,8 +301,8 @@ def check_password():
     if st.session_state.authenticated:
         return True
 
-    st.markdown("<h2 style='text-align: center; margin-top:50px;'>🔒 Video Creator Hub</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #94a3b8;'>Client-side κλείδωμα — Βάλτε τον κωδικό πρόσβασης.</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; margin-top:50px; color:#ffffff;'>🔒 Video Creator Hub</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #94a3b8;'>Βάλτε τον κωδικό πρόσβασης για να ξεκλειδώσετε το εργαλείο.</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
@@ -299,17 +315,17 @@ def check_password():
                 st.rerun()
             else:
                 st.error("❌ Λάθος κωδικός πρόσβασης! (Προεπιλεγμένος: 1234)")
-        st.caption("ℹ️ Προεπιλεγμένος κωδικός: `1234` (Αλλάζει από το μενού αριστερά).")
+        st.caption("ℹ️ Προεπιλεγμένος κωδικός: `1234`")
     return False
 
 if not check_password():
     st.stop()
 
 # ==========================================
-# SIDEBAR / BACKUP & ΡΥΘΜΙΣΕΙΣ
+# SIDEBAR
 # ==========================================
 with st.sidebar:
-    st.title("🎬 Creator Hub")
+    st.markdown("<h2 style='color:#38bdf8;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     st.subheader("🔑 YouTube Data API Key")
@@ -348,16 +364,17 @@ with st.sidebar:
             st.error(f"Σφάλμα αρχείου: {e}")
 
     st.markdown("---")
-    if st.button("🔄 Επαναφορά 12 Ελλήνων Competitors", use_container_width=True):
+    if st.button("🔄 Φόρτωση 24 GR + 2 Intl Competitors", use_container_width=True):
         st.session_state.db["competitors_gr"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR]
+        st.session_state.db["competitors_intl"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL]
         save_data(st.session_state.db)
-        st.success("Οι 12 competitors ανακτήθηκαν!")
+        st.success("Φορτώθηκαν και τα 26 κανάλια!")
         st.rerun()
 
 # ==========================================
 # ΚΥΡΙΩΣ TABS
 # ==========================================
-st.markdown("<h1>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#ffffff;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
 tabs = st.tabs([
     "📊 Dashboard",
@@ -387,7 +404,7 @@ with tabs[0]:
     
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.metric("📺 Το Κανάλι Μου (Subs)", f"{my_ch.get('subs', 0):,}", f"{my_ch.get('name', 'N/A')}")
+        st.metric("📺 Το Κανάλι Μου (Subs)", f"{my_ch.get('subs', 0):,}", f"{my_ch.get('name', 'Tsouros Marine')}")
     with c2:
         synced_c = [c for c in all_comp if c.get("subs", 0) > 0]
         avg_subs = round(sum(c.get("subs", 0) for c in synced_c) / len(synced_c)) if synced_c else 0
@@ -424,7 +441,7 @@ with tabs[0]:
             fig.update_layout(height=260, margin=dict(l=20, r=20, t=20, b=20), paper_bgcolor="#151c2c", plot_bgcolor="#151c2c", font=dict(color="#fff"))
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.info("Συγχρονίστε τα κανάλια από την καρτέλα Competitors για να δείτε τα γραφήματα.")
+            st.info("Συγχρονίστε τα κανάλια από την καρτέλα Competitors για να δείτε το benchmark.")
 
 # ------------------------------------------
 # 2-5. STRATEGY TABS
@@ -507,10 +524,11 @@ with tabs[7]:
         st.dataframe(pd.DataFrame(sched)[["date", "time", "platform", "title", "status"]], use_container_width=True, hide_index=True)
 
 # ------------------------------------------
-# 9. GREEK COMPETITORS (12 ΚΑΝΑΛΙΑ)
+# 9. GREEK COMPETITORS (24 ΚΑΝΑΛΙΑ)
 # ------------------------------------------
 with tabs[8]:
-    st.subheader(f"🇬🇷 Έλληνες Competitors ({len(st.session_state.db.get('competitors_gr', []))} Κανάλια)")
+    comps = st.session_state.db.get("competitors_gr", [])
+    st.subheader(f"🇬🇷 Έλληνες Competitors ({len(comps)} Κανάλια)")
     api_key = st.session_state.db.get("api_key", "")
     
     col_btn1, col_btn2 = st.columns([1, 4])
@@ -519,7 +537,6 @@ with tabs[8]:
             if not api_key:
                 st.error("Βάλτε πρώτα το YouTube API Key στη Sidebar!")
             else:
-                comps = st.session_state.db["competitors_gr"]
                 ids = []
                 for c in comps:
                     cid = resolve_handle(api_key, c["handle"])
@@ -555,7 +572,6 @@ with tabs[8]:
                     save_data(st.session_state.db)
                     st.rerun()
 
-    comps = st.session_state.db.get("competitors_gr", [])
     if comps:
         df_gr = pd.DataFrame(comps)
         st.dataframe(
@@ -567,22 +583,18 @@ with tabs[8]:
             hide_index=True
         )
         
-        # Plotly Charts
         st.subheader("📈 Συγκριτικά Γραφήματα")
         fig1 = px.bar(df_gr, x="name", y="subs", title="Subscribers ανά Κανάλι", color="name", template="plotly_dark")
         fig1.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
         st.plotly_chart(fig1, use_container_width=True)
-        
-        fig2 = px.scatter(df_gr, x="videos", y="avgViews", size="subs", hover_name="name", title="Videos vs Avg Views (Correlation)", template="plotly_dark")
-        fig2.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
-        st.plotly_chart(fig2, use_container_width=True)
 
 # ------------------------------------------
-# 10. INTL COMPETITORS
+# 10. INTL COMPETITORS (2 ΚΑΝΑΛΙΑ)
 # ------------------------------------------
 with tabs[9]:
-    st.subheader("🌐 Ξένοι Competitors")
-    with st.expander("➕ Προσθήκη"):
+    comps_intl = st.session_state.db.get("competitors_intl", [])
+    st.subheader(f"🌐 Ξένοι Competitors ({len(comps_intl)} Κανάλια)")
+    with st.expander("➕ Προσθήκη Ξένου Ανταγωνιστή"):
         with st.form("add_intl"):
             ci_name = st.text_input("Όνομα")
             ci_country = st.text_input("Χώρα")
@@ -595,9 +607,15 @@ with tabs[9]:
                     save_data(st.session_state.db)
                     st.rerun()
 
-    comps_intl = st.session_state.db.get("competitors_intl", [])
     if comps_intl:
-        st.dataframe(pd.DataFrame(comps_intl)[["name", "country", "subs", "totalViews", "videos", "avgViews", "efficiency"]], use_container_width=True, hide_index=True)
+        st.dataframe(
+            pd.DataFrame(comps_intl)[["name", "country", "subs", "totalViews", "videos", "avgViews", "efficiency"]].rename(columns={
+                "name": "Κανάλι", "country": "Χώρα", "subs": "Subscribers", "totalViews": "Total Views",
+                "videos": "Videos", "avgViews": "Avg Views", "efficiency": "Efficiency"
+            }),
+            use_container_width=True,
+            hide_index=True
+        )
 
 # ------------------------------------------
 # 11. ANALYTICS

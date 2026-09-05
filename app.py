@@ -13,7 +13,18 @@ import streamlit as st
 # ΑΣΦΑΛΗΣ ΑΝΑΚΤΗΣΗ YOUTUBE API KEY
 # ==========================================
 
+# ==========================================
+# YOUTUBE DATA API KEY & GITHUB CONFIG
+# ==========================================
+
 YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
+
+try:
+    GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
+    GITHUB_REPO = st.secrets.get("GITHUB_REPO", "")
+except Exception:
+    GITHUB_TOKEN = ""
+    GITHUB_REPO = ""
 
 # ==========================================
 # ΡΥΘΜΙΣΕΙΣ ΣΕΛΙΔΑΣ
@@ -62,18 +73,9 @@ SEED_COMPETITORS_GR = [
     {"name": "SifisFishing", "handle": "@SifisFishing"},
     {"name": "Tsouros Marine", "handle": "UC5cxxXjrQcHnWqh_KtiCpDg"},
     {"name": "Owrka", "handle": "UCpy-2GjgEjnx97N_aan0XFQ"},
-    {"name": "GB Luring", "handle": "@GBLuring"},
     {"name": "Paraktios Fishing", "handle": "@paraktiosfishing"},
-    {"name": "Fishing Time GR", "handle": "@FishingTimeGR"},
-    {"name": "Sea Fishing Greece", "handle": "@seafishinggreece"},
-    {"name": "Captain Hook Fishing", "handle": "@captainhookfishing"},
-    {"name": "Luring Mania", "handle": "@luringmania"},
-    {"name": "Deep Blue Fishing", "handle": "@deepbluefishing"},
-    {"name": "Aegean Anglers", "handle": "@aegeananglers"},
-    {"name": "Rock Fishing Greece", "handle": "@rockfishinggreece"},
-    {"name": "Shore Jigging Hellas", "handle": "@shorejigginghellas"},
-    {"name": "Hellenic Fishing Hunters", "handle": "@hellenicfishinghunters"},
-    {"name": "Fishing Club GR", "handle": "@fishingclubgr"}
+    {"name": "NerdFishing", "handle": "@Nerd-Fishing"},
+
 ]
 
 SEED_COMPETITORS_INTL = [

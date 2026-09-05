@@ -13,7 +13,6 @@ import streamlit as st
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
 # ==========================================
-
 YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
 
 try:
@@ -256,11 +255,11 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   1. ΑΠΟΛΥΤΟ FIX ΓΙΑ ΤΑ TABS (ΚΑΤΑΛΕΥΚΑ ΠΑΝΤΑ)
+   ΑΠΟΛΥΤΟ FIX TABS: ΚΑΤΑΛΕΥΚΑ ΓΡΑΜΜΑΤΑ & BOLD ΣΕ ΟΛΑ
    ======================================================== */
-div[data-testid="stTabs"] [role="tablist"],
-[data-testid="stTabs"] [data-baseweb="tab-list"],
-div[role="tablist"] {
+[data-testid="stTabs"] div[role="tablist"],
+div[data-baseweb="tab-list"],
+[data-testid="stTabs"] > div:first-child {
     display: flex !important;
     flex-wrap: wrap !important;
     overflow: visible !important;
@@ -272,7 +271,7 @@ div[role="tablist"] {
     background: #151c2c !important;
     padding: 14px !important;
     border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5) !important;
     width: 100% !important;
     margin-bottom: 25px !important;
@@ -284,11 +283,13 @@ div[role="tablist"] {
     display: none !important;
 }
 
-div[data-testid="stTabs"] button[role="tab"],
+/* Όλα τα κουμπιά Tabs ως Dark Pills */
+[data-testid="stTabs"] button,
+[data-testid="stTabs"] button[role="tab"],
 button[data-baseweb="tab"] {
     background-color: #1e293b !important;
     background: #1e293b !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
     padding: 10px 18px !important;
     border-radius: 12px !important;
     margin: 2px !important;
@@ -296,21 +297,30 @@ button[data-baseweb="tab"] {
     transition: all 0.2s ease !important;
 }
 
-/* ΕΠΙΒΟΛΗ ΚΑΤΑΛΕΥΚΟΥ ΣΕ ΚΑΘΕ ΣΤΟΙΧΕΙΟ ΤΟΥ TAB */
-div[data-testid="stTabs"] button[role="tab"] *,
-[data-testid="stTabs"] button[data-baseweb="tab"] *,
-button[data-baseweb="tab"] * {
-    color: #ffffff !important;
-    font-weight: 800 !important;
+/* ΕΠΙΒΟΛΗ ΚΑΤΑΛΕΥΚΟΥ BOLD ΧΡΩΜΑΤΟΣ ΣΤΑ ΓΡΑΜΜΑΤΑ */
+[data-testid="stTabs"] button *,
+[data-testid="stTabs"] button p,
+[data-testid="stTabs"] button span,
+[data-testid="stTabs"] button div,
+[data-testid="stTabs"] [data-testid="stMarkdownContainer"] p,
+button[data-baseweb="tab"] *,
+button[data-baseweb="tab"] p,
+button[data-baseweb="tab"] span {
+    color: #ffffff !important; /* 100% ΚΑΤΑΛΕΥΚΟ */
+    font-weight: 800 !important; /* BOLD */
     font-size: 0.95rem !important;
     opacity: 1 !important;
+    visibility: visible !important;
     text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
 }
 
-button[data-baseweb="tab"]:hover {
+[data-testid="stTabs"] button:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
     transform: translateY(-2px) !important;
+}
+[data-testid="stTabs"] button:hover * {
+    color: #38bdf8 !important;
 }
 
 /* Χρώματα Active Tabs */
@@ -329,13 +339,18 @@ button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 
+button[data-baseweb="tab"][aria-selected="true"] * {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7) !important;
+}
+
 /* LABELS */
 label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
     color: #38bdf8 !important;
     font-weight: 800 !important;
     font-size: 0.96rem !important;
     opacity: 1 !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6) !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label * {
@@ -378,9 +393,8 @@ input, textarea, select, [data-baseweb="select"] {
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
-[data-testid="stExpander"] details, [data-testid="stExpander"] summary {
+[data-testid="stExpander"] summary {
     background-color: #1e293b !important;
-    background: #1e293b !important;
     border-radius: 12px !important;
 }
 [data-testid="stExpander"] summary * {
@@ -514,13 +528,14 @@ if not check_password():
 # SIDEBAR
 # ==========================================
 with st.sidebar:
-    st.markdown("<h2 style='color:#38bdf8; font-weight:800;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
-    if GITHUB_TOKEN and GITHUB_REPO:
-        st.markdown("<span style='color:#10b981; font-size:0.8rem;'>🟢 Μόνιμο Cloud Sync Ενεργό</span>", unsafe_allow_html=True)
-    else:
-        st.markdown("<span style='color:#facc15; font-size:0.8rem;'>🟡 Τοπική μνήμη (Βάλτε GitHub Token για Auto-Save)</span>", unsafe_allow_html=True)
-    st.markdown("---")
+    st.markdown("<h2 style='color:#38bdf8; font-weight:800; text-align:center;'>🎬 Creator Hub</h2>", unsafe_allow_html=True)
     
+    if GITHUB_TOKEN and GITHUB_REPO:
+        st.success("🟢 **Cloud Sync: Ενεργό**\n\nΌλα αποθηκεύονται αυτόματα στο GitHub!")
+    else:
+        st.warning("⚠️ **Cloud Sync: Ανενεργό**\n\nΒάλτε το GitHub Token στα Secrets για αυτόματο Auto-Save.")
+        
+    st.markdown("---")
     st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>💾 Backup & Επαναφορά</h4>", unsafe_allow_html=True)
     
     json_str = json.dumps(st.session_state.db, ensure_ascii=False, indent=2)
@@ -564,14 +579,13 @@ tabs = st.tabs([
 ])
 
 # ------------------------------------------
-# 1. DASHBOARD (ΜΟΝΟ ΕΛΛΗΝΙΚΑ ΚΑΝΑΛΙΑ ΣΤΟΥΣ ΜΕΣΟΥΣ ΟΡΟΥΣ)
+# 1. DASHBOARD (ΜΟΝΟ ΕΛΛΗΝΙΚΑ ΚΑΝΑΛΙΑ)
 # ------------------------------------------
 with tabs[0]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🏠 Επισκόπηση Καναλιού & Ελληνικού Ανταγωνισμού</h3>", unsafe_allow_html=True)
     my_ch = st.session_state.db.get("my_channel", {})
     comps_gr = st.session_state.db.get("competitors_gr", [])
     
-    # Υπολογισμός Μέσων Όρων ΑΠΟΚΛΕΙΣΤΙΚΑ από τα συγχρονισμένα Ελληνικά Κανάλια
     synced_gr = [c for c in comps_gr if c.get("subs", 0) > 0]
     avg_subs_gr = round(sum(c.get("subs", 0) for c in synced_gr) / len(synced_gr)) if synced_gr else 0
     avg_views_gr = round(sum(c.get("avgViews", 0) for c in synced_gr) / len(synced_gr)) if synced_gr else 0
@@ -712,7 +726,7 @@ with tabs[6]:
                 my_c.update(stats_map[my_id])
                 
             save_data(st.session_state.db)
-            st.success("✅ Όλα τα κανάλια ανανεώθηκαν και αποθηκεύτηκαν στο Cloud!")
+            st.success("✅ Όλα τα κανάλια ανανεώθηκαν και αποθηκεύτηκαν!")
             st.rerun()
 
     col_add, col_del = st.columns(2)
@@ -809,7 +823,7 @@ with tabs[7]:
                         c["growth"] = round(((curr_subs - prev_subs) / prev_subs) * 100, 2)
             
             save_data(st.session_state.db)
-            st.success("✅ Όλοι οι ξένοι competitors ανανεώθηκαν και αποθηκεύτηκαν!")
+            st.success("✅ Όλοι οι ξένοι competitors ανανεώθηκαν!")
             st.rerun()
 
     col_iadd, col_idel = st.columns(2)

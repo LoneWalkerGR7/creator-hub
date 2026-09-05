@@ -13,7 +13,8 @@ import streamlit as st
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
 # ==========================================
-YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
+
+YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
 
 try:
     GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")

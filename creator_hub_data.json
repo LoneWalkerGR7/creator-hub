@@ -555,7 +555,22 @@
     }
   ],
   "schedule": [],
-  "analytics": [],
+  "analytics": [
+    {
+      "id": "1788597342.893724",
+      "title": "Γεμάτο Βυθόμετρο Αλλά ΔΕΝ Τρώνε! | Η λύση με Tenya & Tai Rubber!",
+      "type": "Long-form (16:9)",
+      "views": 4880,
+      "unique_viewers": 3800,
+      "ctr": 5.7,
+      "retention": 32.6,
+      "avd": "06:33",
+      "new_subs": 46,
+      "watchTime": 524.4,
+      "sources": "Λειτουργίες περιήγησης: 3496.0h (666.7%), Προτεινόμενα βίντεο: 422.0h (80.5%)",
+      "date": "2026-09-05"
+    }
+  ],
   "keywords": [],
   "ideas": [],
   "goals": [],

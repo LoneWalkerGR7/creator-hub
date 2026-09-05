@@ -496,6 +496,19 @@
       "efficiency": 592.4,
       "growth": 0.0,
       "resolvedId": "UCL0L7RQ8mrO10OLRlWPoq6A"
+    },
+    {
+      "name": "Kitano Fishing",
+      "country": "Japan",
+      "handle": "@KitanoFishing",
+      "subs": 0,
+      "totalViews": 0,
+      "videos": 0,
+      "avgViews": 0,
+      "viewsPerSub": 0.0,
+      "efficiency": 0.0,
+      "growth": 0.0,
+      "history": []
     }
   ],
   "schedule": [],

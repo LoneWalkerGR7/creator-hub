@@ -255,9 +255,13 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   TABS: ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
+   ΑΠΟΛΥΤΟ FIX TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
    ======================================================== */
-div[data-testid="stTabs"] [role="tablist"],
+.stTabs, [data-testid="stTabs"] {
+    width: 100% !important;
+}
+
+.stTabs [data-baseweb="tab-list"],
 [data-testid="stTabs"] [data-baseweb="tab-list"],
 div[role="tablist"] {
     display: flex !important;
@@ -271,23 +275,25 @@ div[role="tablist"] {
     background: #151c2c !important;
     padding: 14px !important;
     border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5) !important;
     width: 100% !important;
     margin-bottom: 25px !important;
 }
 
 [data-testid="stTabs"] button[aria-label*="Scroll"],
-[data-testid="stTabs"] [data-baseweb="tab-highlight"],
-[data-testid="stTabs"] [data-baseweb="tab-border"] {
+[data-baseweb="tab-highlight"],
+[data-baseweb="tab-border"] {
     display: none !important;
 }
 
-div[data-testid="stTabs"] button[role="tab"],
+/* Όλα τα κουμπιά Tabs ως Dark Pills */
+.stTabs [data-baseweb="tab"],
+[data-testid="stTabs"] [data-baseweb="tab"],
 button[data-baseweb="tab"] {
     background-color: #1e293b !important;
     background: #1e293b !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
     padding: 10px 18px !important;
     border-radius: 12px !important;
     margin: 2px !important;
@@ -295,24 +301,28 @@ button[data-baseweb="tab"] {
     transition: all 0.2s ease !important;
 }
 
-div[data-testid="stTabs"] button[role="tab"] *,
-[data-testid="stTabs"] button[data-baseweb="tab"] *,
-button[data-baseweb="tab"] * {
-    color: #ffffff !important;
-    font-weight: 800 !important;
+/* ΕΠΙΒΟΛΗ ΚΑΤΑΛΕΥΚΟΥ BOLD ΧΡΩΜΑΤΟΣ ΣΤΑ ΓΡΑΜΜΑΤΑ */
+.stTabs [data-baseweb="tab"] *,
+.stTabs [data-baseweb="tab"] p,
+[data-testid="stTabs"] [data-baseweb="tab"] *,
+[data-testid="stTabs"] [data-baseweb="tab"] p,
+[data-testid="stTabs"] [data-testid="stMarkdownContainer"] p,
+button[data-baseweb="tab"] *,
+button[data-baseweb="tab"] p,
+button[data-baseweb="tab"] span {
+    color: #ffffff !important; /* 100% ΚΑΤΑΛΕΥΚΟ */
+    font-weight: 800 !important; /* BOLD */
     font-size: 0.95rem !important;
     opacity: 1 !important;
     visibility: visible !important;
     text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
 }
 
-button[data-baseweb="tab"]:hover {
+.stTabs [data-baseweb="tab"]:hover,
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
     transform: translateY(-2px) !important;
-}
-[data-testid="stTabs"] button[data-baseweb="tab"]:hover * {
-    color: #38bdf8 !important;
 }
 
 /* Χρώματα Active Tabs */
@@ -1053,34 +1063,38 @@ with tabs[8]:
         rows_an_list = []
         for a in sorted_analytics:
             typ_label = a.get("type", "Long-form")
-            typ_badge = '<span style="background:rgba(244,63,94,0.25); color:#f43f5e; padding:3px 9px; border-radius:12px; font-weight:800;">Shorts</span>' if "Shorts" in typ_label else '<span style="background:rgba(59,130,246,0.25); color:#60a5fa; padding:3px 9px; border-radius:12px; font-weight:800;">Long-form</span>'
+            # Διορθωμένο badge με σταθερό πλάτος & no-wrap για να μην σπάει
+            typ_badge = '<span style="background:rgba(244,63,94,0.25); color:#f43f5e; border:1px solid rgba(244,63,94,0.4); padding:4px 12px; border-radius:12px; font-weight:800; white-space:nowrap; display:inline-block; min-width:95px; text-align:center;">Shorts</span>' if "Shorts" in typ_label else '<span style="background:rgba(59,130,246,0.25); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); padding:4px 12px; border-radius:12px; font-weight:800; white-space:nowrap; display:inline-block; min-width:95px; text-align:center;">Long-form</span>'
+            
             ctr_val = a.get("ctr", 0.0)
-            ctr_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">{ctr_val}%</span>' if ctr_val >= 5.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800;">{ctr_val}%</span>'
+            ctr_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ctr_val}%</span>' if ctr_val >= 5.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ctr_val}%</span>'
+
             ret_val = a.get("retention", 0.0)
-            ret_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>' if ret_val >= 40.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>'
+            ret_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ret_val}%</span>' if ret_val >= 40.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ret_val}%</span>'
+
             subs_count = a.get("new_subs", 0)
-            subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8;">{subs_count}</span>'
+            subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
             # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]
-                src_html = '<div style="display:flex; flex-direction:column; gap:4px;">' + "".join([f'<span class="source-badge">{p}</span>' for p in src_parts]) + '</div>'
+                src_html = '<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">' + "".join([f'<span class="source-badge">{p}</span>' for p in src_parts]) + '</div>'
             else:
                 src_html = '<span style="color:#94a3b8;">—</span>'
 
             row_an = (
                 f'<tr>'
-                f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem; min-width:220px;">{a.get("title", "—")}</td>'
-                f'<td style="text-align:center;">{typ_badge}</td>'
-                f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(a.get("views", 0))}</td>'
-                f'<td style="text-align:right; font-weight:700; color:#cbd5e1;">{fmt(a.get("unique_viewers", 0))}</td>'
-                f'<td style="text-align:center;">{ctr_badge}</td>'
-                f'<td style="text-align:center;">{ret_badge}</td>'
-                f'<td style="text-align:center; font-weight:700; color:#38bdf8;">{a.get("avd", "—")}</td>'
-                f'<td style="text-align:center;">{subs_badge}</td>'
-                f'<td style="text-align:right; font-weight:800; color:#38bdf8;">{a.get("watchTime", 0.0)} h</td>'
-                f'<td style="text-align:left; min-width:200px;">{src_html}</td>'
+                f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem; min-width:240px;">{a.get("title", "—")}</td>'
+                f'<td style="text-align:center; min-width:115px; white-space:nowrap;">{typ_badge}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#ffffff; min-width:95px;">{fmt(a.get("views", 0))}</td>'
+                f'<td style="text-align:right; font-weight:700; color:#cbd5e1; min-width:95px;">{fmt(a.get("unique_viewers", 0))}</td>'
+                f'<td style="text-align:center; min-width:85px;">{ctr_badge}</td>'
+                f'<td style="text-align:center; min-width:95px;">{ret_badge}</td>'
+                f'<td style="text-align:center; font-weight:700; color:#38bdf8; min-width:105px; white-space:nowrap;">{a.get("avd", "—")}</td>'
+                f'<td style="text-align:center; min-width:85px;">{subs_badge}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#38bdf8; min-width:100px; white-space:nowrap;">{a.get("watchTime", 0.0)} h</td>'
+                f'<td style="text-align:left; min-width:230px;">{src_html}</td>'
                 f'</tr>'
             )
             rows_an_list.append(row_an)
@@ -1089,11 +1103,16 @@ with tabs[8]:
             '<div class="data-table-container">'
             '<table class="custom-table">'
             '<thead><tr>'
-            '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th><th style="text-align:center;">ΤΥΠΟΣ</th>'
-            '<th style="text-align:right;">ΠΡΟΒΟΛΕΣ</th><th style="text-align:right;">ΜΟΝ. ΘΕΑΤΕΣ</th>'
-            '<th style="text-align:center;">CTR (%)</th><th style="text-align:center;">RETENTION (%)</th>'
-            '<th style="text-align:center;">ΜΕΣΗ ΔΙΑΡΚΕΙΑ (AVD)</th><th style="text-align:center;">NEW SUBS</th>'
-            '<th style="text-align:right;">WATCH TIME</th><th style="text-align:left;">ΠΗΓΕΣ (ΩΡΕΣ & %)</th>'
+            '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th>'
+            '<th style="text-align:center;">ΤΥΠΟΣ</th>'
+            '<th style="text-align:right;">ΠΡΟΒΟΛΕΣ</th>'
+            '<th style="text-align:right;">ΜΟΝ. ΘΕΑΤΕΣ</th>'
+            '<th style="text-align:center;">CTR (%)</th>'
+            '<th style="text-align:center;">RETENTION (%)</th>'
+            '<th style="text-align:center;">ΜΕΣΗ ΔΙΑΡΚΕΙΑ (AVD)</th>'
+            '<th style="text-align:center;">NEW SUBS</th>'
+            '<th style="text-align:right;">WATCH TIME</th>'
+            '<th style="text-align:left;">ΠΗΓΕΣ (ΩΡΕΣ & %)</th>'
             '</tr></thead>'
             '<tbody>' + "".join(rows_an_list) + '</tbody>'
             '</table></div>'

@@ -255,11 +255,11 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   ΑΠΟΛΥΤΟ FIX TABS: ΚΑΤΑΛΕΥΚΑ ΓΡΑΜΜΑΤΑ & BOLD ΣΕ ΟΛΑ
+   TABS: ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
    ======================================================== */
-[data-testid="stTabs"] div[role="tablist"],
-div[data-baseweb="tab-list"],
-[data-testid="stTabs"] > div:first-child {
+div[data-testid="stTabs"] [role="tablist"],
+[data-testid="stTabs"] [data-baseweb="tab-list"],
+div[role="tablist"] {
     display: flex !important;
     flex-wrap: wrap !important;
     overflow: visible !important;
@@ -271,7 +271,7 @@ div[data-baseweb="tab-list"],
     background: #151c2c !important;
     padding: 14px !important;
     border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5) !important;
     width: 100% !important;
     margin-bottom: 25px !important;
@@ -283,13 +283,11 @@ div[data-baseweb="tab-list"],
     display: none !important;
 }
 
-/* Όλα τα κουμπιά Tabs ως Dark Pills */
-[data-testid="stTabs"] button,
-[data-testid="stTabs"] button[role="tab"],
+div[data-testid="stTabs"] button[role="tab"],
 button[data-baseweb="tab"] {
     background-color: #1e293b !important;
     background: #1e293b !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
     padding: 10px 18px !important;
     border-radius: 12px !important;
     margin: 2px !important;
@@ -297,29 +295,23 @@ button[data-baseweb="tab"] {
     transition: all 0.2s ease !important;
 }
 
-/* ΕΠΙΒΟΛΗ ΚΑΤΑΛΕΥΚΟΥ BOLD ΧΡΩΜΑΤΟΣ ΣΤΑ ΓΡΑΜΜΑΤΑ */
-[data-testid="stTabs"] button *,
-[data-testid="stTabs"] button p,
-[data-testid="stTabs"] button span,
-[data-testid="stTabs"] button div,
-[data-testid="stTabs"] [data-testid="stMarkdownContainer"] p,
-button[data-baseweb="tab"] *,
-button[data-baseweb="tab"] p,
-button[data-baseweb="tab"] span {
-    color: #ffffff !important; /* 100% ΚΑΤΑΛΕΥΚΟ */
-    font-weight: 800 !important; /* BOLD */
+div[data-testid="stTabs"] button[role="tab"] *,
+[data-testid="stTabs"] button[data-baseweb="tab"] *,
+button[data-baseweb="tab"] * {
+    color: #ffffff !important;
+    font-weight: 800 !important;
     font-size: 0.95rem !important;
     opacity: 1 !important;
     visibility: visible !important;
     text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
 }
 
-[data-testid="stTabs"] button:hover {
+button[data-baseweb="tab"]:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
     transform: translateY(-2px) !important;
 }
-[data-testid="stTabs"] button:hover * {
+[data-testid="stTabs"] button[data-baseweb="tab"]:hover * {
     color: #38bdf8 !important;
 }
 
@@ -393,8 +385,9 @@ input, textarea, select, [data-baseweb="select"] {
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
-[data-testid="stExpander"] summary {
+[data-testid="stExpander"] details, [data-testid="stExpander"] summary {
     background-color: #1e293b !important;
+    background: #1e293b !important;
     border-radius: 12px !important;
 }
 [data-testid="stExpander"] summary * {
@@ -486,6 +479,20 @@ button[kind="primary"] {
 .growth-up { color: #10b981; font-weight: 800; }
 .growth-down { color: #ef4444; font-weight: 800; }
 .growth-flat { color: #94a3b8; font-weight: 600; }
+
+.source-badge {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin: 2px 0;
+    white-space: nowrap;
+}
+
 .prompt-card-box {
     background: #151c2c;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -729,7 +736,7 @@ with tabs[6]:
             st.success("✅ Όλα τα κανάλια ανανεώθηκαν και αποθηκεύτηκαν!")
             st.rerun()
 
-    col_add, col_del = st.columns(2)
+    col_add, col_edit, col_del = st.columns(3)
     with col_add:
         with st.expander("➕ Προσθήκη Νέου Καναλιού"):
             with st.form("add_comp_gr", clear_on_submit=True):
@@ -740,6 +747,23 @@ with tabs[6]:
                         st.session_state.db["competitors_gr"].append({"name": c_name, "handle": c_handle, **blank_stats()})
                         save_data(st.session_state.db)
                         st.rerun()
+
+    with col_edit:
+        with st.expander("✏️ Επεξεργασία Καναλιού"):
+            comp_names = [c["name"] for c in comps]
+            if comp_names:
+                selected_edit = st.selectbox("Επιλέξτε κανάλι:", comp_names, key="sel_edit_gr")
+                target_comp = next((c for c in comps if c["name"] == selected_edit), None)
+                if target_comp:
+                    with st.form("edit_comp_gr_form"):
+                        new_name = st.text_input("Όνομα", value=target_comp.get("name", ""))
+                        new_handle = st.text_input("@handle ή UC ID", value=target_comp.get("handle", ""))
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_comp["name"] = new_name
+                            target_comp["handle"] = new_handle
+                            save_data(st.session_state.db)
+                            st.success("Οι αλλαγές αποθηκεύτηκαν!")
+                            st.rerun()
 
     with col_del:
         with st.expander("🗑️ Διαγραφή Καναλιού"):
@@ -826,7 +850,7 @@ with tabs[7]:
             st.success("✅ Όλοι οι ξένοι competitors ανανεώθηκαν!")
             st.rerun()
 
-    col_iadd, col_idel = st.columns(2)
+    col_iadd, col_iedit, col_idel = st.columns(3)
     with col_iadd:
         with st.expander("➕ Προσθήκη Ξένου Καναλιού"):
             with st.form("add_comp_intl", clear_on_submit=True):
@@ -838,6 +862,25 @@ with tabs[7]:
                         st.session_state.db["competitors_intl"].append({"name": ci_name, "country": ci_country, "handle": ci_handle, **blank_stats()})
                         save_data(st.session_state.db)
                         st.rerun()
+
+    with col_iedit:
+        with st.expander("✏️ Επεξεργασία Ξένου Καναλιού"):
+            comp_intl_names = [c["name"] for c in comps_intl]
+            if comp_intl_names:
+                selected_iedit = st.selectbox("Επιλέξτε κανάλι:", comp_intl_names, key="sel_iedit")
+                target_icomp = next((c for c in comps_intl if c["name"] == selected_iedit), None)
+                if target_icomp:
+                    with st.form("edit_comp_intl_form"):
+                        new_iname = st.text_input("Όνομα", value=target_icomp.get("name", ""))
+                        new_icountry = st.text_input("Χώρα", value=target_icomp.get("country", ""))
+                        new_ihandle = st.text_input("@handle ή Channel ID", value=target_icomp.get("handle", ""))
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_icomp["name"] = new_iname
+                            target_icomp["country"] = new_icountry
+                            target_icomp["handle"] = new_ihandle
+                            save_data(st.session_state.db)
+                            st.success("Οι αλλαγές αποθηκεύτηκαν!")
+                            st.rerun()
 
     with col_idel:
         with st.expander("🗑️ Διαγραφή Ξένου Καναλιού"):
@@ -893,73 +936,101 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY
+# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
     
-    with st.expander("➕ Καταγραφή Στατιστικών Βίντεο"):
-        with st.form("an_form_add", clear_on_submit=True):
-            a_c1, a_c2, a_c3 = st.columns(3)
-            with a_c1:
+    analytics_list = st.session_state.db.get("analytics", [])
+
+    col_a_add, col_a_edit, col_a_del = st.columns(3)
+    with col_a_add:
+        with st.expander("➕ Καταγραφή Νέου Βίντεο"):
+            with st.form("an_form_add", clear_on_submit=True):
                 t = st.text_input("Τίτλος Βίντεο")
                 typ = st.selectbox("Τύπος Βίντεο", ["Long-form (16:9)", "Shorts (9:16)"])
                 views = st.number_input("👁️ Προβολές (Views)", min_value=0, step=100)
                 unique_viewers = st.number_input("👥 Μοναδικοί Θεατές", min_value=0, step=50)
-
-            with a_c2:
                 ctr = st.number_input("CTR (%)", min_value=0.0, max_value=100.0, step=0.1)
                 ret = st.number_input("Retention / Avg Viewed (%)", min_value=0.0, max_value=100.0, step=0.1)
                 avd = st.text_input("⏱️ Μέση Διάρκεια (AVD)", placeholder="π.χ. 03:45")
                 new_subs = st.number_input("➕ New Subs", step=1)
-
-            with a_c3:
                 wt = st.number_input("Συνολικό Watch Time (Ώρες)", min_value=0.0, step=0.1)
-                st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:4px;'>📊 Πηγές Επισκεψιμότητας & Ώρες</p>", unsafe_allow_html=True)
+                
+                st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:2px;'>📊 Πηγές Επισκεψιμότητας & Ώρες</p>", unsafe_allow_html=True)
                 src_1 = st.selectbox("1η Κύρια Πηγή:", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src1")
                 hours_1 = st.number_input("Ώρες 1ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h1")
                 src_2 = st.selectbox("2η Πηγή (προαιρετικά):", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src2")
                 hours_2 = st.number_input("Ώρες 2ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h2")
 
-            if st.form_submit_button("➕ Αποθήκευση Analytics Βίντεο", use_container_width=True):
-                if t:
-                    if "analytics" not in st.session_state.db: st.session_state.db["analytics"] = []
-                    sources_list = []
-                    if wt > 0:
-                        if src_1 != "— Καμία —" and hours_1 > 0:
-                            pct_1 = round((hours_1 / wt) * 100, 1)
-                            sources_list.append(f"{src_1}: {hours_1}h ({pct_1}%)")
-                        elif src_1 != "— Καμία —": sources_list.append(src_1)
-                        if src_2 != "— Καμία —" and hours_2 > 0:
-                            pct_2 = round((hours_2 / wt) * 100, 1)
-                            sources_list.append(f"{src_2}: {hours_2}h ({pct_2}%)")
-                        elif src_2 != "— Καμία —": sources_list.append(src_2)
-                    else:
-                        if src_1 != "— Καμία —": sources_list.append(src_1)
-                        if src_2 != "— Καμία —": sources_list.append(src_2)
-                    
-                    sources_str = ", ".join(sources_list) if sources_list else "—"
+                if st.form_submit_button("➕ Αποθήκευση Βίντεο", use_container_width=True):
+                    if t:
+                        if "analytics" not in st.session_state.db: st.session_state.db["analytics"] = []
+                        
+                        sources_list = []
+                        if wt > 0:
+                            if src_1 != "— Καμία —" and hours_1 > 0:
+                                pct_1 = round((hours_1 / wt) * 100, 1)
+                                sources_list.append(f"{src_1}: {hours_1}h ({pct_1}%)")
+                            elif src_1 != "— Καμία —": sources_list.append(src_1)
+                            
+                            if src_2 != "— Καμία —" and hours_2 > 0:
+                                pct_2 = round((hours_2 / wt) * 100, 1)
+                                sources_list.append(f"{src_2}: {hours_2}h ({pct_2}%)")
+                            elif src_2 != "— Καμία —": sources_list.append(src_2)
+                        else:
+                            if src_1 != "— Καμία —": sources_list.append(src_1)
+                            if src_2 != "— Καμία —": sources_list.append(src_2)
+                        
+                        sources_str = ", ".join(sources_list) if sources_list else "—"
 
-                    st.session_state.db["analytics"].append({
-                        "id": str(datetime.datetime.now().timestamp()), "title": t, "type": typ,
-                        "views": int(views), "unique_viewers": int(unique_viewers), "ctr": float(ctr),
-                        "retention": float(ret), "avd": avd or "—", "new_subs": int(new_subs),
-                        "watchTime": float(wt), "sources": sources_str, "date": str(datetime.date.today())
-                    })
+                        st.session_state.db["analytics"].append({
+                            "id": str(datetime.datetime.now().timestamp()), "title": t, "type": typ,
+                            "views": int(views), "unique_viewers": int(unique_viewers), "ctr": float(ctr),
+                            "retention": float(ret), "avd": avd or "—", "new_subs": int(new_subs),
+                            "watchTime": float(wt), "sources": sources_str, "date": str(datetime.date.today())
+                        })
+                        save_data(st.session_state.db)
+                        st.success("✅ Τα στατιστικά αποθηκεύτηκαν!")
+                        st.rerun()
+
+    with col_a_edit:
+        with st.expander("✏️ Επεξεργασία Βίντεο"):
+            if analytics_list:
+                an_titles = [a.get("title", "Βίντεο") for a in analytics_list]
+                selected_a_edit = st.selectbox("Επιλέξτε βίντεο:", an_titles, key="sel_a_edit")
+                target_an = next((a for a in analytics_list if a.get("title") == selected_a_edit), None)
+                if target_an:
+                    with st.form("edit_an_form"):
+                        e_title = st.text_input("Τίτλος", value=target_an.get("title", ""))
+                        e_views = st.number_input("Προβολές", value=int(target_an.get("views", 0)), step=100)
+                        e_ctr = st.number_input("CTR (%)", value=float(target_an.get("ctr", 0.0)), step=0.1)
+                        e_ret = st.number_input("Retention (%)", value=float(target_an.get("retention", 0.0)), step=0.1)
+                        e_avd = st.text_input("AVD", value=str(target_an.get("avd", "")))
+                        e_subs = st.number_input("New Subs", value=int(target_an.get("new_subs", 0)), step=1)
+                        e_wt = st.number_input("Watch Time (h)", value=float(target_an.get("watchTime", 0.0)), step=0.1)
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_an["title"] = e_title
+                            target_an["views"] = int(e_views)
+                            target_an["ctr"] = float(e_ctr)
+                            target_an["retention"] = float(e_ret)
+                            target_an["avd"] = e_avd
+                            target_an["new_subs"] = int(e_subs)
+                            target_an["watchTime"] = float(e_wt)
+                            save_data(st.session_state.db)
+                            st.success("Οι αλλαγές αποθηκεύτηκαν!")
+                            st.rerun()
+
+    with col_a_del:
+        with st.expander("🗑️ Διαγραφή Εγγραφής"):
+            if analytics_list:
+                an_titles = [a.get("title", "Βίντεο") for a in analytics_list]
+                selected_an_del = st.selectbox("Επιλέξτε βίντεο:", an_titles, key="sel_del_an")
+                if st.button("🗑️ Διαγραφή Επιλεγμένου", key="btn_del_an", type="primary"):
+                    st.session_state.db["analytics"] = [a for a in analytics_list if a.get("title") != selected_an_del]
                     save_data(st.session_state.db)
-                    st.success("✅ Τα στατιστικά αποθηκεύτηκαν!")
+                    st.success("Η εγγραφή διαγράφηκε!")
                     st.rerun()
-
-    analytics_list = st.session_state.db.get("analytics", [])
-    if analytics_list:
-        with st.expander("🗑️ Διαγραφή Εγγραφής Analytics"):
-            an_titles = [a.get("title", "Βίντεο") for a in analytics_list]
-            selected_an_del = st.selectbox("Επιλέξτε βίντεο για διαγραφή:", an_titles, key="sel_del_an")
-            if st.button("🗑️ Διαγραφή Επιλεγμένου Βίντεο", key="btn_del_an", type="primary"):
-                st.session_state.db["analytics"] = [a for a in analytics_list if a.get("title") != selected_an_del]
-                save_data(st.session_state.db)
-                st.success(f"Η εγγραφή '{selected_an_del}' διαγράφηκε!")
-                st.rerun()
 
     col_asort1, col_asort2, _ = st.columns([2, 1.8, 1.5])
     with col_asort1:
@@ -989,12 +1060,18 @@ with tabs[8]:
             ret_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>' if ret_val >= 40.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800;">{ret_val}%</span>'
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8;">{subs_count}</span>'
+
+            # Stacked source badges
             src_str = a.get("sources", "—")
-            src_html = f'<span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:3px 10px; border-radius:8px; font-weight:700;">{src_str}</span>' if src_str != "—" else '<span style="color:#94a3b8;">—</span>'
+            if src_str != "—":
+                src_parts = [s.strip() for s in src_str.split(",") if s.strip()]
+                src_html = '<div style="display:flex; flex-direction:column; gap:4px;">' + "".join([f'<span class="source-badge">{p}</span>' for p in src_parts]) + '</div>'
+            else:
+                src_html = '<span style="color:#94a3b8;">—</span>'
 
             row_an = (
                 f'<tr>'
-                f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem;">{a.get("title", "—")}</td>'
+                f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem; min-width:220px;">{a.get("title", "—")}</td>'
                 f'<td style="text-align:center;">{typ_badge}</td>'
                 f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(a.get("views", 0))}</td>'
                 f'<td style="text-align:right; font-weight:700; color:#cbd5e1;">{fmt(a.get("unique_viewers", 0))}</td>'
@@ -1003,7 +1080,7 @@ with tabs[8]:
                 f'<td style="text-align:center; font-weight:700; color:#38bdf8;">{a.get("avd", "—")}</td>'
                 f'<td style="text-align:center;">{subs_badge}</td>'
                 f'<td style="text-align:right; font-weight:800; color:#38bdf8;">{a.get("watchTime", 0.0)} h</td>'
-                f'<td>{src_html}</td>'
+                f'<td style="text-align:left; min-width:200px;">{src_html}</td>'
                 f'</tr>'
             )
             rows_an_list.append(row_an)

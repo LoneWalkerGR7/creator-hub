@@ -535,6 +535,19 @@
       "efficiency": 0.0,
       "growth": 0.0,
       "history": []
+    },
+    {
+      "name": "Fisherlandia",
+      "country": "Italy",
+      "handle": "@fisherlandia",
+      "subs": 0,
+      "totalViews": 0,
+      "videos": 0,
+      "avgViews": 0,
+      "viewsPerSub": 0.0,
+      "efficiency": 0.0,
+      "growth": 0.0,
+      "history": []
     }
   ],
   "schedule": [],

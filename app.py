@@ -13,7 +13,7 @@ import streamlit as st
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
 # ==========================================
-YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
+YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
 
 try:
     GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
@@ -255,7 +255,7 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   ΑΠΟΛΥΤΟ FIX TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
+   TABS: ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
    ======================================================== */
 .stTabs, [data-testid="stTabs"] {
     width: 100% !important;
@@ -287,7 +287,6 @@ div[role="tablist"] {
     display: none !important;
 }
 
-/* Όλα τα κουμπιά Tabs ως Dark Pills */
 .stTabs [data-baseweb="tab"],
 [data-testid="stTabs"] [data-baseweb="tab"],
 button[data-baseweb="tab"] {
@@ -301,7 +300,6 @@ button[data-baseweb="tab"] {
     transition: all 0.2s ease !important;
 }
 
-/* ΕΠΙΒΟΛΗ ΚΑΤΑΛΕΥΚΟΥ BOLD ΧΡΩΜΑΤΟΣ ΣΤΑ ΓΡΑΜΜΑΤΑ */
 .stTabs [data-baseweb="tab"] *,
 .stTabs [data-baseweb="tab"] p,
 [data-testid="stTabs"] [data-baseweb="tab"] *,
@@ -310,8 +308,8 @@ button[data-baseweb="tab"] {
 button[data-baseweb="tab"] *,
 button[data-baseweb="tab"] p,
 button[data-baseweb="tab"] span {
-    color: #ffffff !important; /* 100% ΚΑΤΑΛΕΥΚΟ */
-    font-weight: 800 !important; /* BOLD */
+    color: #ffffff !important;
+    font-weight: 800 !important;
     font-size: 0.95rem !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -643,7 +641,7 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
-# 2-5. STRATEGY TABS
+# 2-5. STRATEGY TABS (ΜΕ ΠΛΗΡΕΣ INLINE EDIT & DELETE)
 # ------------------------------------------
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
@@ -654,7 +652,16 @@ for key, t_view, t_title in strat_map:
             col_s1, col_s2 = st.columns([5.5, 1])
             with col_s1:
                 with st.expander(f"📌 {item['step']}", expanded=True):
-                    st.write(item["desc"])
+                    # Φόρμα Επεξεργασίας μέσα στο Expander
+                    with st.form(f"edit_step_form_{key}_{idx}"):
+                        edit_title = st.text_input("Τίτλος Βήματος", value=item["step"], key=f"edit_t_{key}_{idx}")
+                        edit_desc = st.text_area("Περιγραφή Βήματος", value=item["desc"], height=90, key=f"edit_d_{key}_{idx}")
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών Βήματος", use_container_width=True):
+                            item["step"] = edit_title
+                            item["desc"] = edit_desc
+                            save_data(st.session_state.db)
+                            st.success("✅ Το βήμα ενημερώθηκε!")
+                            st.rerun()
             with col_s2:
                 if st.button("🗑️ Διαγραφή", key=f"del_step_{key}_{idx}", type="primary"):
                     st.session_state.db["strategies"][key].pop(idx)
@@ -1063,7 +1070,6 @@ with tabs[8]:
         rows_an_list = []
         for a in sorted_analytics:
             typ_label = a.get("type", "Long-form")
-            # Διορθωμένο badge με σταθερό πλάτος & no-wrap για να μην σπάει
             typ_badge = '<span style="background:rgba(244,63,94,0.25); color:#f43f5e; border:1px solid rgba(244,63,94,0.4); padding:4px 12px; border-radius:12px; font-weight:800; white-space:nowrap; display:inline-block; min-width:95px; text-align:center;">Shorts</span>' if "Shorts" in typ_label else '<span style="background:rgba(59,130,246,0.25); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); padding:4px 12px; border-radius:12px; font-weight:800; white-space:nowrap; display:inline-block; min-width:95px; text-align:center;">Long-form</span>'
             
             ctr_val = a.get("ctr", 0.0)
@@ -1075,7 +1081,6 @@ with tabs[8]:
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
-            # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]

@@ -9,11 +9,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import streamlit as st
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
 
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
 # ==========================================
 YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
+ANALYTICS_SCOPES = ['https://www.googleapis.com/auth/yt-analytics.readonly']
 
 try:
     GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
@@ -100,6 +104,13 @@ def rank_badge(rank, is_my=True):
     bg, color = ("rgba(16, 185, 129, 0.25)", "#10b981") if is_my else ("rgba(59, 130, 246, 0.25)", "#60a5fa")
     emoji = "🟢" if is_my else "🔵"
     return f'<span style="background:{bg}; color:{color}; padding:3px 9px; border-radius:12px; font-weight:800; border:1px solid {color}50;">{emoji} {r_str}</span>'
+
+def google_rank_badge(rank):
+    if not rank or str(rank).strip() in ["", "0", "—", "-", "None"]:
+        return '<span style="color:#94a3b8;">—</span>'
+    r_str = str(rank).strip()
+    if not r_str.startswith("#"): r_str = f"#{r_str}"
+    return f'<span style="background:rgba(249, 115, 22, 0.25); color:#fb923c; padding:3px 9px; border-radius:12px; font-weight:800; border:1px solid rgba(249, 115, 22, 0.5);">🟠 {r_str}</span>'
 
 def sort_channels(channels, sort_by, sort_dir):
     is_desc = "Φθίνουσα" in sort_dir
@@ -192,6 +203,7 @@ def get_default_data():
         "competitors_gr": [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR],
         "competitors_intl": [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL],
         "schedule": [], "analytics": [], "keywords": [], "ideas": [], "goals": [], "prompts": [],
+        "google_oauth_token": None,
         "strategies": {
             "yt": [{"step": "1. Προ-Παραγωγή", "desc": "Έρευνα SEO, Scripting, Thumbnail Concept."}, {"step": "2. Παραγωγή", "desc": "Οριζόντια εγγραφή (16:9), Ήχος Studio, A-Roll & B-Roll."}, {"step": "3. Post-Production", "desc": "Montage, Sound Effects, Chapters, Custom Thumbnail."}],
             "shorts": [{"step": "1. Hook & Format", "desc": "Hook στα πρώτα 2'', Κάθετο (9:16), διάρκεια < 60 sec."}],
@@ -255,15 +267,10 @@ html, body, [class*="css"], .stApp {
 }
 
 /* ========================================================
-   TABS: ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
+   ΑΠΟΛΥΤΟ FIX TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
    ======================================================== */
-.stTabs, [data-testid="stTabs"] {
-    width: 100% !important;
-}
-
-.stTabs [data-baseweb="tab-list"],
-[data-testid="stTabs"] [data-baseweb="tab-list"],
-div[role="tablist"] {
+.stTabs, [data-testid="stTabs"] { width: 100% !important; }
+.stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
     flex-wrap: wrap !important;
     overflow: visible !important;
@@ -281,15 +288,9 @@ div[role="tablist"] {
     margin-bottom: 25px !important;
 }
 
-[data-testid="stTabs"] button[aria-label*="Scroll"],
-[data-baseweb="tab-highlight"],
-[data-baseweb="tab-border"] {
-    display: none !important;
-}
+[data-testid="stTabs"] button[aria-label*="Scroll"], [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] { display: none !important; }
 
-.stTabs [data-baseweb="tab"],
-[data-testid="stTabs"] [data-baseweb="tab"],
-button[data-baseweb="tab"] {
+.stTabs [data-baseweb="tab"], [data-testid="stTabs"] [data-baseweb="tab"], button[data-baseweb="tab"] {
     background-color: #1e293b !important;
     background: #1e293b !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -300,14 +301,7 @@ button[data-baseweb="tab"] {
     transition: all 0.2s ease !important;
 }
 
-.stTabs [data-baseweb="tab"] *,
-.stTabs [data-baseweb="tab"] p,
-[data-testid="stTabs"] [data-baseweb="tab"] *,
-[data-testid="stTabs"] [data-baseweb="tab"] p,
-[data-testid="stTabs"] [data-testid="stMarkdownContainer"] p,
-button[data-baseweb="tab"] *,
-button[data-baseweb="tab"] p,
-button[data-baseweb="tab"] span {
+.stTabs [data-baseweb="tab"] *, .stTabs [data-baseweb="tab"] p, [data-testid="stTabs"] [data-baseweb="tab"] *, [data-testid="stTabs"] [data-baseweb="tab"] p, [data-testid="stTabs"] [data-testid="stMarkdownContainer"] p, button[data-baseweb="tab"] *, button[data-baseweb="tab"] p, button[data-baseweb="tab"] span {
     color: #ffffff !important;
     font-weight: 800 !important;
     font-size: 0.95rem !important;
@@ -316,14 +310,12 @@ button[data-baseweb="tab"] span {
     text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
 }
 
-.stTabs [data-baseweb="tab"]:hover,
-[data-testid="stTabs"] button[data-baseweb="tab"]:hover {
+.stTabs [data-baseweb="tab"]:hover, [data-testid="stTabs"] button[data-baseweb="tab"]:hover {
     background-color: #334155 !important;
     border-color: #38bdf8 !important;
     transform: translateY(-2px) !important;
 }
 
-/* Χρώματα Active Tabs */
 button[data-baseweb="tab"]:nth-of-type(1)[aria-selected="true"] { background: linear-gradient(135deg, #2e1065 0%, #a855f7 100%) !important; border: 2px solid #c084fc !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(2)[aria-selected="true"] { background: linear-gradient(135deg, #450a0a 0%, #ef4444 100%) !important; border: 2px solid #fca5a5 !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(3)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #f43f5e 100%) !important; border: 2px solid #fecdd3 !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.6) !important; }
@@ -339,11 +331,7 @@ button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 
-button[data-baseweb="tab"][aria-selected="true"] * {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    text-shadow: 0 0 10px rgba(255,255,255,0.7) !important;
-}
+button[data-baseweb="tab"][aria-selected="true"] * { color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 0 10px rgba(255,255,255,0.7) !important; }
 
 /* LABELS */
 label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
@@ -353,12 +341,7 @@ label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
     opacity: 1 !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label * {
-    color: #ffffff !important;
-    font-weight: 700 !important;
-    font-size: 0.92rem !important;
-}
-
+div[data-testid="stRadio"] div[role="radiogroup"] label * { color: #ffffff !important; font-weight: 700 !important; font-size: 0.92rem !important; }
 input, textarea, select, [data-baseweb="select"] {
     background-color: #0d1322 !important;
     color: #ffffff !important;
@@ -375,17 +358,8 @@ input, textarea, select, [data-baseweb="select"] {
     padding: 16px 20px !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
 }
-[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * {
-    color: #38bdf8 !important;
-    font-weight: 800 !important;
-    font-size: 0.95rem !important;
-}
-[data-testid="stMetricValue"], [data-testid="stMetricValue"] * {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    font-size: 2.3rem !important;
-    text-shadow: 0 2px 10px rgba(255,255,255,0.2) !important;
-}
+[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * { color: #38bdf8 !important; font-weight: 800 !important; font-size: 0.95rem !important; }
+[data-testid="stMetricValue"], [data-testid="stMetricValue"] * { color: #ffffff !important; font-weight: 800 !important; font-size: 2.3rem !important; text-shadow: 0 2px 10px rgba(255,255,255,0.2) !important; }
 
 [data-testid="stExpander"], div[data-testid="stExpander"] {
     background-color: #151c2c !important;
@@ -393,21 +367,9 @@ input, textarea, select, [data-baseweb="select"] {
     border-radius: 12px !important;
     margin-bottom: 12px !important;
 }
-[data-testid="stExpander"] details, [data-testid="stExpander"] summary {
-    background-color: #1e293b !important;
-    background: #1e293b !important;
-    border-radius: 12px !important;
-}
-[data-testid="stExpander"] summary * {
-    color: #38bdf8 !important;
-    font-weight: 800 !important;
-    font-size: 1rem !important;
-}
-[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
-    background-color: #151c2c !important;
-    color: #ffffff !important;
-    padding: 14px !important;
-}
+[data-testid="stExpander"] details, [data-testid="stExpander"] summary { background-color: #1e293b !important; background: #1e293b !important; border-radius: 12px !important; }
+[data-testid="stExpander"] summary * { color: #38bdf8 !important; font-weight: 800 !important; font-size: 1rem !important; }
+[data-testid="stExpander"] div[data-testid="stExpanderDetails"] { background-color: #151c2c !important; color: #ffffff !important; padding: 14px !important; }
 
 div.stButton > button, button[kind="secondary"], .stButton button {
     background-color: #1e293b !important;
@@ -417,26 +379,9 @@ div.stButton > button, button[kind="secondary"], .stButton button {
     font-weight: 800 !important;
     transition: all 0.2s ease !important;
 }
-div.stButton > button:hover {
-    background-color: #334155 !important;
-    border-color: #38bdf8 !important;
-    color: #38bdf8 !important;
-}
-
-button[kind="primary"] {
-    background-color: #dc2626 !important;
-    border-color: #ef4444 !important;
-    color: #ffffff !important;
-    font-weight: 800 !important;
-}
-.stForm button {
-    background-color: #16a34a !important;
-    border: 1px solid #22c55e !important;
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    border-radius: 10px !important;
-    padding: 10px 20px !important;
-}
+div.stButton > button:hover { background-color: #334155 !important; border-color: #38bdf8 !important; color: #38bdf8 !important; }
+button[kind="primary"] { background-color: #dc2626 !important; border-color: #ef4444 !important; color: #ffffff !important; font-weight: 800 !important; }
+.stForm button { background-color: #16a34a !important; border: 1px solid #22c55e !important; color: #ffffff !important; font-weight: 800 !important; border-radius: 10px !important; padding: 10px 20px !important; }
 
 .data-table-container {
     background: #151c2c;
@@ -448,12 +393,7 @@ button[kind="primary"] {
     overflow-x: auto;
     width: 100%;
 }
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.92rem;
-    text-align: left;
-}
+.custom-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; text-align: left; }
 .custom-table th {
     background: rgba(13, 19, 34, 0.95);
     color: #38bdf8;
@@ -464,26 +404,10 @@ button[kind="primary"] {
     padding: 16px 18px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
-.custom-table td {
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-    font-weight: 600;
-}
+.custom-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: #ffffff; font-weight: 600; }
 .custom-table tr:hover { background-color: rgba(255, 255, 255, 0.05); }
-.custom-table tr.my-row {
-    background: linear-gradient(90deg, rgba(168, 85, 247, 0.22) 0%, transparent 100%) !important;
-    border-left: 4px solid #facc15 !important;
-}
-.badge-you {
-    background: #facc15;
-    color: #000;
-    font-size: 0.72rem;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-weight: 800;
-    margin-left: 6px;
-}
+.custom-table tr.my-row { background: linear-gradient(90deg, rgba(168, 85, 247, 0.22) 0%, transparent 100%) !important; border-left: 4px solid #facc15 !important; }
+.badge-you { background: #facc15; color: #000; font-size: 0.72rem; padding: 2px 7px; border-radius: 4px; font-weight: 800; margin-left: 6px; }
 .growth-up { color: #10b981; font-weight: 800; }
 .growth-down { color: #ef4444; font-weight: 800; }
 .growth-flat { color: #94a3b8; font-weight: 600; }
@@ -641,7 +565,7 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
-# 2-5. STRATEGY TABS (ΜΕ ΠΛΗΡΕΣ INLINE EDIT & DELETE)
+# 2-5. STRATEGY TABS (INLINE EDIT & DELETE)
 # ------------------------------------------
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
@@ -652,7 +576,6 @@ for key, t_view, t_title in strat_map:
             col_s1, col_s2 = st.columns([5.5, 1])
             with col_s1:
                 with st.expander(f"📌 {item['step']}", expanded=True):
-                    # Φόρμα Επεξεργασίας μέσα στο Expander
                     with st.form(f"edit_step_form_{key}_{idx}"):
                         edit_title = st.text_input("Τίτλος Βήματος", value=item["step"], key=f"edit_t_{key}_{idx}")
                         edit_desc = st.text_area("Περιγραφή Βήματος", value=item["desc"], height=90, key=f"edit_d_{key}_{idx}")
@@ -953,11 +876,93 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
+# 9. ANALYTICS & VIDEO HISTORY (ΜΕ YOUTUBE ANALYTICS OAUTH)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
     
+    # ----------------------------------------------------
+    # SECTION 1: ΑΥΤΟΜΑΤΗ ΛΗΨΗ ΑΠΟ YOUTUBE ANALYTICS API
+    # ----------------------------------------------------
+    with st.expander("📥 Αυτόματη Λήψη Αναφοράς από YouTube Analytics API (Επίσημο)"):
+        st.markdown("<p style='color:#cbd5e1;'>Συνδεθείτε με το κανάλι σας για να κατεβάσετε αυτόματα ημερήσια στατιστικά (Views, Watch Time, Likes, Subs) [3].</p>", unsafe_allow_html=True)
+        
+        c_auth1, c_auth2 = st.columns([2, 1])
+        with c_auth1:
+            uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας:", type=["json"], key="oauth_secret_file")
+        
+        col_d1, col_d2 = st.columns(2)
+        with col_d1:
+            start_date_q = st.date_input("Ημερομηνία Έναρξης", datetime.date(2026, 1, 1), key="yt_an_start")
+        with col_d2:
+            end_date_q = st.date_input("Ημερομηνία Λήξης", datetime.date.today(), key="yt_an_end")
+            
+        if uploaded_secret is not None:
+            try:
+                secret_dict = json.load(uploaded_secret)
+                flow = Flow.from_client_config(
+                    secret_dict,
+                    scopes=ANALYTICS_SCOPES,
+                    redirect_uri="urn:ietf:wg:oauth:2.0:oob"
+                )
+                auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
+                st.markdown(f'<a href="{auth_url}" target="_blank"><button style="padding:10px 18px; background:#ef4444; color:#fff; border-radius:8px; border:none; font-weight:800; cursor:pointer;">🔗 1. Πατήστε Εδώ για Σύνδεση με Google ↗</button></a>', unsafe_allow_html=True)
+                
+                auth_code = st.text_input("2. Επικολλήστε τον Κωδικό Επαλήθευσης Google (Auth Code):", key="google_auth_code_input")
+                if st.button("🔓 Ολοκλήρωση Σύνδεσης & Λήψη"):
+                    if auth_code:
+                        flow.fetch_token(code=auth_code.strip())
+                        creds = flow.credentials
+                        st.session_state.google_creds = creds
+                        st.success("✅ Συνδεθήκατε επιτυχώς!")
+                    else:
+                        st.warning("Επικολλήστε πρώτα τον κωδικό.")
+            except Exception as e:
+                st.error(f"Σφάλμα ανάγνωσης client_secret: {e}")
+
+        # Αν υπάρχουν διαπιστευτήρια, εκτέλεση του Query
+        if "google_creds" in st.session_state:
+            try:
+                yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
+                rep = yt_analytics.reports().query(
+                    ids='channel==MINE',
+                    startDate=str(start_date_q),
+                    endDate=str(end_date_q),
+                    metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
+                    dimensions='day',
+                    sort='day'
+                ).execute()
+
+                if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
+                    headers = [h['name'] for h in rep['columnHeaders']]
+                    df_rep = pd.DataFrame(rep['rows'], columns=headers)
+                    
+                    st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
+                    
+                    # Γραφήματα
+                    fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
+                    fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
+                    st.plotly_chart(fig_views, use_container_width=True)
+                    
+                    # Download CSV
+                    csv_data = df_rep.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
+                        data=csv_data,
+                        file_name="youtube_stats.csv",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
+                else:
+                    st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
+            except Exception as e:
+                st.error(f"Σφάλμα YouTube Analytics API: {e}")
+
+    st.markdown("---")
+
+    # ----------------------------------------------------
+    # SECTION 2: ΧΕΙΡΟΚΙΝΗΤΗ ΚΑΤΑΓΡΑΦΗ & ΠΙΝΑΚΑΣ
+    # ----------------------------------------------------
     analytics_list = st.session_state.db.get("analytics", [])
 
     col_a_add, col_a_edit, col_a_del = st.columns(3)
@@ -1081,6 +1086,7 @@ with tabs[8]:
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
+            # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]
@@ -1127,11 +1133,13 @@ with tabs[8]:
         st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει στατιστικά βίντεο ακόμα. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
-# 10. KEYWORDS
+# 10. KEYWORDS & TAG SCORE INTELLIGENCE
 # ------------------------------------------
 with tabs[9]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 YouTube Keywords & Tag Score Intelligence</h3>", unsafe_allow_html=True)
     
+    keywords_list = st.session_state.db.get("keywords", [])
+
     col_q1, col_q2, col_q3 = st.columns([2.5, 1.2, 1.2])
     with col_q1: quick_kw = st.text_input("🔎 Γρήγορη Έρευνα Tag / Keyword:", placeholder="π.χ. Spinning για Λαβράκια...")
     with col_q2:
@@ -1143,58 +1151,92 @@ with tabs[9]:
         if st.button("📈 Google Trends", use_container_width=True):
             if quick_kw: st.markdown(f'<a href="https://trends.google.com/trends/explore?q={urllib.parse.quote(quick_kw)}&geo=GR" target="_blank"><button style="width:100%; padding:10px; background:#3b82f6; color:#fff; border-radius:8px; border:none; font-weight:700;">Άνοιγμα στο Trends ↗</button></a>', unsafe_allow_html=True)
 
-    with st.expander("➕ Προσθήκη Νέου Tag με Σκορ & Κατάταξη (TubeBuddy / SEO)"):
-        with st.form("kw_advanced_form", clear_on_submit=True):
-            k_c1, k_c2 = st.columns(2)
-            with k_c1:
-                kw_tag = st.text_input("Λέξη-Κλειδί / Tag (π.χ. LRF τεχνική)")
-                kw_target = st.text_input("Target Βίντεο (προαιρετικό)")
-                kw_my_rank = st.text_input("🟢 Θέση Κατάταξής μου στο YouTube (π.χ. #3)")
-                kw_tb_rank = st.text_input("🔵 TubeBuddy Trending Rank (π.χ. #1)")
-            with k_c2:
-                kw_overall_score = st.number_input("📊 Overall Keyword Score (0 - 100)", min_value=0, max_value=100, value=60, step=1)
-                kw_volume = st.selectbox("📊 Search Volume (Όγκος Αναζήτησης)", ["Πολύ Υψηλός", "Υψηλός", "Μέτριος", "Χαμηλός"])
-                kw_comp = st.selectbox("⚔️ Competition (Ανταγωνισμός)", ["Πολύ Χαμηλός", "Χαμηλός", "Μέτριος", "Υψηλός", "Πολύ Υψηλός"])
-                kw_opt = st.selectbox("🎯 Optimization Strength", ["Εξαιρετική (90-100%)", "Καλή (70-89%)", "Μέτρια (50-69%)", "Χαμηλή (<50%)"])
+    col_k_add, col_k_edit, col_k_del = st.columns(3)
+    with col_k_add:
+        with st.expander("➕ Προσθήκη Νέου Tag"):
+            with st.form("kw_advanced_form", clear_on_submit=True):
+                k_c1, k_c2 = st.columns(2)
+                with k_c1:
+                    kw_tag = st.text_input("Λέξη-Κλειδί / Tag (π.χ. LRF τεχνική)")
+                    kw_target = st.text_input("Target Βίντεο (προαιρετικό)")
+                    kw_my_rank = st.text_input("🟢 Θέση στο YouTube (π.χ. #3)")
+                    kw_google_rank = st.text_input("🟠 Θέση στο Google (π.χ. #1)")
+                    kw_tb_rank = st.text_input("🔵 TubeBuddy Rank (π.χ. #1)")
+                with k_c2:
+                    kw_monthly = st.number_input("📅 Μηνιαίες Αναζητήσεις", min_value=0, step=100)
+                    kw_overall_score = st.number_input("📊 Overall Score (0-100)", min_value=0, max_value=100, value=60, step=1)
+                    kw_volume = st.selectbox("📊 Search Volume", ["Πολύ Υψηλός", "Υψηλός", "Μέτριος", "Χαμηλός"])
+                    kw_comp = st.selectbox("⚔️ Competition", ["Πολύ Χαμηλός", "Χαμηλός", "Μέτριος", "Υψηλός", "Πολύ Υψηλός"])
+                    kw_opt = st.selectbox("🎯 Optimization", ["Εξαιρετική (90-100%)", "Καλή (70-89%)", "Μέτρια (50-69%)", "Χαμηλή (<50%)"])
 
-            k_c3, k_c4 = st.columns(2)
-            with k_c3: kw_priority = st.selectbox("Προτεραιότητα", ["Υψηλή", "Μεσαία", "Χαμηλή"])
-            with k_c4: kw_status = st.selectbox("Status", ["Νέα", "Σε χρήση", "Ολοκληρώθηκε"])
+                k_c3, k_c4 = st.columns(2)
+                with k_c3: kw_priority = st.selectbox("Προτεραιότητα", ["Υψηλή", "Μεσαία", "Χαμηλή"])
+                with k_c4: kw_status = st.selectbox("Status", ["Νέα", "Σε χρήση", "Ολοκληρώθηκε"])
 
-            if st.form_submit_button("➕ Αποθήκευση Tag & Σκορ", use_container_width=True):
-                if kw_tag:
-                    if "keywords" not in st.session_state.db: st.session_state.db["keywords"] = []
-                    st.session_state.db["keywords"].append({
-                        "id": str(datetime.datetime.now().timestamp()), "tag": kw_tag, "target": kw_target or "—",
-                        "my_rank": kw_my_rank or "—", "tb_rank": kw_tb_rank or "—", "score": int(kw_overall_score),
-                        "volume": kw_volume, "competition": kw_comp, "optimization": kw_opt, "priority": kw_priority,
-                        "status": kw_status, "date": str(datetime.date.today())
-                    })
+                if st.form_submit_button("➕ Αποθήκευση Tag & Σκορ", use_container_width=True):
+                    if kw_tag:
+                        if "keywords" not in st.session_state.db: st.session_state.db["keywords"] = []
+                        st.session_state.db["keywords"].append({
+                            "id": str(datetime.datetime.now().timestamp()), "tag": kw_tag, "target": kw_target or "—",
+                            "my_rank": kw_my_rank or "—", "google_rank": kw_google_rank or "—", "tb_rank": kw_tb_rank or "—",
+                            "monthly": int(kw_monthly), "score": int(kw_overall_score), "volume": kw_volume,
+                            "competition": kw_comp, "optimization": kw_opt, "priority": kw_priority,
+                            "status": kw_status, "date": str(datetime.date.today())
+                        })
+                        save_data(st.session_state.db)
+                        st.success("✅ Το Tag αποθηκεύτηκε!")
+                        st.rerun()
+
+    with col_k_edit:
+        with st.expander("✏️ Επεξεργασία Tag"):
+            if keywords_list:
+                kw_names = [k.get("tag", "Tag") for k in keywords_list]
+                selected_k_edit = st.selectbox("Επιλέξτε Tag:", kw_names, key="sel_k_edit")
+                target_k = next((k for k in keywords_list if k.get("tag") == selected_k_edit), None)
+                if target_k:
+                    with st.form("edit_kw_form"):
+                        ek_tag = st.text_input("Tag", value=target_k.get("tag", ""))
+                        ek_target = st.text_input("Target Βίντεο", value=target_k.get("target", ""))
+                        ek_my = st.text_input("🟢 Θέση YouTube", value=str(target_k.get("my_rank", "")))
+                        ek_google = st.text_input("🟠 Θέση Google", value=str(target_k.get("google_rank", "")))
+                        ek_tb = st.text_input("🔵 TubeBuddy Rank", value=str(target_k.get("tb_rank", "")))
+                        ek_monthly = st.number_input("📅 Μηνιαίες Αναζητήσεις", value=int(target_k.get("monthly", 0)), step=100)
+                        ek_score = st.number_input("📊 Score", value=int(target_k.get("score", 60)), min_value=0, max_value=100)
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_k["tag"] = ek_tag
+                            target_k["target"] = ek_target
+                            target_k["my_rank"] = ek_my
+                            target_k["google_rank"] = ek_google
+                            target_k["tb_rank"] = ek_tb
+                            target_k["monthly"] = int(ek_monthly)
+                            target_k["score"] = int(ek_score)
+                            save_data(st.session_state.db)
+                            st.success("Οι αλλαγές αποθηκεύτηκαν!")
+                            st.rerun()
+
+    with col_k_del:
+        with st.expander("🗑️ Διαγραφή Tag"):
+            if keywords_list:
+                kw_names = [k.get("tag", "Tag") for k in keywords_list]
+                selected_kw_del = st.selectbox("Επιλέξτε Tag:", kw_names, key="sel_del_kw")
+                if st.button("🗑️ Διαγραφή Επιλεγμένου", key="btn_del_kw", type="primary"):
+                    st.session_state.db["keywords"] = [k for k in keywords_list if k.get("tag") != selected_kw_del]
                     save_data(st.session_state.db)
-                    st.success("✅ Το Tag αποθηκεύτηκε!")
+                    st.success("Το Tag διαγράφηκε!")
                     st.rerun()
-
-    keywords_list = st.session_state.db.get("keywords", [])
-    if keywords_list:
-        with st.expander("🗑️ Διαγραφή Tag / Keyword"):
-            kw_names = [k.get("tag", "Tag") for k in keywords_list]
-            selected_kw_del = st.selectbox("Επιλέξτε Tag για διαγραφή:", kw_names, key="sel_del_kw")
-            if st.button("🗑️ Διαγραφή Επιλεγμένου Tag", key="btn_del_kw", type="primary"):
-                st.session_state.db["keywords"] = [k for k in keywords_list if k.get("tag") != selected_kw_del]
-                save_data(st.session_state.db)
-                st.success(f"Το Tag '{selected_kw_del}' διαγράφηκε!")
-                st.rerun()
 
     col_ksort1, col_ksort2, _ = st.columns([2, 1.8, 1.5])
     with col_ksort1:
-        sort_by_kw = st.selectbox("📊 Ταξινόμηση κατά:", ["Overall Score", "🟢 Θέση μου", "🔵 TubeBuddy #", "Tag (Α-Ω)", "Προτεραιότητα", "Status"], key="sort_by_kw")
+        sort_by_kw = st.selectbox("📊 Ταξινόμηση κατά:", ["Overall Score", "📅 Μηνιαίες Αναζητήσεις", "🟢 Θέση YouTube", "🟠 Θέση Google", "🔵 TubeBuddy #", "Tag (Α-Ω)", "Προτεραιότητα", "Status"], key="sort_by_kw")
     with col_ksort2:
         sort_dir_kw = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_kw")
 
     is_k_desc = "Φθίνουσα" in sort_dir_kw
     sorted_keywords = list(keywords_list)
     if sort_by_kw == "Overall Score": sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("score", 0), reverse=is_k_desc)
+    elif "Μηνιαίες" in sort_by_kw: sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("monthly", 0), reverse=is_k_desc)
     elif "🟢" in sort_by_kw: sorted_keywords = sorted(sorted_keywords, key=lambda x: str(x.get("my_rank", "")), reverse=not is_k_desc)
+    elif "🟠" in sort_by_kw: sorted_keywords = sorted(sorted_keywords, key=lambda x: str(x.get("google_rank", "")), reverse=not is_k_desc)
     elif "🔵" in sort_by_kw: sorted_keywords = sorted(sorted_keywords, key=lambda x: str(x.get("tb_rank", "")), reverse=not is_k_desc)
     elif "Tag" in sort_by_kw: sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("tag", "").lower(), reverse=not is_k_desc)
     elif "Προτεραιότητα" in sort_by_kw: sorted_keywords = sorted(sorted_keywords, key=lambda x: x.get("priority", ""), reverse=is_k_desc)
@@ -1206,16 +1248,21 @@ with tabs[9]:
             prio = k.get("priority", "Μεσαία")
             prio_html = '<span style="background:rgba(239,68,68,0.25); color:#fca5a5; padding:3px 9px; border-radius:12px; font-weight:800;">Υψηλή</span>' if prio == "Υψηλή" else ('<span style="background:rgba(234,179,8,0.25); color:#fde047; padding:3px 9px; border-radius:12px; font-weight:800;">Μεσαία</span>' if prio == "Μεσαία" else '<span style="background:rgba(59,130,246,0.25); color:#93c5fd; padding:3px 9px; border-radius:12px; font-weight:800;">Χαμηλή</span>')
 
+            monthly_val = k.get("monthly", 0)
+            monthly_str = fmt(monthly_val) if monthly_val > 0 else "—"
+
             row_kw = (
                 f'<tr>'
-                f'<td style="font-weight:800; color:#38bdf8; font-size:1rem;">{k.get("tag", "—")}</td>'
+                f'<td style="font-weight:800; color:#38bdf8; font-size:1rem; min-width:180px;">{k.get("tag", "—")}</td>'
                 f'<td style="text-align:center;">{rank_badge(k.get("my_rank"), is_my=True)}</td>'
+                f'<td style="text-align:center;">{google_rank_badge(k.get("google_rank"))}</td>'
                 f'<td style="text-align:center;">{rank_badge(k.get("tb_rank"), is_my=False)}</td>'
                 f'<td style="text-align:center;">{score_badge(k.get("score"))}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#ffffff;">{monthly_str}</td>'
                 f'<td style="text-align:center; font-weight:700;">{k.get("volume", "—")}</td>'
                 f'<td style="text-align:center; font-weight:700;">{k.get("competition", "—")}</td>'
                 f'<td style="text-align:center; font-weight:700;">{k.get("optimization", "—")}</td>'
-                f'<td style="font-weight:600; color:#cbd5e1;">{k.get("target", "—")}</td>'
+                f'<td style="font-weight:600; color:#cbd5e1; min-width:160px;">{k.get("target", "—")}</td>'
                 f'<td style="text-align:center;">{prio_html}</td>'
                 f'<td style="text-align:center; font-weight:700; color:#ffffff;">{k.get("status", "Νέα")}</td>'
                 f'</tr>'
@@ -1226,8 +1273,9 @@ with tabs[9]:
             '<div class="data-table-container">'
             '<table class="custom-table">'
             '<thead><tr>'
-            '<th style="text-align:left;">TAG / KEYWORD</th><th style="text-align:center;">🟢 ΘΕΣΗ ΜΟΥ</th>'
-            '<th style="text-align:center;">🔵 TUBEBUDDY #</th><th style="text-align:center;">📊 OVERALL SCORE</th>'
+            '<th style="text-align:left;">TAG / KEYWORD</th><th style="text-align:center;">🟢 YOUTUBE RANK</th>'
+            '<th style="text-align:center;">🟠 GOOGLE RANK</th><th style="text-align:center;">🔵 TUBEBUDDY #</th>'
+            '<th style="text-align:center;">📊 OVERALL SCORE</th><th style="text-align:right;">📅 ΜΗΝ. ΑΝΑΖΗΤΗΣΕΙΣ</th>'
             '<th style="text-align:center;">📈 SEARCH VOL.</th><th style="text-align:center;">⚔️ COMPETITION</th>'
             '<th style="text-align:center;">🎯 OPTIMIZATION</th><th style="text-align:left;">TARGET ΒΙΝΤΕΟ</th>'
             '<th style="text-align:center;">ΠΡΟΤΕΡΑΙΟΤΗΤΑ</th><th style="text-align:center;">STATUS</th>'

@@ -299,6 +299,7 @@ def load_data():
             if "competitors_intl" not in data: data["competitors_intl"] = [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL]
             if "keywords" not in data: data["keywords"] = []
             if "analytics" not in data: data["analytics"] = []
+            if "goals" not in data: data["goals"] = []
             return data
     except Exception:
         return get_default_data()
@@ -315,7 +316,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 # ==========================================
-# ULTRA HIGH CONTRAST & BOLD CSS (15 TABS)
+# ULTRA HIGH CONTRAST, BOLD & BIG METRICS CSS
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -340,6 +341,7 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
+/* TABS */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -403,8 +405,6 @@ button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(15)[aria-selected="true"] { background: linear-gradient(135deg, #065f46 0%, #10b981 100%) !important; border: 2px solid #6ee7b7 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6) !important; }
 
-button[data-baseweb="tab"][aria-selected="true"] * { color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 0 10px rgba(255,255,255,0.7) !important; }
-
 /* LABELS */
 label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
     color: #38bdf8 !important;
@@ -423,15 +423,28 @@ input, textarea, select, [data-baseweb="select"] {
     font-size: 0.95rem !important;
 }
 
+/* METRICS - ΜΕΓΑΛΑ ΝΟΥΜΕΡΑ ΜΕ ΛΑΜΨΗ */
 [data-testid="stMetric"] {
     background: #151c2c !important;
-    border: 1px solid rgba(56, 189, 248, 0.3) !important;
-    border-radius: 14px !important;
-    padding: 16px 20px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 16px !important;
+    padding: 18px 22px !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5) !important;
 }
-[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * { color: #38bdf8 !important; font-weight: 800 !important; font-size: 0.95rem !important; }
-[data-testid="stMetricValue"], [data-testid="stMetricValue"] * { color: #ffffff !important; font-weight: 800 !important; font-size: 2.3rem !important; text-shadow: 0 2px 10px rgba(255,255,255,0.2) !important; }
+[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * {
+    color: #38bdf8 !important;
+    font-weight: 800 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 0.02em !important;
+}
+[data-testid="stMetricValue"], [data-testid="stMetricValue"] * {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 2.8rem !important; /* ΠΟΛΥ ΜΕΓΑΛΑ ΝΟΥΜΕΡΑ */
+    line-height: 1.1 !important;
+    text-shadow: 0 2px 14px rgba(255,255,255,0.3) !important;
+    letter-spacing: -0.02em !important;
+}
 
 [data-testid="stExpander"], div[data-testid="stExpander"] {
     background-color: #151c2c !important;
@@ -495,6 +508,28 @@ button[kind="primary"] { background-color: #dc2626 !important; border-color: #ef
     font-weight: 700;
     margin: 2px 0;
     white-space: nowrap;
+}
+
+.goal-card-box {
+    background: #151c2c;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.goal-bar-track {
+    background: rgba(255, 255, 255, 0.1);
+    height: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+.goal-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
 }
 
 .prompt-card-box {
@@ -590,7 +625,7 @@ tabs = st.tabs([
 ])
 
 # ------------------------------------------
-# 1. DASHBOARD (ΜΟΝΟ ΕΛΛΗΝΙΚΑ ΚΑΝΑΛΙΑ)
+# 1. DASHBOARD (ΜΕΓΑΛΑ ΝΟΥΜΕΡΑ & ΠΡΟΟΔΟΣ ΣΤΟΧΩΝ)
 # ------------------------------------------
 with tabs[0]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🏠 Επισκόπηση Καναλιού & Ελληνικού Ανταγωνισμού</h3>", unsafe_allow_html=True)
@@ -601,28 +636,66 @@ with tabs[0]:
     avg_subs_gr = round(sum(c.get("subs", 0) for c in synced_gr) / len(synced_gr)) if synced_gr else 0
     avg_views_gr = round(sum(c.get("avgViews", 0) for c in synced_gr) / len(synced_gr)) if synced_gr else 0
     
+    # Μετρικές με πολύ μεγάλα νούμερα
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.metric("📺 Το Κανάλι Μου", fmt(my_ch.get('subs', 0)), f"{my_ch.get('name', 'Tsouros Marine')}")
+        st.metric("📺 Το Κανάλι Μου (Subs)", fmt(my_ch.get('subs', 0)), f"{my_ch.get('name', 'Tsouros Marine')}")
     with c2:
-        st.metric("👥 Μ.Ο. Subs (Ελληνικά)", fmt(avg_subs_gr), f"{len(comps_gr)} ελληνικά κανάλια")
+        st.metric("👥 Μ.Ο. Subs (Ελληνικά)", fmt(avg_subs_gr), f"{len(comps_gr)} κανάλια")
     with c3:
         st.metric("👀 Μ.Ο. Avg Views (Ελληνικά)", fmt(avg_views_gr))
     with c4:
         st.metric("💡 Ιδέες σε Αναμονή", len(st.session_state.db.get("ideas", [])))
 
     st.markdown("---")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>📅 Επόμενα Προγραμματισμένα</h4>", unsafe_allow_html=True)
+
+    # ΠΡΟΟΔΟΣ ΣΤΟΧΩΝ ΤΡΕΧΟΝΤΟΣ ΜΗΝΑ
+    curr_month_str = datetime.date.today().strftime("%Y-%m")
+    goals_list = st.session_state.db.get("goals", [])
+    curr_goal = next((g for g in goals_list if g.get("month", "").startswith(curr_month_str) or g.get("month", "") == curr_month_str), None)
+    
+    col_dash_left, col_dash_right = st.columns(2)
+    with col_dash_left:
+        st.markdown(f"<h4 style='color:#38bdf8; font-weight:800;'>🎯 Στόχος Τρέχοντος Μήνα ({curr_month_str})</h4>", unsafe_allow_html=True)
+        if curr_goal:
+            # Υπολογισμοί πραγματικών δεδομένων μήνα
+            sched_items = st.session_state.db.get("schedule", [])
+            published_month = len([s for s in sched_items if s.get("status") == "Published" and s.get("date", "").startswith(curr_month_str)])
+            
+            t_subs = int(curr_goal.get("subs", 0))
+            t_views = int(curr_goal.get("views", 0))
+            t_uploads = int(curr_goal.get("uploads", 0))
+
+            # Progress Subs
+            st.markdown(f"**➕ Στόχος Subs:** `{t_subs:,}`", unsafe_allow_html=True)
+            st.markdown('<div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #ec4899, #a855f7);"></div></div>', unsafe_allow_html=True)
+
+            # Progress Views
+            st.markdown(f"**👀 Στόχος Views:** `{t_views:,}`", unsafe_allow_html=True)
+            st.markdown('<div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #3b82f6, #06b6d4);"></div></div>', unsafe_allow_html=True)
+
+            # Progress Uploads
+            up_pct = min(100, round((published_month / t_uploads) * 100)) if t_uploads > 0 else 0
+            st.markdown(f"**🎬 Δημοσιεύσεις (Uploads):** `{published_month}` / `{t_uploads}` ({up_pct}%)", unsafe_allow_html=True)
+            st.markdown(f'<div class="goal-bar-track"><div class="goal-bar-fill" style="width:{up_pct}%; background:linear-gradient(90deg, #10b981, #22c55e);"></div></div>', unsafe_allow_html=True)
+        else:
+            st.info(f"ℹ️ Δεν έχει οριστεί στόχος για τον μήνα {curr_month_str}. Ορίστε έναν στην καρτέλα 🎯 Στόχοι!")
+
+        # Επόμενα Προγραμματισμένα
+        st.markdown("<h4 style='color:#38bdf8; font-weight:800; margin-top:15px;'>📅 Επόμενα Προγραμματισμένα</h4>", unsafe_allow_html=True)
         sched = st.session_state.db.get("schedule", [])
         if sched:
-            df_sched = pd.DataFrame(sched)
-            st.dataframe(df_sched[["date", "platform", "title", "status"]].head(5), use_container_width=True, hide_index=True)
+            today_s = datetime.date.today().isoformat()
+            upcoming_s = [s for s in sched if s.get("date", "") >= today_s and s.get("status") != "Published"][:4]
+            if upcoming_s:
+                df_sched = pd.DataFrame(upcoming_s)
+                st.dataframe(df_sched[["date", "platform", "title", "status"]], use_container_width=True, hide_index=True)
+            else:
+                st.info("Δεν υπάρχουν επερχόμενα προγραμματισμένα βίντεο.")
         else:
             st.info("Δεν υπάρχουν προγραμματισμένα βίντεο.")
 
-    with col_b:
+    with col_dash_right:
         st.markdown("<h4 style='color:#38bdf8; font-weight:800;'>⚖️ Benchmark vs Ελληνικός Ανταγωνισμός</h4>", unsafe_allow_html=True)
         my_avg_v = my_ch.get("avgViews", 0)
         if avg_views_gr > 0:
@@ -633,7 +706,7 @@ with tabs[0]:
                 y=[my_avg_v, avg_views_gr],
                 marker_color=["#facc15", "#3b82f6"]
             ))
-            fig.update_layout(height=260, margin=dict(l=20, r=20, t=20, b=20), paper_bgcolor="#151c2c", plot_bgcolor="#151c2c", font=dict(color="#fff"))
+            fig.update_layout(height=280, margin=dict(l=20, r=20, t=20, b=20), paper_bgcolor="#151c2c", plot_bgcolor="#151c2c", font=dict(color="#fff"))
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
@@ -677,34 +750,89 @@ for key, t_view, t_title in strat_map:
                     st.rerun()
 
 # ------------------------------------------
-# 6. SCHEDULE
+# 6. SCHEDULE (DARK HTML TABLE)
 # ------------------------------------------
 with tabs[5]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📅 Πρόγραμμα Δημοσιεύσεων</h3>", unsafe_allow_html=True)
-    with st.expander("➕ Προσθήκη Νέου Βίντεο"):
-        with st.form("sched_form", clear_on_submit=True):
-            c1, c2 = st.columns(2)
-            with c1:
+    sched_list = st.session_state.db.get("schedule", [])
+    
+    col_sc_add, col_sc_edit, col_sc_del = st.columns(3)
+    with col_sc_add:
+        with st.expander("➕ Προσθήκη Νέου Βίντεο"):
+            with st.form("sched_form", clear_on_submit=True):
                 sc_date = st.date_input("Ημερομηνία", datetime.date.today())
                 sc_time = st.time_input("Ώρα", datetime.time(18, 0))
                 sc_plat = st.selectbox("Πλατφόρμα", ["YouTube Long", "YouTube Shorts", "Facebook Reel", "Instagram Reel", "TikTok"])
-            with c2:
                 sc_title = st.text_input("Τίτλος Βίντεο")
                 sc_status = st.selectbox("Status", ["Ιδέα", "Script", "Filming", "Editing", "Ready", "Published"])
-            if st.form_submit_button("➕ Προσθήκη Βίντεο"):
-                if sc_title:
-                    if "schedule" not in st.session_state.db: st.session_state.db["schedule"] = []
-                    st.session_state.db["schedule"].append({
-                        "id": str(datetime.datetime.now().timestamp()), "date": str(sc_date),
-                        "time": str(sc_time)[:5], "platform": sc_plat, "title": sc_title, "status": sc_status
-                    })
+                if st.form_submit_button("➕ Προσθήκη"):
+                    if sc_title:
+                        if "schedule" not in st.session_state.db: st.session_state.db["schedule"] = []
+                        st.session_state.db["schedule"].append({
+                            "id": str(datetime.datetime.now().timestamp()), "date": str(sc_date),
+                            "time": str(sc_time)[:5], "platform": sc_plat, "title": sc_title, "status": sc_status
+                        })
+                        save_data(st.session_state.db)
+                        st.success("Το βίντεο προστέθηκε!")
+                        st.rerun()
+
+    with col_sc_edit:
+        with st.expander("✏️ Επεξεργασία Βίντεο"):
+            if sched_list:
+                s_titles = [s.get("title", "Βίντεο") for s in sched_list]
+                sel_sc_edit = st.selectbox("Επιλέξτε Βίντεο:", s_titles, key="sel_sc_edit")
+                target_sc = next((s for s in sched_list if s.get("title") == sel_sc_edit), None)
+                if target_sc:
+                    with st.form("edit_sched_form"):
+                        e_sc_title = st.text_input("Τίτλος", value=target_sc.get("title", ""))
+                        e_sc_date = st.text_input("Ημερομηνία (YYYY-MM-DD)", value=target_sc.get("date", ""))
+                        e_sc_status = st.selectbox("Status", ["Ιδέα", "Script", "Filming", "Editing", "Ready", "Published"], index=["Ιδέα", "Script", "Filming", "Editing", "Ready", "Published"].index(target_sc.get("status", "Ιδέα")))
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_sc["title"] = e_sc_title
+                            target_sc["date"] = e_sc_date
+                            target_sc["status"] = e_sc_status
+                            save_data(st.session_state.db)
+                            st.success("Ενημερώθηκε!")
+                            st.rerun()
+
+    with col_sc_del:
+        with st.expander("🗑️ Διαγραφή Βίντεο"):
+            if sched_list:
+                s_titles = [s.get("title", "Βίντεο") for s in sched_list]
+                sel_sc_del = st.selectbox("Επιλέξτε για διαγραφή:", s_titles, key="sel_sc_del")
+                if st.button("🗑️ Διαγραφή Επιλεγμένου", key="btn_del_sc", type="primary"):
+                    st.session_state.db["schedule"] = [s for s in sched_list if s.get("title") != sel_sc_del]
                     save_data(st.session_state.db)
-                    st.success("Το βίντεο προστέθηκε!")
+                    st.success("Διαγράφηκε!")
                     st.rerun()
 
-    sched = st.session_state.db.get("schedule", [])
-    if sched:
-        st.dataframe(pd.DataFrame(sched)[["date", "time", "platform", "title", "status"]], use_container_width=True, hide_index=True)
+    if sched_list:
+        rows_sc_list = []
+        for s in sched_list:
+            st_val = s.get("status", "Ιδέα")
+            st_color = {"Published": "#10b981", "Ready": "#38bdf8", "Editing": "#facc15", "Filming": "#a855f7", "Script": "#60a5fa"}.get(st_val, "#f43f5e")
+            st_badge = f'<span style="background:{st_color}25; color:{st_color}; border:1px solid {st_color}50; padding:3px 10px; border-radius:12px; font-weight:800;">{st_val}</span>'
+
+            row_sc = (
+                f'<tr>'
+                f'<td style="font-weight:700; color:#38bdf8;">{s.get("date", "—")}</td>'
+                f'<td style="text-align:center;">{s.get("time", "—")}</td>'
+                f'<td style="text-align:center; font-weight:700;">{s.get("platform", "—")}</td>'
+                f'<td style="font-weight:700; color:#ffffff;">{s.get("title", "—")}</td>'
+                f'<td style="text-align:center;">{st_badge}</td>'
+                f'</tr>'
+            )
+            rows_sc_list.append(row_sc)
+
+        table_sc_html = (
+            '<div class="data-table-container"><table class="custom-table"><thead><tr>'
+            '<th style="text-align:left;">ΗΜΕΡΟΜΗΝΙΑ</th><th style="text-align:center;">ΩΡΑ</th>'
+            '<th style="text-align:center;">ΠΛΑΤΦΟΡΜΑ</th><th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th><th style="text-align:center;">STATUS</th>'
+            '</tr></thead><tbody>' + "".join(rows_sc_list) + '</tbody></table></div>'
+        )
+        st.markdown(table_sc_html, unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν υπάρχουν προγραμματισμένα βίντεο. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 7. GREEK COMPETITORS
@@ -819,16 +947,12 @@ with tabs[6]:
         rows_list.append(row)
 
     table_html = (
-        '<div class="data-table-container">'
-        '<table class="custom-table">'
-        '<thead><tr>'
+        '<div class="data-table-container"><table class="custom-table"><thead><tr>'
         '<th style="text-align:left;">CHANNEL</th><th style="text-align:right;">SUBSCRIBERS (ΑΚΡΙΒΗΣ)</th>'
         '<th style="text-align:right;">TOTAL VIEWS</th><th style="text-align:right;">VIDEOS</th>'
         '<th style="text-align:right;">AVG VIEWS</th><th style="text-align:right;">VIEWS/SUB</th>'
         '<th style="text-align:right;">EFFICIENCY</th><th style="text-align:center;">GROWTH</th>'
-        '</tr></thead>'
-        '<tbody>' + "".join(rows_list) + '</tbody>'
-        '</table></div>'
+        '</tr></thead><tbody>' + "".join(rows_list) + '</tbody></table></div>'
     )
     st.markdown(table_html, unsafe_allow_html=True)
 
@@ -933,17 +1057,12 @@ with tabs[7]:
         rows_intl_list.append(row_intl)
 
     table_intl_html = (
-        '<div class="data-table-container">'
-        '<table class="custom-table">'
-        '<thead><tr>'
+        '<div class="data-table-container"><table class="custom-table"><thead><tr>'
         '<th style="text-align:left;">CHANNEL</th><th style="text-align:left;">ΧΩΡΑ</th>'
         '<th style="text-align:right;">SUBSCRIBERS (ΑΚΡΙΒΗΣ)</th><th style="text-align:right;">TOTAL VIEWS</th>'
         '<th style="text-align:right;">VIDEOS</th><th style="text-align:right;">AVG VIEWS</th>'
-        '<th style="text-align:right;">VIEWS/SUB</th><th style="text-align:right;">EFFICIENCY</th>'
-        '<th style="text-align:center;">GROWTH</th>'
-        '</tr></thead>'
-        '<tbody>' + "".join(rows_intl_list) + '</tbody>'
-        '</table></div>'
+        '<th style="text-align:right;">VIEWS/SUB</th><th style="text-align:right;">EFFICIENCY</th><th style="text-align:center;">GROWTH</th>'
+        '</tr></thead><tbody>' + "".join(rows_intl_list) + '</tbody></table></div>'
     )
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
@@ -952,158 +1071,6 @@ with tabs[7]:
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
-    
-    with st.expander("📥 Αυτόματη Λήψη Αναφοράς από YouTube Analytics API (Επίσημο)"):
-        st.markdown("<p style='color:#cbd5e1;'>Συνδεθείτε με το κανάλι σας για να κατεβάσετε αυτόματα ημερήσια στατιστικά (Views, Watch Time, Likes, Subs) [3].</p>", unsafe_allow_html=True)
-        
-        client_secret_dict = st.session_state.db.get("client_secret_dict")
-        
-        c_auth1, c_auth2 = st.columns([2, 1])
-        with c_auth1:
-            uploaded_secret = st.file_uploader("Ανεβάστε το νέο `client_secret.json` σας (Web application):", type=["json"], key="oauth_secret_file")
-            if uploaded_secret is not None:
-                try:
-                    raw_dict = json.load(uploaded_secret)
-                    st.session_state.db["client_secret_dict"] = raw_dict
-                    client_secret_dict = raw_dict
-                    save_data(st.session_state.db)
-                    st.success("✅ Το client_secret αποθηκεύτηκε!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Σφάλμα ανάγνωσης JSON: {e}")
-        
-        with c_auth2:
-            if client_secret_dict:
-                is_web = "web" in client_secret_dict
-                if is_web:
-                    st.success("✅ Έγκυρο Web Client ID")
-                else:
-                    st.warning("⚠️ Παλιό Desktop Client JSON")
-                if st.button("🗑️ Καθαρισμός client_secret", key="btn_clear_cs"):
-                    st.session_state.db["client_secret_dict"] = None
-                    st.session_state.db["google_refresh_token"] = None
-                    if "google_creds" in st.session_state:
-                        del st.session_state.google_creds
-                    save_data(st.session_state.db)
-                    st.success("Το αρχείο διαγράφηκε! Ανεβάστε το νέο Web JSON.")
-                    st.rerun()
-
-        # Έλεγχος αυτόματης επαναφοράς Token
-        if "google_creds" not in st.session_state and client_secret_dict and st.session_state.db.get("google_refresh_token"):
-            try:
-                c_info = client_secret_dict.get("web", {}) or client_secret_dict.get("installed", {})
-                st.session_state.google_creds = Credentials(
-                    None,
-                    refresh_token=st.session_state.db["google_refresh_token"],
-                    token_uri="https://oauth2.googleapis.com/token",
-                    client_id=c_info.get("client_id"),
-                    client_secret=c_info.get("client_secret"),
-                    scopes=ANALYTICS_SCOPES
-                )
-            except Exception:
-                pass
-
-        # Αυτόματη εξαργύρωση Code μετά την επιστροφή από το Google
-        if "code" in st.query_params and client_secret_dict:
-            auth_code = st.query_params.get("code")
-            c_info = client_secret_dict.get("web", {}) or client_secret_dict.get("installed", {})
-            try:
-                token_resp = requests.post(
-                    "https://oauth2.googleapis.com/token",
-                    data={
-                        "code": auth_code,
-                        "client_id": c_info.get("client_id"),
-                        "client_secret": c_info.get("client_secret"),
-                        "redirect_uri": APP_REDIRECT_URI,
-                        "grant_type": "authorization_code"
-                    }
-                ).json()
-                
-                if "access_token" in token_resp:
-                    creds = Credentials(
-                        token=token_resp.get("access_token"),
-                        refresh_token=token_resp.get("refresh_token") or st.session_state.db.get("google_refresh_token"),
-                        token_uri="https://oauth2.googleapis.com/token",
-                        client_id=c_info.get("client_id"),
-                        client_secret=c_info.get("client_secret"),
-                        scopes=ANALYTICS_SCOPES
-                    )
-                    st.session_state.google_creds = creds
-                    if token_resp.get("refresh_token"):
-                        st.session_state.db["google_refresh_token"] = token_resp["refresh_token"]
-                        save_data(st.session_state.db)
-                    st.query_params.clear()
-                    st.success("✅ Συνδεθήκατε επιτυχώς με το Google!")
-                    st.rerun()
-            except Exception as e:
-                st.error(f"Σφάλμα σύνδεσης: {e}")
-
-        col_d1, col_d2 = st.columns(2)
-        with col_d1:
-            start_date_q = st.date_input("Ημερομηνία Έναρξης", datetime.date(2026, 1, 1), key="yt_an_start")
-        with col_d2:
-            end_date_q = st.date_input("Ημερομηνία Λήξης", datetime.date.today(), key="yt_an_end")
-
-        if "google_creds" not in st.session_state:
-            if client_secret_dict:
-                c_info = client_secret_dict.get("web", {}) or client_secret_dict.get("installed", {})
-                client_id = c_info.get("client_id", "")
-                
-                # Παραγωγή επίσημου συνδέσμου OAuth
-                params = {
-                    "client_id": client_id,
-                    "redirect_uri": APP_REDIRECT_URI,
-                    "response_type": "code",
-                    "scope": "https://www.googleapis.com/auth/yt-analytics.readonly",
-                    "access_type": "offline",
-                    "prompt": "consent",
-                    "include_granted_scopes": "true"
-                }
-                google_auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urllib.parse.urlencode(params)}"
-                
-                st.markdown(f'<a href="{google_auth_url}" target="_blank"><button style="padding:12px 24px; background:#ef4444; color:#fff; border-radius:10px; border:none; font-weight:800; cursor:pointer; font-size:1rem; box-shadow:0 4px 14px rgba(239,68,68,0.4);">🔗 1. Πατήστε Εδώ για Σύνδεση με Google (YouTube Analytics) ↗</button></a>', unsafe_allow_html=True)
-                st.caption("ℹ️ Ο σύνδεσμος θα ανοίξει σε νέα καρτέλα. Αφού συνδεθείτε, επιστρέφετε αυτόματα εδώ!")
-            else:
-                st.info("ℹ️ Ανεβάστε πρώτα το νέο `client_secret.json` (Web application) παραπάνω.")
-        else:
-            st.success("🟢 Συνδεδεμένοι στο YouTube Analytics API!")
-            if st.button("📥 Λήψη Στατιστικών Περιόδου", use_container_width=True):
-                try:
-                    yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
-                    rep = yt_analytics.reports().query(
-                        ids='channel==MINE',
-                        startDate=str(start_date_q),
-                        endDate=str(end_date_q),
-                        metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
-                        dimensions='day',
-                        sort='day'
-                    ).execute()
-
-                    if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
-                        headers = [h['name'] for h in rep['columnHeaders']]
-                        df_rep = pd.DataFrame(rep['rows'], columns=headers)
-                        
-                        st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
-                        
-                        fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
-                        fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
-                        st.plotly_chart(fig_views, use_container_width=True)
-                        
-                        csv_data = df_rep.to_csv(index=False).encode('utf-8')
-                        st.download_button(
-                            label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
-                            data=csv_data,
-                            file_name="youtube_stats.csv",
-                            mime="text/csv",
-                            use_container_width=True
-                        )
-                    else:
-                        st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
-                except Exception as e:
-                    st.error(f"Σφάλμα YouTube Analytics API: {e}")
-
-    st.markdown("---")
-
     analytics_list = st.session_state.db.get("analytics", [])
 
     col_a_add, col_a_edit, col_a_del = st.columns(3)
@@ -1140,7 +1107,6 @@ with tabs[8]:
                 if st.form_submit_button("➕ Αποθήκευση Βίντεο", use_container_width=True):
                     if t:
                         if "analytics" not in st.session_state.db: st.session_state.db["analytics"] = []
-                        
                         sources_list = []
                         if wt > 0:
                             if src_1 != "— Καμία —" and hours_1 > 0:
@@ -1159,22 +1125,11 @@ with tabs[8]:
                         sources_str = ", ".join(sources_list) if sources_list else "—"
 
                         st.session_state.db["analytics"].append({
-                            "id": str(datetime.datetime.now().timestamp()),
-                            "title": t,
-                            "type": typ,
-                            "upload_date": str(u_date),
-                            "views": int(views),
-                            "unique_viewers": int(unique_viewers),
-                            "ctr": float(ctr),
-                            "retention": float(ret),
-                            "avd": avd or "—",
-                            "new_subs": int(new_subs),
-                            "likes": int(likes),
-                            "comments": int(comments),
-                            "desc_links": int(d_links),
-                            "desc_words": int(d_words),
-                            "watchTime": float(wt),
-                            "sources": sources_str,
+                            "id": str(datetime.datetime.now().timestamp()), "title": t, "type": typ,
+                            "upload_date": str(u_date), "views": int(views), "unique_viewers": int(unique_viewers),
+                            "ctr": float(ctr), "retention": float(ret), "avd": avd or "—", "new_subs": int(new_subs),
+                            "likes": int(likes), "comments": int(comments), "desc_links": int(d_links),
+                            "desc_words": int(d_words), "watchTime": float(wt), "sources": sources_str,
                             "date": str(datetime.date.today())
                         })
                         save_data(st.session_state.db)
@@ -1229,49 +1184,28 @@ with tabs[8]:
 
     col_fil, col_asort1, col_asort2 = st.columns([1.5, 2, 1.5])
     with col_fil:
-        filter_type = st.selectbox(
-            "🎬 Φίλτρο Τύπου:",
-            ["Όλα τα Βίντεο", "Long-form (16:9)", "Shorts (9:16)"],
-            key="an_filter_type"
-        )
+        filter_type = st.selectbox("🎬 Φίλτρο Τύπου:", ["Όλα τα Βίντεο", "Long-form (16:9)", "Shorts (9:16)"], key="an_filter_type")
     with col_asort1:
-        sort_by_an = st.selectbox(
-            "📊 Ταξινόμηση κατά:",
-            ["Προβολές (Views)", "Watch Time", "Likes", "Σχόλια", "CTR (%)", "Retention (%)", "New Subs", "Μοναδικοί Θεατές", "Ημερομηνία Δημοσίευσης", "Τίτλος (Α-Ω)"],
-            key="sort_by_an"
-        )
+        sort_by_an = st.selectbox("📊 Ταξινόμηση κατά:", ["Προβολές (Views)", "Watch Time", "Likes", "Σχόλια", "CTR (%)", "Retention (%)", "New Subs", "Μοναδικοί Θεατές", "Ημερομηνία Δημοσίευσης", "Τίτλος (Α-Ω)"], key="sort_by_an")
     with col_asort2:
         sort_dir_an = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_an")
 
     filtered_analytics = list(analytics_list)
-    if filter_type == "Long-form (16:9)":
-        filtered_analytics = [a for a in filtered_analytics if "Long" in a.get("type", "")]
-    elif filter_type == "Shorts (9:16)":
-        filtered_analytics = [a for a in filtered_analytics if "Shorts" in a.get("type", "")]
+    if filter_type == "Long-form (16:9)": filtered_analytics = [a for a in filtered_analytics if "Long" in a.get("type", "")]
+    elif filter_type == "Shorts (9:16)": filtered_analytics = [a for a in filtered_analytics if "Shorts" in a.get("type", "")]
 
     is_a_desc = "Φθίνουσα" in sort_dir_an
-    if "Προβολές" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("views", 0), reverse=is_a_desc)
-    elif "Watch Time" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("watchTime", 0.0), reverse=is_a_desc)
-    elif "Likes" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("likes", 0), reverse=is_a_desc)
-    elif "Σχόλια" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("comments", 0), reverse=is_a_desc)
-    elif "CTR" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("ctr", 0.0), reverse=is_a_desc)
-    elif "Retention" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("retention", 0.0), reverse=is_a_desc)
-    elif "New Subs" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("new_subs", 0), reverse=is_a_desc)
-    elif "Μοναδικοί" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("unique_viewers", 0), reverse=is_a_desc)
-    elif "Ημερομηνία Δημοσίευσης" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: str(x.get("upload_date", "")), reverse=is_a_desc)
-    elif "Τίτλος" in sort_by_an:
-        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("title", "").lower(), reverse=not is_a_desc)
-    else:
-        sorted_analytics = filtered_analytics
+    if "Προβολές" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("views", 0), reverse=is_a_desc)
+    elif "Watch Time" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("watchTime", 0.0), reverse=is_a_desc)
+    elif "Likes" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("likes", 0), reverse=is_a_desc)
+    elif "Σχόλια" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("comments", 0), reverse=is_a_desc)
+    elif "CTR" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("ctr", 0.0), reverse=is_a_desc)
+    elif "Retention" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("retention", 0.0), reverse=is_a_desc)
+    elif "New Subs" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("new_subs", 0), reverse=is_a_desc)
+    elif "Μοναδικοί" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("unique_viewers", 0), reverse=is_a_desc)
+    elif "Ημερομηνία" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: str(x.get("upload_date", "")), reverse=is_a_desc)
+    elif "Τίτλος" in sort_by_an: sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("title", "").lower(), reverse=not is_a_desc)
+    else: sorted_analytics = filtered_analytics
 
     if sorted_analytics:
         rows_an_list = []
@@ -1317,27 +1251,15 @@ with tabs[8]:
             rows_an_list.append(row_an)
 
         table_an_html = (
-            '<div class="data-table-container">'
-            '<table class="custom-table">'
-            '<thead><tr>'
-            '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th>'
-            '<th style="text-align:center;">ΗΜΕΡΟΜΗΝΙΑ</th>'
-            '<th style="text-align:center;">ΤΥΠΟΣ</th>'
-            '<th style="text-align:right;">ΠΡΟΒΟΛΕΣ</th>'
-            '<th style="text-align:right;">ΜΟΝ. ΘΕΑΤΕΣ</th>'
-            '<th style="text-align:center;">CTR (%)</th>'
-            '<th style="text-align:center;">RETENTION (%)</th>'
-            '<th style="text-align:center;">ΜΕΣΗ ΔΙΑΡΚΕΙΑ (AVD)</th>'
-            '<th style="text-align:center;">NEW SUBS</th>'
-            '<th style="text-align:right;">LIKES</th>'
-            '<th style="text-align:right;">ΣΧΟΛΙΑ</th>'
-            '<th style="text-align:center;">DESC LINKS</th>'
-            '<th style="text-align:right;">DESC WORDS</th>'
-            '<th style="text-align:right;">WATCH TIME</th>'
-            '<th style="text-align:left;">ΠΗΓΕΣ (ΩΡΕΣ & %)</th>'
-            '</tr></thead>'
-            '<tbody>' + "".join(rows_an_list) + '</tbody>'
-            '</table></div>'
+            '<div class="data-table-container"><table class="custom-table"><thead><tr>'
+            '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th><th style="text-align:center;">ΗΜΕΡΟΜΗΝΙΑ</th>'
+            '<th style="text-align:center;">ΤΥΠΟΣ</th><th style="text-align:right;">ΠΡΟΒΟΛΕΣ</th>'
+            '<th style="text-align:right;">ΜΟΝ. ΘΕΑΤΕΣ</th><th style="text-align:center;">CTR (%)</th>'
+            '<th style="text-align:center;">RETENTION (%)</th><th style="text-align:center;">ΜΕΣΗ ΔΙΑΡΚΕΙΑ (AVD)</th>'
+            '<th style="text-align:center;">NEW SUBS</th><th style="text-align:right;">LIKES</th>'
+            '<th style="text-align:right;">ΣΧΟΛΙΑ</th><th style="text-align:center;">DESC LINKS</th>'
+            '<th style="text-align:right;">DESC WORDS</th><th style="text-align:right;">WATCH TIME</th>'
+            '<th style="text-align:left;">ΠΗΓΕΣ (ΩΡΕΣ & %)</th></tr></thead><tbody>' + "".join(rows_an_list) + '</tbody></table></div>'
         )
         st.markdown(table_an_html, unsafe_allow_html=True)
     else:
@@ -1348,7 +1270,6 @@ with tabs[8]:
 # ------------------------------------------
 with tabs[9]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 YouTube Keywords & Tag Score Intelligence</h3>", unsafe_allow_html=True)
-    
     keywords_list = st.session_state.db.get("keywords", [])
 
     col_q1, col_q2, col_q3 = st.columns([2.5, 1.2, 1.2])
@@ -1458,7 +1379,6 @@ with tabs[9]:
         for k in sorted_keywords:
             prio = k.get("priority", "Μεσαία")
             prio_html = '<span style="background:rgba(239,68,68,0.25); color:#fca5a5; padding:3px 9px; border-radius:12px; font-weight:800;">Υψηλή</span>' if prio == "Υψηλή" else ('<span style="background:rgba(234,179,8,0.25); color:#fde047; padding:3px 9px; border-radius:12px; font-weight:800;">Μεσαία</span>' if prio == "Μεσαία" else '<span style="background:rgba(59,130,246,0.25); color:#93c5fd; padding:3px 9px; border-radius:12px; font-weight:800;">Χαμηλή</span>')
-
             monthly_val = k.get("monthly", 0)
             monthly_str = fmt(monthly_val) if monthly_val > 0 else "—"
 
@@ -1481,18 +1401,14 @@ with tabs[9]:
             rows_kw_list.append(row_kw)
 
         table_kw_html = (
-            '<div class="data-table-container">'
-            '<table class="custom-table">'
-            '<thead><tr>'
+            '<div class="data-table-container"><table class="custom-table"><thead><tr>'
             '<th style="text-align:left;">TAG / KEYWORD</th><th style="text-align:center;">🟢 YOUTUBE RANK</th>'
             '<th style="text-align:center;">🟠 GOOGLE RANK</th><th style="text-align:center;">🔵 TUBEBUDDY #</th>'
             '<th style="text-align:center;">📊 OVERALL SCORE</th><th style="text-align:right;">📅 ΜΗΝ. ΑΝΑΖΗΤΗΣΕΙΣ</th>'
             '<th style="text-align:center;">📈 SEARCH VOL.</th><th style="text-align:center;">⚔️ COMPETITION</th>'
             '<th style="text-align:center;">🎯 OPTIMIZATION</th><th style="text-align:left;">TARGET ΒΙΝΤΕΟ</th>'
             '<th style="text-align:center;">ΠΡΟΤΕΡΑΙΟΤΗΤΑ</th><th style="text-align:center;">STATUS</th>'
-            '</tr></thead>'
-            '<tbody>' + "".join(rows_kw_list) + '</tbody>'
-            '</table></div>'
+            '</tr></thead><tbody>' + "".join(rows_kw_list) + '</tbody></table></div>'
         )
         st.markdown(table_kw_html, unsafe_allow_html=True)
     else:
@@ -1522,25 +1438,121 @@ with tabs[10]:
         st.markdown("---")
 
 # ------------------------------------------
-# 12. GOALS
+# 12. GOALS (DARK TABLE & VISUAL CARDS)
 # ------------------------------------------
 with tabs[11]:
-    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🎯 Μηνιαίοι Στόχοι</h3>", unsafe_allow_html=True)
-    with st.form("goal_form_add", clear_on_submit=True):
-        m = st.text_input("Μήνας (π.χ. 2026-10)")
-        s = st.number_input("Στόχος Subs", step=10)
-        v = st.number_input("Στόχος Views", step=1000)
-        u = st.number_input("Στόχος Uploads", step=1)
-        if st.form_submit_button("Αποθήκευση"):
-            if m:
-                if "goals" not in st.session_state.db: st.session_state.db["goals"] = []
-                st.session_state.db["goals"].append({"month": m, "subs": s, "views": v, "uploads": u})
-                save_data(st.session_state.db)
-                st.rerun()
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🎯 Μηνιαίοι Στόχοι & Παρακολούθηση</h3>", unsafe_allow_html=True)
+    goals_list = st.session_state.db.get("goals", [])
+    sched_items = st.session_state.db.get("schedule", [])
 
-    gls = st.session_state.db.get("goals", [])
-    if gls:
-        st.dataframe(pd.DataFrame(gls), use_container_width=True, hide_index=True)
+    col_g_add, col_g_edit, col_g_del = st.columns(3)
+    with col_g_add:
+        with st.expander("➕ Προσθήκη Νέου Στόχου"):
+            with st.form("goal_form_add", clear_on_submit=True):
+                m = st.text_input("Μήνας (π.χ. 2026-10)")
+                s = st.number_input("Στόχος Νέων Subs", step=10, min_value=0)
+                v = st.number_input("Στόχος Views", step=1000, min_value=0)
+                u = st.number_input("Στόχος Uploads", step=1, min_value=0)
+                if st.form_submit_button("➕ Αποθήκευση"):
+                    if m:
+                        if "goals" not in st.session_state.db: st.session_state.db["goals"] = []
+                        st.session_state.db["goals"].append({
+                            "id": str(datetime.datetime.now().timestamp()),
+                            "month": m.strip(), "subs": int(s), "views": int(v), "uploads": int(u)
+                        })
+                        save_data(st.session_state.db)
+                        st.success("✅ Ο στόχος αποθηκεύτηκε!")
+                        st.rerun()
+
+    with col_g_edit:
+        with st.expander("✏️ Επεξεργασία Στόχου"):
+            if goals_list:
+                g_months = [g.get("month", "Μήνας") for g in goals_list]
+                sel_g_edit = st.selectbox("Επιλέξτε Μήνα:", g_months, key="sel_g_edit")
+                target_g = next((g for g in goals_list if g.get("month") == sel_g_edit), None)
+                if target_g:
+                    with st.form("edit_goal_form"):
+                        eg_month = st.text_input("Μήνας", value=target_g.get("month", ""))
+                        eg_subs = st.number_input("Στόχος Subs", value=int(target_g.get("subs", 0)), step=10)
+                        eg_views = st.number_input("Στόχος Views", value=int(target_g.get("views", 0)), step=1000)
+                        eg_uploads = st.number_input("Στόχος Uploads", value=int(target_g.get("uploads", 0)), step=1)
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_g["month"] = eg_month
+                            target_g["subs"] = int(eg_subs)
+                            target_g["views"] = int(eg_views)
+                            target_g["uploads"] = int(eg_uploads)
+                            save_data(st.session_state.db)
+                            st.success("Ενημερώθηκε!")
+                            st.rerun()
+
+    with col_g_del:
+        with st.expander("🗑️ Διαγραφή Στόχου"):
+            if goals_list:
+                g_months = [g.get("month", "Μήνας") for g in goals_list]
+                sel_g_del = st.selectbox("Επιλέξτε Στόχο για Διαγραφή:", g_months, key="sel_g_del")
+                if st.button("🗑️ Διαγραφή Επιλεγμένου", key="btn_del_g", type="primary"):
+                    st.session_state.db["goals"] = [g for g in goals_list if g.get("month") != sel_g_del]
+                    save_data(st.session_state.db)
+                    st.success("Ο στόχος διαγράφηκε!")
+                    st.rerun()
+
+    # ΟΠΤΙΚΕΣ ΚΑΡΤΕΣ ΠΡΟΟΔΟΥ ΑΝΑ ΜΗΝΑ
+    if goals_list:
+        st.markdown("<h4 style='color:#38bdf8; font-weight:800; margin-top:20px;'>📊 Κάρτες Προόδου Στόχων</h4>", unsafe_allow_html=True)
+        for g in goals_list:
+            m_str = g.get("month", "")
+            t_subs = int(g.get("subs", 0))
+            t_views = int(g.get("views", 0))
+            t_uploads = int(g.get("uploads", 0))
+            
+            # Υπολογισμός δημοσιευμένων από το πρόγραμμα
+            published_month = len([s for s in sched_items if s.get("status") == "Published" and s.get("date", "").startswith(m_str)])
+            up_pct = min(100, round((published_month / t_uploads) * 100)) if t_uploads > 0 else 0
+
+            st.markdown(f"""
+            <div class="goal-card-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="margin:0; color:#38bdf8; font-weight:800;">🎯 Μήνας: {m_str}</h3>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.9rem;">
+                    <span>➕ Στόχος Subs:</span><span>{t_subs:,}</span>
+                </div>
+                <div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #ec4899, #a855f7);"></div></div>
+                
+                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.9rem;">
+                    <span>👀 Στόχος Views:</span><span>{t_views:,}</span>
+                </div>
+                <div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #3b82f6, #06b6d4);"></div></div>
+                
+                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.9rem;">
+                    <span>🎬 Δημοσιεύσεις (Uploads):</span><span>{published_month} / {t_uploads} ({up_pct}%)</span>
+                </div>
+                <div class="goal-bar-track"><div class="goal-bar-fill" style="width:{up_pct}%; background:linear-gradient(90deg, #10b981, #22c55e);"></div></div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Πίνακας Στόχων (Dark HTML Table)
+        rows_g_list = []
+        for g in goals_list:
+            row_g = (
+                f'<tr>'
+                f'<td style="font-weight:800; color:#38bdf8; font-size:1rem;">{g.get("month", "—")}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(g.get("subs", 0))}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#ffffff;">{fmt(g.get("views", 0))}</td>'
+                f'<td style="text-align:right; font-weight:800; color:#38bdf8;">{fmt(g.get("uploads", 0))}</td>'
+                f'</tr>'
+            )
+            rows_g_list.append(row_g)
+
+        table_g_html = (
+            '<div class="data-table-container"><table class="custom-table"><thead><tr>'
+            '<th style="text-align:left;">ΜΗΝΑΣ</th><th style="text-align:right;">ΣΤΟΧΟΣ SUBS</th>'
+            '<th style="text-align:right;">ΣΤΟΧΟΣ VIEWS</th><th style="text-align:right;">ΣΤΟΧΟΣ UPLOADS</th>'
+            '</tr></thead><tbody>' + "".join(rows_g_list) + '</tbody></table></div>'
+        )
+        st.markdown(table_g_html, unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε ορίσει στόχους ακόμα. Προσθέστε έναν παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 13. PROMPTS LIBRARY

@@ -32,6 +32,7 @@ except ImportError:
 # ==========================================
 YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
 ANALYTICS_SCOPES = ['https://www.googleapis.com/auth/yt-analytics.readonly']
+APP_REDIRECT_URI = "https://video-creator-tube.streamlit.app/"
 
 try:
     GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
@@ -278,6 +279,8 @@ def get_default_data():
         "competitors_gr": [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR],
         "competitors_intl": [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL],
         "schedule": [], "analytics": [], "keywords": [], "ideas": [], "goals": [], "prompts": [],
+        "client_secret_dict": None,
+        "google_refresh_token": None,
         "strategies": {
             "yt": [{"step": "1. Προ-Παραγωγή", "desc": "Έρευνα SEO, Scripting, Thumbnail Concept."}, {"step": "2. Παραγωγή", "desc": "Οριζόντια εγγραφή (16:9), Ήχος Studio, A-Roll & B-Roll."}, {"step": "3. Post-Production", "desc": "Montage, Sound Effects, Chapters, Custom Thumbnail."}],
             "shorts": [{"step": "1. Hook & Format", "desc": "Hook στα πρώτα 2'', Κάθετο (9:16), διάρκεια < 60 sec."}],
@@ -637,7 +640,7 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
-# 2-5. STRATEGY TABS (INLINE EDIT & DELETE)
+# 2-5. STRATEGY TABS
 # ------------------------------------------
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
@@ -948,7 +951,7 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY (ΜΕ ΦΙΛΤΡΟ & ΝΕΕΣ ΣΤΗΛΕΣ)
+# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
@@ -959,73 +962,112 @@ with tabs[8]:
         if not GOOGLE_AUTH_AVAILABLE:
             st.warning("⚠️ Προσθέστε στο `requirements.txt` τα: `google-api-python-client`, `google-auth-oauthlib`, `google-auth` για να ενεργοποιηθεί η σύνδεση.")
         else:
+            client_secret_dict = st.session_state.db.get("client_secret_dict")
+            
             c_auth1, c_auth2 = st.columns([2, 1])
             with c_auth1:
                 uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας:", type=["json"], key="oauth_secret_file")
-            
+                if uploaded_secret is not None:
+                    try:
+                        client_secret_dict = json.load(uploaded_secret)
+                        st.session_state.db["client_secret_dict"] = client_secret_dict
+                        save_data(st.session_state.db)
+                        st.success("✅ Το client_secret αποθηκεύτηκε!")
+                    except Exception as e:
+                        st.error(f"Σφάλμα ανάγνωσης JSON: {e}")
+
+            # Έλεγχος αυτόματης επαναφοράς Token αν υπάρχει
+            if "google_creds" not in st.session_state and client_secret_dict and st.session_state.db.get("google_refresh_token"):
+                try:
+                    c_info = client_secret_dict.get("web", {}) or client_secret_dict.get("installed", {})
+                    st.session_state.google_creds = Credentials(
+                        None,
+                        refresh_token=st.session_state.db["google_refresh_token"],
+                        token_uri="https://oauth2.googleapis.com/token",
+                        client_id=c_info.get("client_id"),
+                        client_secret=c_info.get("client_secret"),
+                        scopes=ANALYTICS_SCOPES
+                    )
+                except Exception:
+                    pass
+
+            # Έλεγχος OAuth Redirect με Code
+            if "code" in st.query_params and client_secret_dict:
+                auth_code = st.query_params.get("code")
+                try:
+                    flow = Flow.from_client_config(
+                        client_secret_dict,
+                        scopes=ANALYTICS_SCOPES,
+                        redirect_uri=APP_REDIRECT_URI
+                    )
+                    flow.fetch_token(code=auth_code)
+                    creds = flow.credentials
+                    st.session_state.google_creds = creds
+                    if creds.refresh_token:
+                        st.session_state.db["google_refresh_token"] = creds.refresh_token
+                        save_data(st.session_state.db)
+                    st.query_params.clear()
+                    st.success("✅ Συνδεθήκατε επιτυχώς με το Google!")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Σφάλμα εξαργύρωσης κωδικού: {e}")
+
             col_d1, col_d2 = st.columns(2)
             with col_d1:
                 start_date_q = st.date_input("Ημερομηνία Έναρξης", datetime.date(2026, 1, 1), key="yt_an_start")
             with col_d2:
                 end_date_q = st.date_input("Ημερομηνία Λήξης", datetime.date.today(), key="yt_an_end")
-                
-            if uploaded_secret is not None:
-                try:
-                    secret_dict = json.load(uploaded_secret)
-                    flow = Flow.from_client_config(
-                        secret_dict,
-                        scopes=ANALYTICS_SCOPES,
-                        redirect_uri="urn:ietf:wg:oauth:2.0:oob"
-                    )
-                    auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
-                    st.markdown(f'<a href="{auth_url}" target="_blank"><button style="padding:10px 18px; background:#ef4444; color:#fff; border-radius:8px; border:none; font-weight:800; cursor:pointer;">🔗 1. Πατήστε Εδώ για Σύνδεση με Google ↗</button></a>', unsafe_allow_html=True)
-                    
-                    auth_code = st.text_input("2. Επικολλήστε τον Κωδικό Επαλήθευσης Google (Auth Code):", key="google_auth_code_input")
-                    if st.button("🔓 Ολοκλήρωση Σύνδεσης & Λήψη"):
-                        if auth_code:
-                            flow.fetch_token(code=auth_code.strip())
-                            creds = flow.credentials
-                            st.session_state.google_creds = creds
-                            st.success("✅ Συνδεθήκατε επιτυχώς!")
-                        else:
-                            st.warning("Επικολλήστε πρώτα τον κωδικό.")
-                except Exception as e:
-                    st.error(f"Σφάλμα ανάγνωσης client_secret: {e}")
 
-            if "google_creds" in st.session_state:
-                try:
-                    yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
-                    rep = yt_analytics.reports().query(
-                        ids='channel==MINE',
-                        startDate=str(start_date_q),
-                        endDate=str(end_date_q),
-                        metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
-                        dimensions='day',
-                        sort='day'
-                    ).execute()
-
-                    if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
-                        headers = [h['name'] for h in rep['columnHeaders']]
-                        df_rep = pd.DataFrame(rep['rows'], columns=headers)
-                        
-                        st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
-                        
-                        fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
-                        fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
-                        st.plotly_chart(fig_views, use_container_width=True)
-                        
-                        csv_data = df_rep.to_csv(index=False).encode('utf-8')
-                        st.download_button(
-                            label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
-                            data=csv_data,
-                            file_name="youtube_stats.csv",
-                            mime="text/csv",
-                            use_container_width=True
+            if "google_creds" not in st.session_state:
+                if client_secret_dict:
+                    try:
+                        flow = Flow.from_client_config(
+                            client_secret_dict,
+                            scopes=ANALYTICS_SCOPES,
+                            redirect_uri=APP_REDIRECT_URI
                         )
-                    else:
-                        st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
-                except Exception as e:
-                    st.error(f"Σφάλμα YouTube Analytics API: {e}")
+                        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
+                        st.markdown(f'<a href="{auth_url}" target="_self"><button style="padding:12px 24px; background:#ef4444; color:#fff; border-radius:10px; border:none; font-weight:800; cursor:pointer; font-size:1rem; box-shadow:0 4px 14px rgba(239,68,68,0.4);">🔗 1. Πατήστε Εδώ για Σύνδεση με Google (YouTube Analytics) ↗</button></a>', unsafe_allow_html=True)
+                    except Exception as e:
+                        st.error(f"Σφάλμα παραγωγής συνδέσμου OAuth: {e}")
+                else:
+                    st.info("ℹ️ Ανεβάστε πρώτα το `client_secret.json` παραπάνω.")
+            else:
+                st.success("🟢 Συνδεδεμένοι στο YouTube Analytics API!")
+                if st.button("📥 Λήψη Στατιστικών Περιόδου", use_container_width=True):
+                    try:
+                        yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
+                        rep = yt_analytics.reports().query(
+                            ids='channel==MINE',
+                            startDate=str(start_date_q),
+                            endDate=str(end_date_q),
+                            metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
+                            dimensions='day',
+                            sort='day'
+                        ).execute()
+
+                        if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
+                            headers = [h['name'] for h in rep['columnHeaders']]
+                            df_rep = pd.DataFrame(rep['rows'], columns=headers)
+                            
+                            st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
+                            
+                            fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
+                            fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
+                            st.plotly_chart(fig_views, use_container_width=True)
+                            
+                            csv_data = df_rep.to_csv(index=False).encode('utf-8')
+                            st.download_button(
+                                label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
+                                data=csv_data,
+                                file_name="youtube_stats.csv",
+                                mime="text/csv",
+                                use_container_width=True
+                            )
+                        else:
+                            st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
+                    except Exception as e:
+                        st.error(f"Σφάλμα YouTube Analytics API: {e}")
 
     st.markdown("---")
 
@@ -1105,8 +1147,6 @@ with tabs[8]:
                         save_data(st.session_state.db)
                         st.success("✅ Τα αναλυτικά στατιστικά του βίντεο αποθηκεύτηκαν!")
                         st.rerun()
-                    else:
-                        st.warning("⚠️ Συμπληρώστε τον τίτλο του βίντεο.")
 
     with col_a_edit:
         with st.expander("✏️ Επεξεργασία Βίντεο"):
@@ -1154,7 +1194,6 @@ with tabs[8]:
                     st.success("Η εγγραφή διαγράφηκε!")
                     st.rerun()
 
-    # ΦΙΛΤΡΟ ΤΥΠΟΥ ΒΙΝΤΕΟ & ΤΑΞΙΝΟΜΗΣΗ
     col_fil, col_asort1, col_asort2 = st.columns([1.5, 2, 1.5])
     with col_fil:
         filter_type = st.selectbox(
@@ -1171,7 +1210,6 @@ with tabs[8]:
     with col_asort2:
         sort_dir_an = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_an")
 
-    # Εφαρμογή Φίλτρου Τύπου
     filtered_analytics = list(analytics_list)
     if filter_type == "Long-form (16:9)":
         filtered_analytics = [a for a in filtered_analytics if "Long" in a.get("type", "")]
@@ -1202,7 +1240,6 @@ with tabs[8]:
     else:
         sorted_analytics = filtered_analytics
 
-    # HTML Table Rendering
     if sorted_analytics:
         rows_an_list = []
         for a in sorted_analytics:
@@ -1218,7 +1255,6 @@ with tabs[8]:
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
-            # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]

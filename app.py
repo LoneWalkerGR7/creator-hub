@@ -9,9 +9,17 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import streamlit as st
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
-from googleapiclient.discovery import build
+
+# ==========================================
+# ΑΣΦΑΛΗΣ ΕΙΣΑΓΩΓΗ GOOGLE AUTH (ΧΩΡΙΣ CRASH)
+# ==========================================
+try:
+    from google.oauth2.credentials import Credentials
+    from google_auth_oauthlib.flow import Flow
+    from googleapiclient.discovery import build
+    GOOGLE_AUTH_AVAILABLE = True
+except ImportError:
+    GOOGLE_AUTH_AVAILABLE = False
 
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
@@ -164,9 +172,6 @@ def fetch_channel_stats(api_key, channel_ids):
         st.error(f"Σφάλμα API: {e}")
         return {}
 
-# ==========================================
-# GITHUB AUTO-SAVE (ΜΟΝΙΜΗ ΑΠΟΘΗΚΕΥΣΗ)
-# ==========================================
 def save_to_github(content_dict):
     if not GITHUB_TOKEN or not GITHUB_REPO:
         return False
@@ -203,7 +208,6 @@ def get_default_data():
         "competitors_gr": [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR],
         "competitors_intl": [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL],
         "schedule": [], "analytics": [], "keywords": [], "ideas": [], "goals": [], "prompts": [],
-        "google_oauth_token": None,
         "strategies": {
             "yt": [{"step": "1. Προ-Παραγωγή", "desc": "Έρευνα SEO, Scripting, Thumbnail Concept."}, {"step": "2. Παραγωγή", "desc": "Οριζόντια εγγραφή (16:9), Ήχος Studio, A-Roll & B-Roll."}, {"step": "3. Post-Production", "desc": "Montage, Sound Effects, Chapters, Custom Thumbnail."}],
             "shorts": [{"step": "1. Hook & Format", "desc": "Hook στα πρώτα 2'', Κάθετο (9:16), διάρκεια < 60 sec."}],
@@ -266,9 +270,7 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* ========================================================
-   ΑΠΟΛΥΤΟ FIX TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
-   ======================================================== */
+/* TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -887,76 +889,76 @@ with tabs[8]:
     with st.expander("📥 Αυτόματη Λήψη Αναφοράς από YouTube Analytics API (Επίσημο)"):
         st.markdown("<p style='color:#cbd5e1;'>Συνδεθείτε με το κανάλι σας για να κατεβάσετε αυτόματα ημερήσια στατιστικά (Views, Watch Time, Likes, Subs) [3].</p>", unsafe_allow_html=True)
         
-        c_auth1, c_auth2 = st.columns([2, 1])
-        with c_auth1:
-            uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας:", type=["json"], key="oauth_secret_file")
-        
-        col_d1, col_d2 = st.columns(2)
-        with col_d1:
-            start_date_q = st.date_input("Ημερομηνία Έναρξης", datetime.date(2026, 1, 1), key="yt_an_start")
-        with col_d2:
-            end_date_q = st.date_input("Ημερομηνία Λήξης", datetime.date.today(), key="yt_an_end")
+        if not GOOGLE_AUTH_AVAILABLE:
+            st.warning("⚠️ Προσθέστε στο `requirements.txt` τα: `google-api-python-client`, `google-auth-oauthlib`, `google-auth` για να ενεργοποιηθεί η σύνδεση.")
+        else:
+            c_auth1, c_auth2 = st.columns([2, 1])
+            with c_auth1:
+                uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας:", type=["json"], key="oauth_secret_file")
             
-        if uploaded_secret is not None:
-            try:
-                secret_dict = json.load(uploaded_secret)
-                flow = Flow.from_client_config(
-                    secret_dict,
-                    scopes=ANALYTICS_SCOPES,
-                    redirect_uri="urn:ietf:wg:oauth:2.0:oob"
-                )
-                auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
-                st.markdown(f'<a href="{auth_url}" target="_blank"><button style="padding:10px 18px; background:#ef4444; color:#fff; border-radius:8px; border:none; font-weight:800; cursor:pointer;">🔗 1. Πατήστε Εδώ για Σύνδεση με Google ↗</button></a>', unsafe_allow_html=True)
+            col_d1, col_d2 = st.columns(2)
+            with col_d1:
+                start_date_q = st.date_input("Ημερομηνία Έναρξης", datetime.date(2026, 1, 1), key="yt_an_start")
+            with col_d2:
+                end_date_q = st.date_input("Ημερομηνία Λήξης", datetime.date.today(), key="yt_an_end")
                 
-                auth_code = st.text_input("2. Επικολλήστε τον Κωδικό Επαλήθευσης Google (Auth Code):", key="google_auth_code_input")
-                if st.button("🔓 Ολοκλήρωση Σύνδεσης & Λήψη"):
-                    if auth_code:
-                        flow.fetch_token(code=auth_code.strip())
-                        creds = flow.credentials
-                        st.session_state.google_creds = creds
-                        st.success("✅ Συνδεθήκατε επιτυχώς!")
-                    else:
-                        st.warning("Επικολλήστε πρώτα τον κωδικό.")
-            except Exception as e:
-                st.error(f"Σφάλμα ανάγνωσης client_secret: {e}")
-
-        # Αν υπάρχουν διαπιστευτήρια, εκτέλεση του Query
-        if "google_creds" in st.session_state:
-            try:
-                yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
-                rep = yt_analytics.reports().query(
-                    ids='channel==MINE',
-                    startDate=str(start_date_q),
-                    endDate=str(end_date_q),
-                    metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
-                    dimensions='day',
-                    sort='day'
-                ).execute()
-
-                if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
-                    headers = [h['name'] for h in rep['columnHeaders']]
-                    df_rep = pd.DataFrame(rep['rows'], columns=headers)
-                    
-                    st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
-                    
-                    # Γραφήματα
-                    fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
-                    fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
-                    st.plotly_chart(fig_views, use_container_width=True)
-                    
-                    # Download CSV
-                    csv_data = df_rep.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
-                        data=csv_data,
-                        file_name="youtube_stats.csv",
-                        mime="text/csv",
-                        use_container_width=True
+            if uploaded_secret is not None:
+                try:
+                    secret_dict = json.load(uploaded_secret)
+                    flow = Flow.from_client_config(
+                        secret_dict,
+                        scopes=ANALYTICS_SCOPES,
+                        redirect_uri="urn:ietf:wg:oauth:2.0:oob"
                     )
-                else:
-                    st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
-            except Exception as e:
-                st.error(f"Σφάλμα YouTube Analytics API: {e}")
+                    auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
+                    st.markdown(f'<a href="{auth_url}" target="_blank"><button style="padding:10px 18px; background:#ef4444; color:#fff; border-radius:8px; border:none; font-weight:800; cursor:pointer;">🔗 1. Πατήστε Εδώ για Σύνδεση με Google ↗</button></a>', unsafe_allow_html=True)
+                    
+                    auth_code = st.text_input("2. Επικολλήστε τον Κωδικό Επαλήθευσης Google (Auth Code):", key="google_auth_code_input")
+                    if st.button("🔓 Ολοκλήρωση Σύνδεσης & Λήψη"):
+                        if auth_code:
+                            flow.fetch_token(code=auth_code.strip())
+                            creds = flow.credentials
+                            st.session_state.google_creds = creds
+                            st.success("✅ Συνδεθήκατε επιτυχώς!")
+                        else:
+                            st.warning("Επικολλήστε πρώτα τον κωδικό.")
+                except Exception as e:
+                    st.error(f"Σφάλμα ανάγνωσης client_secret: {e}")
+
+            if "google_creds" in st.session_state:
+                try:
+                    yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
+                    rep = yt_analytics.reports().query(
+                        ids='channel==MINE',
+                        startDate=str(start_date_q),
+                        endDate=str(end_date_q),
+                        metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
+                        dimensions='day',
+                        sort='day'
+                    ).execute()
+
+                    if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
+                        headers = [h['name'] for h in rep['columnHeaders']]
+                        df_rep = pd.DataFrame(rep['rows'], columns=headers)
+                        
+                        st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
+                        
+                        fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
+                        fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
+                        st.plotly_chart(fig_views, use_container_width=True)
+                        
+                        csv_data = df_rep.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
+                            data=csv_data,
+                            file_name="youtube_stats.csv",
+                            mime="text/csv",
+                            use_container_width=True
+                        )
+                    else:
+                        st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
+                except Exception as e:
+                    st.error(f"Σφάλμα YouTube Analytics API: {e}")
 
     st.markdown("---")
 
@@ -969,21 +971,26 @@ with tabs[8]:
     with col_a_add:
         with st.expander("➕ Καταγραφή Νέου Βίντεο"):
             with st.form("an_form_add", clear_on_submit=True):
-                t = st.text_input("Τίτλος Βίντεο")
-                typ = st.selectbox("Τύπος Βίντεο", ["Long-form (16:9)", "Shorts (9:16)"])
-                views = st.number_input("👁️ Προβολές (Views)", min_value=0, step=100)
-                unique_viewers = st.number_input("👥 Μοναδικοί Θεατές", min_value=0, step=50)
-                ctr = st.number_input("CTR (%)", min_value=0.0, max_value=100.0, step=0.1)
-                ret = st.number_input("Retention / Avg Viewed (%)", min_value=0.0, max_value=100.0, step=0.1)
-                avd = st.text_input("⏱️ Μέση Διάρκεια (AVD)", placeholder="π.χ. 03:45")
-                new_subs = st.number_input("➕ New Subs", step=1)
-                wt = st.number_input("Συνολικό Watch Time (Ώρες)", min_value=0.0, step=0.1)
-                
-                st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:2px;'>📊 Πηγές Επισκεψιμότητας & Ώρες</p>", unsafe_allow_html=True)
-                src_1 = st.selectbox("1η Κύρια Πηγή:", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src1")
-                hours_1 = st.number_input("Ώρες 1ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h1")
-                src_2 = st.selectbox("2η Πηγή (προαιρετικά):", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src2")
-                hours_2 = st.number_input("Ώρες 2ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h2")
+                a_c1, a_c2, a_c3 = st.columns(3)
+                with a_c1:
+                    t = st.text_input("Τίτλος Βίντεο")
+                    typ = st.selectbox("Τύπος Βίντεο", ["Long-form (16:9)", "Shorts (9:16)"])
+                    views = st.number_input("👁️ Προβολές (Views)", min_value=0, step=100)
+                    unique_viewers = st.number_input("👥 Μοναδικοί Θεατές", min_value=0, step=50)
+
+                with a_c2:
+                    ctr = st.number_input("CTR (%)", min_value=0.0, max_value=100.0, step=0.1)
+                    ret = st.number_input("Retention / Avg Viewed (%)", min_value=0.0, max_value=100.0, step=0.1)
+                    avd = st.text_input("⏱️ Μέση Διάρκεια (AVD)", placeholder="π.χ. 03:45")
+                    new_subs = st.number_input("➕ New Subs", step=1)
+
+                with a_c3:
+                    wt = st.number_input("Συνολικό Watch Time (Ώρες)", min_value=0.0, step=0.1)
+                    st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:2px;'>📊 Πηγές Επισκεψιμότητας & Ώρες</p>", unsafe_allow_html=True)
+                    src_1 = st.selectbox("1η Κύρια Πηγή:", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src1")
+                    hours_1 = st.number_input("Ώρες 1ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h1")
+                    src_2 = st.selectbox("2η Πηγή (προαιρετικά):", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src2")
+                    hours_2 = st.number_input("Ώρες 2ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h2")
 
                 if st.form_submit_button("➕ Αποθήκευση Βίντεο", use_container_width=True):
                     if t:
@@ -1086,7 +1093,6 @@ with tabs[8]:
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
-            # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]

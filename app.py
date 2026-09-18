@@ -11,7 +11,7 @@ import requests
 import streamlit as st
 
 # ==========================================
-# ΑΣΦΑΛΗΣ ΕΙΣΑΓΩΓΗ GOOGLE AUTH (ΧΩΡΙΣ CRASH)
+# ΑΣΦΑΛΗΣ ΕΙΣΑΓΩΓΗ ΒΙΒΛΙΟΘΗΚΩΝ GOOGLE & TRANSCRIPTS
 # ==========================================
 try:
     from google.oauth2.credentials import Credentials
@@ -20,6 +20,12 @@ try:
     GOOGLE_AUTH_AVAILABLE = True
 except ImportError:
     GOOGLE_AUTH_AVAILABLE = False
+
+try:
+    from youtube_transcript_api import YouTubeTranscriptApi
+    TRANSCRIPT_AVAILABLE = True
+except ImportError:
+    TRANSCRIPT_AVAILABLE = False
 
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
@@ -172,6 +178,22 @@ def fetch_channel_stats(api_key, channel_ids):
         st.error(f"Σφάλμα API: {e}")
         return {}
 
+def extract_video_id(url_or_id):
+    if not url_or_id: return ""
+    url_or_id = url_or_id.strip()
+    if "v=" in url_or_id:
+        return url_or_id.split("v=")[1].split("&")[0].split("?")[0]
+    elif "youtu.be/" in url_or_id:
+        return url_or_id.split("youtu.be/")[1].split("?")[0]
+    elif "shorts/" in url_or_id:
+        return url_or_id.split("shorts/")[1].split("?")[0]
+    elif "live/" in url_or_id:
+        return url_or_id.split("live/")[1].split("?")[0]
+    return url_or_id
+
+# ==========================================
+# GITHUB AUTO-SAVE (ΜΟΝΙΜΗ ΑΠΟΘΗΚΕΥΣΗ)
+# ==========================================
 def save_to_github(content_dict):
     if not GITHUB_TOKEN or not GITHUB_REPO:
         return False
@@ -245,7 +267,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 # ==========================================
-# ULTRA HIGH CONTRAST & BOLD CSS
+# ULTRA HIGH CONTRAST & BOLD CSS (15 TABS)
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -270,7 +292,7 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ */
+/* TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -332,6 +354,7 @@ button[data-baseweb="tab"]:nth-of-type(11)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(12)[aria-selected="true"] { background: linear-gradient(135deg, #4c0519 0%, #e11d48 100%) !important; border: 2px solid #fecdd3 !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
+button[data-baseweb="tab"]:nth-of-type(15)[aria-selected="true"] { background: linear-gradient(135deg, #065f46 0%, #10b981 100%) !important; border: 2px solid #6ee7b7 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6) !important; }
 
 button[data-baseweb="tab"][aria-selected="true"] * { color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 0 10px rgba(255,255,255,0.7) !important; }
 
@@ -508,7 +531,7 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
-# ΚΥΡΙΩΣ TABS (14 TABS)
+# ΚΥΡΙΩΣ TABS (15 TABS)
 # ==========================================
 st.markdown("<h1 style='text-align: center; color:#ffffff; font-weight:800; margin-bottom: 25px;'>🎬 Video Creator Hub & Competitor Intelligence</h1>", unsafe_allow_html=True)
 
@@ -516,7 +539,7 @@ tabs = st.tabs([
     "📊 Dashboard", "🎬 YouTube Long-Form", "📱 YouTube Shorts", "📸 FB & IG Reels",
     "🎵 TikTok", "📅 Πρόγραμμα", "🇬🇷 Έλληνες Competitors", "🌐 Ξένοι Competitors",
     "📈 Ιστορικό & Analytics", "🔑 Keywords", "💡 Ιδέες", "🎯 Στόχοι",
-    "📜 Prompts Library", "🖼️ Thumbnail AI Editor"
+    "📜 Prompts Library", "🖼️ Thumbnail AI Editor", "📝 Transcript Extractor"
 ])
 
 # ------------------------------------------
@@ -883,9 +906,6 @@ with tabs[7]:
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
     
-    # ----------------------------------------------------
-    # SECTION 1: ΑΥΤΟΜΑΤΗ ΛΗΨΗ ΑΠΟ YOUTUBE ANALYTICS API
-    # ----------------------------------------------------
     with st.expander("📥 Αυτόματη Λήψη Αναφοράς από YouTube Analytics API (Επίσημο)"):
         st.markdown("<p style='color:#cbd5e1;'>Συνδεθείτε με το κανάλι σας για να κατεβάσετε αυτόματα ημερήσια στατιστικά (Views, Watch Time, Likes, Subs) [3].</p>", unsafe_allow_html=True)
         
@@ -962,9 +982,6 @@ with tabs[8]:
 
     st.markdown("---")
 
-    # ----------------------------------------------------
-    # SECTION 2: ΧΕΙΡΟΚΙΝΗΤΗ ΚΑΤΑΓΡΑΦΗ & ΠΙΝΑΚΑΣ
-    # ----------------------------------------------------
     analytics_list = st.session_state.db.get("analytics", [])
 
     col_a_add, col_a_edit, col_a_del = st.columns(3)
@@ -1379,3 +1396,64 @@ with tabs[13]:
     if img_file:
         st.image(img_file, caption="Competitor Thumbnail", width=400)
         st.code("High-impact YouTube thumbnail, dramatic lighting, intense composition, vivid neon highlights (#facc15, #ef4444), photorealistic detail, 8k resolution, cinematic depth of field, bold text safe zone on left third --ar 16:9 --v 6.0", language="text")
+
+# ------------------------------------------
+# 15. TRANSCRIPT EXTRACTOR (NEW)
+# ------------------------------------------
+with tabs[14]:
+    st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📝 YouTube Transcript Extractor</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#cbd5e1;'>Εξάγετε άμεσα όλους τους υποτίτλους / ομιλία από οποιοδήποτε βίντεο YouTube (Ελληνικά ή Αγγλικά) για δημιουργία περιλήψεων, άρθρων ή scripts.</p>", unsafe_allow_html=True)
+    
+    if not TRANSCRIPT_AVAILABLE:
+        st.warning("⚠️ Προσθέστε στο `requirements.txt` το `youtube-transcript-api` για να ενεργοποιηθεί η ανάκτηση υποτίτλων.")
+    else:
+        video_input = st.text_input("🔗 Εισαγωγή YouTube Video URL ή Video ID:", placeholder="π.χ. https://www.youtube.com/watch?v=dQw4w9WgXcQ ή απλό ID")
+        
+        c_tr1, c_tr2 = st.columns([1.5, 4])
+        with c_tr1:
+            fetch_tr_btn = st.button("🎙️ Ανάκτηση Υποτίτλων", use_container_width=True)
+        
+        if fetch_tr_btn:
+            if video_input:
+                vid_id = extract_video_id(video_input)
+                try:
+                    with st.spinner("⏳ Ανάκτηση υποτίτλων από το YouTube..."):
+                        # Προσπάθεια ανάκτησης στα Ελληνικά ή Αγγλικά, ή οποιαδήποτε διαθέσιμη γλώσσα
+                        try:
+                            transcript = YouTubeTranscriptApi.get_transcript(vid_id, languages=['el', 'en'])
+                        except Exception:
+                            transcript_list = YouTubeTranscriptApi.list_transcripts(vid_id)
+                            transcript = transcript_list.find_transcript(['el', 'en']).fetch()
+
+                        full_text = " ".join([item['text'] for item in transcript])
+                        words_count = len(full_text.split())
+                        reading_time = max(1, round(words_count / 200))
+                        
+                        st.session_state.last_transcript = full_text
+                        st.session_state.last_tr_meta = {"words": words_count, "time": reading_time, "vid": vid_id}
+                        st.success(f"✅ Οι υπότιτλοι ανακτήθηκαν επιτυχώς ({words_count:,} λέξεις • ~{reading_time} λεπτά ανάγνωση)!")
+                except Exception as e:
+                    st.error(f"❌ Σφάλμα κατά την ανάκτηση: {e}. Βεβαιωθείτε ότι το βίντεο διαθέτει υποτίτλους/transcript.")
+            else:
+                st.warning("⚠️ Παρακαλώ εισάγετε ένα έγκυρο YouTube URL ή ID.")
+
+        if "last_transcript" in st.session_state and st.session_state.last_transcript:
+            tr_text = st.session_state.last_transcript
+            meta = st.session_state.get("last_tr_meta", {})
+            
+            st.markdown("---")
+            st.text_area("📄 Πλήρες Κείμενο Υποτίτλων (Full Transcript):", tr_text, height=320)
+            
+            c_d1, c_d2 = st.columns(2)
+            with c_d1:
+                st.download_button(
+                    label="⬇️ Λήψη Υποτίτλων (.txt)",
+                    data=tr_text.encode('utf-8'),
+                    file_name=f"transcript_{meta.get('vid', 'video')}.txt",
+                    mime="text/plain",
+                    use_container_width=True
+                )
+            with c_d2:
+                with st.expander("🤖 Δημιουργία AI Prompt για Περίληψη"):
+                    ai_prompt = f"Παρακαλώ διάβασε το παρακάτω transcript από βίντεο YouTube και δώσε μου:\n1. Σύντομη περίληψη 3 προτάσεων\n2. Τα 5 σημαντικότερα βασικά συμπεράσματα (bullet points)\n3. 3 ιδέες για τίτλους YouTube βίντεο με βάση το περιεχόμενο\n\nTranscript:\n\"\"\"\n{tr_text[:3000]}...\n\"\"\""
+                    st.code(ai_prompt, language="text")

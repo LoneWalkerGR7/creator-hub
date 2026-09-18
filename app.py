@@ -9,11 +9,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import streamlit as st
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
 
 # ==========================================
 # YOUTUBE DATA API KEY & GITHUB CONFIG
 # ==========================================
 YOUTUBE_API_KEY = "AIzaSyCf5YtVQBxrBAU1If2N2CJATtvOAjXk8PY"
+ANALYTICS_SCOPES = ['https://www.googleapis.com/auth/yt-analytics.readonly']
 
 try:
     GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
@@ -199,6 +203,7 @@ def get_default_data():
         "competitors_gr": [{**c, **blank_stats()} for c in SEED_COMPETITORS_GR],
         "competitors_intl": [{**c, **blank_stats()} for c in SEED_COMPETITORS_INTL],
         "schedule": [], "analytics": [], "keywords": [], "ideas": [], "goals": [], "prompts": [],
+        "google_oauth_token": None,
         "strategies": {
             "yt": [{"step": "1. Προ-Παραγωγή", "desc": "Έρευνα SEO, Scripting, Thumbnail Concept."}, {"step": "2. Παραγωγή", "desc": "Οριζόντια εγγραφή (16:9), Ήχος Studio, A-Roll & B-Roll."}, {"step": "3. Post-Production", "desc": "Montage, Sound Effects, Chapters, Custom Thumbnail."}],
             "shorts": [{"step": "1. Hook & Format", "desc": "Hook στα πρώτα 2'', Κάθετο (9:16), διάρκεια < 60 sec."}],
@@ -261,7 +266,9 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS */
+/* ========================================================
+   ΑΠΟΛΥΤΟ FIX TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS & 2 ΣΕΙΡΕΣ
+   ======================================================== */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -558,7 +565,7 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
-# 2-5. STRATEGY TABS
+# 2-5. STRATEGY TABS (INLINE EDIT & DELETE)
 # ------------------------------------------
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
@@ -869,11 +876,93 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
+# 9. ANALYTICS & VIDEO HISTORY (ΜΕ YOUTUBE ANALYTICS OAUTH)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
     
+    # ----------------------------------------------------
+    # SECTION 1: ΑΥΤΟΜΑΤΗ ΛΗΨΗ ΑΠΟ YOUTUBE ANALYTICS API
+    # ----------------------------------------------------
+    with st.expander("📥 Αυτόματη Λήψη Αναφοράς από YouTube Analytics API (Επίσημο)"):
+        st.markdown("<p style='color:#cbd5e1;'>Συνδεθείτε με το κανάλι σας για να κατεβάσετε αυτόματα ημερήσια στατιστικά (Views, Watch Time, Likes, Subs) [3].</p>", unsafe_allow_html=True)
+        
+        c_auth1, c_auth2 = st.columns([2, 1])
+        with c_auth1:
+            uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας:", type=["json"], key="oauth_secret_file")
+        
+        col_d1, col_d2 = st.columns(2)
+        with col_d1:
+            start_date_q = st.date_input("Ημερομηνία Έναρξης", datetime.date(2026, 1, 1), key="yt_an_start")
+        with col_d2:
+            end_date_q = st.date_input("Ημερομηνία Λήξης", datetime.date.today(), key="yt_an_end")
+            
+        if uploaded_secret is not None:
+            try:
+                secret_dict = json.load(uploaded_secret)
+                flow = Flow.from_client_config(
+                    secret_dict,
+                    scopes=ANALYTICS_SCOPES,
+                    redirect_uri="urn:ietf:wg:oauth:2.0:oob"
+                )
+                auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
+                st.markdown(f'<a href="{auth_url}" target="_blank"><button style="padding:10px 18px; background:#ef4444; color:#fff; border-radius:8px; border:none; font-weight:800; cursor:pointer;">🔗 1. Πατήστε Εδώ για Σύνδεση με Google ↗</button></a>', unsafe_allow_html=True)
+                
+                auth_code = st.text_input("2. Επικολλήστε τον Κωδικό Επαλήθευσης Google (Auth Code):", key="google_auth_code_input")
+                if st.button("🔓 Ολοκλήρωση Σύνδεσης & Λήψη"):
+                    if auth_code:
+                        flow.fetch_token(code=auth_code.strip())
+                        creds = flow.credentials
+                        st.session_state.google_creds = creds
+                        st.success("✅ Συνδεθήκατε επιτυχώς!")
+                    else:
+                        st.warning("Επικολλήστε πρώτα τον κωδικό.")
+            except Exception as e:
+                st.error(f"Σφάλμα ανάγνωσης client_secret: {e}")
+
+        # Αν υπάρχουν διαπιστευτήρια, εκτέλεση του Query
+        if "google_creds" in st.session_state:
+            try:
+                yt_analytics = build('youtubeAnalytics', 'v2', credentials=st.session_state.google_creds)
+                rep = yt_analytics.reports().query(
+                    ids='channel==MINE',
+                    startDate=str(start_date_q),
+                    endDate=str(end_date_q),
+                    metrics='views,estimatedMinutesWatched,averageViewDuration,likes,subscribersGained',
+                    dimensions='day',
+                    sort='day'
+                ).execute()
+
+                if 'columnHeaders' in rep and 'rows' in rep and rep['rows']:
+                    headers = [h['name'] for h in rep['columnHeaders']]
+                    df_rep = pd.DataFrame(rep['rows'], columns=headers)
+                    
+                    st.success(f"✅ Φορτώθηκαν {len(df_rep)} ημέρες στατιστικών!")
+                    
+                    # Γραφήματα
+                    fig_views = px.line(df_rep, x='day', y='views', title='📈 Ημερήσιες Προβολές (Views)', markers=True, template="plotly_dark")
+                    fig_views.update_layout(paper_bgcolor="#151c2c", plot_bgcolor="#151c2c")
+                    st.plotly_chart(fig_views, use_container_width=True)
+                    
+                    # Download CSV
+                    csv_data = df_rep.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="⬇️ Λήψη Αναφοράς ως `youtube_stats.csv`",
+                        data=csv_data,
+                        file_name="youtube_stats.csv",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
+                else:
+                    st.info("Δεν βρέθηκαν δεδομένα για το επιλεγμένο διάστημα.")
+            except Exception as e:
+                st.error(f"Σφάλμα YouTube Analytics API: {e}")
+
+    st.markdown("---")
+
+    # ----------------------------------------------------
+    # SECTION 2: ΧΕΙΡΟΚΙΝΗΤΗ ΚΑΤΑΓΡΑΦΗ & ΠΙΝΑΚΑΣ
+    # ----------------------------------------------------
     analytics_list = st.session_state.db.get("analytics", [])
 
     col_a_add, col_a_edit, col_a_del = st.columns(3)
@@ -997,6 +1086,7 @@ with tabs[8]:
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
+            # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]
@@ -1043,7 +1133,7 @@ with tabs[8]:
         st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει στατιστικά βίντεο ακόμα. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
-# 10. KEYWORDS & TAG SCORE INTELLIGENCE (UPGRADED)
+# 10. KEYWORDS & TAG SCORE INTELLIGENCE
 # ------------------------------------------
 with tabs[9]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🔑 YouTube Keywords & Tag Score Intelligence</h3>", unsafe_allow_html=True)
@@ -1183,18 +1273,12 @@ with tabs[9]:
             '<div class="data-table-container">'
             '<table class="custom-table">'
             '<thead><tr>'
-            '<th style="text-align:left;">TAG / KEYWORD</th>'
-            '<th style="text-align:center;">🟢 YOUTUBE RANK</th>'
-            '<th style="text-align:center;">🟠 GOOGLE RANK</th>'
-            '<th style="text-align:center;">🔵 TUBEBUDDY #</th>'
-            '<th style="text-align:center;">📊 OVERALL SCORE</th>'
-            '<th style="text-align:right;">📅 ΜΗΝ. ΑΝΑΖΗΤΗΣΕΙΣ</th>'
-            '<th style="text-align:center;">📈 SEARCH VOL.</th>'
-            '<th style="text-align:center;">⚔️ COMPETITION</th>'
-            '<th style="text-align:center;">🎯 OPTIMIZATION</th>'
-            '<th style="text-align:left;">TARGET ΒΙΝΤΕΟ</th>'
-            '<th style="text-align:center;">ΠΡΟΤΕΡΑΙΟΤΗΤΑ</th>'
-            '<th style="text-align:center;">STATUS</th>'
+            '<th style="text-align:left;">TAG / KEYWORD</th><th style="text-align:center;">🟢 YOUTUBE RANK</th>'
+            '<th style="text-align:center;">🟠 GOOGLE RANK</th><th style="text-align:center;">🔵 TUBEBUDDY #</th>'
+            '<th style="text-align:center;">📊 OVERALL SCORE</th><th style="text-align:right;">📅 ΜΗΝ. ΑΝΑΖΗΤΗΣΕΙΣ</th>'
+            '<th style="text-align:center;">📈 SEARCH VOL.</th><th style="text-align:center;">⚔️ COMPETITION</th>'
+            '<th style="text-align:center;">🎯 OPTIMIZATION</th><th style="text-align:left;">TARGET ΒΙΝΤΕΟ</th>'
+            '<th style="text-align:center;">ΠΡΟΤΕΡΑΙΟΤΗΤΑ</th><th style="text-align:center;">STATUS</th>'
             '</tr></thead>'
             '<tbody>' + "".join(rows_kw_list) + '</tbody>'
             '</table></div>'

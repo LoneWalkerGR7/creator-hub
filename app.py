@@ -192,6 +192,60 @@ def extract_video_id(url_or_id):
     return url_or_id
 
 # ==========================================
+# ΚΑΘΟΛΙΚΗ & ΑΣΦΑΛΗΣ ΑΝΑΚΤΗΣΗ ΥΠΟΤΙΤΛΩΝ
+# ==========================================
+def fetch_transcript_safe(video_id):
+    # 1. Προσπάθεια με API v1.x (Modern Instance API)
+    try:
+        api = YouTubeTranscriptApi()
+        if hasattr(api, 'list'):
+            t_list = api.list(video_id)
+            try:
+                t = t_list.find_transcript(['el', 'en'])
+            except Exception:
+                t = next(iter(t_list))
+            return t.fetch()
+        elif hasattr(api, 'fetch'):
+            return api.fetch(video_id)
+    except Exception:
+        pass
+
+    # 2. Προσπάθεια με API v0.x (Legacy get_transcript)
+    try:
+        if hasattr(YouTubeTranscriptApi, 'get_transcript'):
+            try:
+                return YouTubeTranscriptApi.get_transcript(video_id, languages=['el', 'en'])
+            except Exception:
+                return YouTubeTranscriptApi.get_transcript(video_id)
+    except Exception:
+        pass
+
+    # 3. Προσπάθεια με API v0.x (Legacy list_transcripts)
+    try:
+        if hasattr(YouTubeTranscriptApi, 'list_transcripts'):
+            t_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            try:
+                t = t_list.find_transcript(['el', 'en'])
+            except Exception:
+                t = next(iter(t_list))
+            return t.fetch()
+    except Exception:
+        pass
+
+    raise Exception("Δεν βρέθηκαν διαθέσιμοι υπότιτλοι (transcripts) για αυτό το βίντεο.")
+
+def format_transcript_text(transcript_data):
+    lines = []
+    for item in transcript_data:
+        if isinstance(item, dict) and 'text' in item:
+            lines.append(item['text'])
+        elif hasattr(item, 'text'):
+            lines.append(item.text)
+        elif isinstance(item, str):
+            lines.append(item)
+    return " ".join(lines)
+
+# ==========================================
 # GITHUB AUTO-SAVE (ΜΟΝΙΜΗ ΑΠΟΘΗΚΕΥΣΗ)
 # ==========================================
 def save_to_github(content_dict):
@@ -292,7 +346,7 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS: ΠΛΗΡΩΣ ΟΡΑΤΑ ΚΑΤΑΛΕΥΚΑ PILLS */
+/* TABS */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -1398,7 +1452,7 @@ with tabs[13]:
         st.code("High-impact YouTube thumbnail, dramatic lighting, intense composition, vivid neon highlights (#facc15, #ef4444), photorealistic detail, 8k resolution, cinematic depth of field, bold text safe zone on left third --ar 16:9 --v 6.0", language="text")
 
 # ------------------------------------------
-# 15. TRANSCRIPT EXTRACTOR (NEW)
+# 15. TRANSCRIPT EXTRACTOR (FIXED & UPGRADED)
 # ------------------------------------------
 with tabs[14]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📝 YouTube Transcript Extractor</h3>", unsafe_allow_html=True)
@@ -1418,14 +1472,9 @@ with tabs[14]:
                 vid_id = extract_video_id(video_input)
                 try:
                     with st.spinner("⏳ Ανάκτηση υποτίτλων από το YouTube..."):
-                        # Προσπάθεια ανάκτησης στα Ελληνικά ή Αγγλικά, ή οποιαδήποτε διαθέσιμη γλώσσα
-                        try:
-                            transcript = YouTubeTranscriptApi.get_transcript(vid_id, languages=['el', 'en'])
-                        except Exception:
-                            transcript_list = YouTubeTranscriptApi.list_transcripts(vid_id)
-                            transcript = transcript_list.find_transcript(['el', 'en']).fetch()
-
-                        full_text = " ".join([item['text'] for item in transcript])
+                        transcript_data = fetch_transcript_safe(vid_id)
+                        full_text = format_transcript_text(transcript_data)
+                        
                         words_count = len(full_text.split())
                         reading_time = max(1, round(words_count / 200))
                         

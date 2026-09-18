@@ -56,7 +56,7 @@ TRAFFIC_SOURCE_OPTIONS = [
     "Λειτουργίες περιήγησης", "Αναζήτηση YouTube", "Προτεινόμενα βίντεο",
     "Σελίδες καναλιών", "Εξωτερικές", "Απευθείας πληκτρολόγηση ή άγνωστη πηγή",
     "Ειδοποιήσεις", "Διαφημίσεις YouTube", "Άλλες λειτουργίες του YouTube",
-    "Τελικές οθόνες", "Σχετικά Short", "Λίστα αναπαραγωγής", "Ροή Shorts" "Σελίδες hashtag (#)"
+    "Τελικές οθόνες", "Σχετικά Short", "Λίστα αναπαραγωγής", "Σελίδες hashtag (#)"
 ]
 
 SEED_COMPETITORS_GR = [
@@ -191,11 +191,7 @@ def extract_video_id(url_or_id):
         return url_or_id.split("live/")[1].split("?")[0]
     return url_or_id
 
-# ==========================================
-# ΚΑΘΟΛΙΚΗ & ΑΣΦΑΛΗΣ ΑΝΑΚΤΗΣΗ ΥΠΟΤΙΤΛΩΝ
-# ==========================================
 def fetch_transcript_safe(video_id):
-    # 1. Προσπάθεια με API v1.x (Modern Instance API)
     try:
         api = YouTubeTranscriptApi()
         if hasattr(api, 'list'):
@@ -210,7 +206,6 @@ def fetch_transcript_safe(video_id):
     except Exception:
         pass
 
-    # 2. Προσπάθεια με API v0.x (Legacy get_transcript)
     try:
         if hasattr(YouTubeTranscriptApi, 'get_transcript'):
             try:
@@ -220,7 +215,6 @@ def fetch_transcript_safe(video_id):
     except Exception:
         pass
 
-    # 3. Προσπάθεια με API v0.x (Legacy list_transcripts)
     try:
         if hasattr(YouTubeTranscriptApi, 'list_transcripts'):
             t_list = YouTubeTranscriptApi.list_transcripts(video_id)
@@ -232,7 +226,7 @@ def fetch_transcript_safe(video_id):
     except Exception:
         pass
 
-    raise Exception("Δεν βρέθηκαν διαθέσιμοι υπότιτλοι (transcripts) για αυτό το βίντεο.")
+    raise Exception("Δεν βρέθηκαν διαθέσιμοι υπότιτλοι για αυτό το βίντεο.")
 
 def format_transcript_text(transcript_data):
     lines = []
@@ -346,7 +340,6 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -955,7 +948,7 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY (ΜΕ YOUTUBE ANALYTICS OAUTH)
+# 9. ANALYTICS & VIDEO HISTORY (ΜΕ ΦΙΛΤΡΟ & ΝΕΕΣ ΣΤΗΛΕΣ)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
@@ -1046,6 +1039,7 @@ with tabs[8]:
                 with a_c1:
                     t = st.text_input("Τίτλος Βίντεο")
                     typ = st.selectbox("Τύπος Βίντεο", ["Long-form (16:9)", "Shorts (9:16)"])
+                    u_date = st.date_input("📅 Ημερομηνία Δημοσίευσης", datetime.date.today(), key="an_u_date")
                     views = st.number_input("👁️ Προβολές (Views)", min_value=0, step=100)
                     unique_viewers = st.number_input("👥 Μοναδικοί Θεατές", min_value=0, step=50)
 
@@ -1054,9 +1048,14 @@ with tabs[8]:
                     ret = st.number_input("Retention / Avg Viewed (%)", min_value=0.0, max_value=100.0, step=0.1)
                     avd = st.text_input("⏱️ Μέση Διάρκεια (AVD)", placeholder="π.χ. 03:45")
                     new_subs = st.number_input("➕ New Subs", step=1)
+                    wt = st.number_input("Συνολικό Watch Time (Ώρες)", min_value=0.0, step=0.1)
 
                 with a_c3:
-                    wt = st.number_input("Συνολικό Watch Time (Ώρες)", min_value=0.0, step=0.1)
+                    likes = st.number_input("👍 YT Likes", min_value=0, step=10)
+                    comments = st.number_input("💬 YT Comments", min_value=0, step=5)
+                    d_links = st.number_input("🔗 Desc Link Count", min_value=0, step=1)
+                    d_words = st.number_input("📝 Desc Word Count", min_value=0, step=10)
+                    
                     st.markdown("<p style='color:#38bdf8; font-weight:800; margin-bottom:2px;'>📊 Πηγές Επισκεψιμότητας & Ώρες</p>", unsafe_allow_html=True)
                     src_1 = st.selectbox("1η Κύρια Πηγή:", ["— Καμία —"] + TRAFFIC_SOURCE_OPTIONS, key="an_src1")
                     hours_1 = st.number_input("Ώρες 1ης Πηγής (h)", min_value=0.0, step=0.1, key="an_h1")
@@ -1085,14 +1084,29 @@ with tabs[8]:
                         sources_str = ", ".join(sources_list) if sources_list else "—"
 
                         st.session_state.db["analytics"].append({
-                            "id": str(datetime.datetime.now().timestamp()), "title": t, "type": typ,
-                            "views": int(views), "unique_viewers": int(unique_viewers), "ctr": float(ctr),
-                            "retention": float(ret), "avd": avd or "—", "new_subs": int(new_subs),
-                            "watchTime": float(wt), "sources": sources_str, "date": str(datetime.date.today())
+                            "id": str(datetime.datetime.now().timestamp()),
+                            "title": t,
+                            "type": typ,
+                            "upload_date": str(u_date),
+                            "views": int(views),
+                            "unique_viewers": int(unique_viewers),
+                            "ctr": float(ctr),
+                            "retention": float(ret),
+                            "avd": avd or "—",
+                            "new_subs": int(new_subs),
+                            "likes": int(likes),
+                            "comments": int(comments),
+                            "desc_links": int(d_links),
+                            "desc_words": int(d_words),
+                            "watchTime": float(wt),
+                            "sources": sources_str,
+                            "date": str(datetime.date.today())
                         })
                         save_data(st.session_state.db)
-                        st.success("✅ Τα στατιστικά αποθηκεύτηκαν!")
+                        st.success("✅ Τα αναλυτικά στατιστικά του βίντεο αποθηκεύτηκαν!")
                         st.rerun()
+                    else:
+                        st.warning("⚠️ Συμπληρώστε τον τίτλο του βίντεο.")
 
     with col_a_edit:
         with st.expander("✏️ Επεξεργασία Βίντεο"):
@@ -1108,6 +1122,10 @@ with tabs[8]:
                         e_ret = st.number_input("Retention (%)", value=float(target_an.get("retention", 0.0)), step=0.1)
                         e_avd = st.text_input("AVD", value=str(target_an.get("avd", "")))
                         e_subs = st.number_input("New Subs", value=int(target_an.get("new_subs", 0)), step=1)
+                        e_likes = st.number_input("YT Likes", value=int(target_an.get("likes", 0)), step=10)
+                        e_comm = st.number_input("YT Comments", value=int(target_an.get("comments", 0)), step=5)
+                        e_dlinks = st.number_input("Desc Links", value=int(target_an.get("desc_links", 0)), step=1)
+                        e_dwords = st.number_input("Desc Words", value=int(target_an.get("desc_words", 0)), step=10)
                         e_wt = st.number_input("Watch Time (h)", value=float(target_an.get("watchTime", 0.0)), step=0.1)
                         if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
                             target_an["title"] = e_title
@@ -1116,6 +1134,10 @@ with tabs[8]:
                             target_an["retention"] = float(e_ret)
                             target_an["avd"] = e_avd
                             target_an["new_subs"] = int(e_subs)
+                            target_an["likes"] = int(e_likes)
+                            target_an["comments"] = int(e_comm)
+                            target_an["desc_links"] = int(e_dlinks)
+                            target_an["desc_words"] = int(e_dwords)
                             target_an["watchTime"] = float(e_wt)
                             save_data(st.session_state.db)
                             st.success("Οι αλλαγές αποθηκεύτηκαν!")
@@ -1132,23 +1154,55 @@ with tabs[8]:
                     st.success("Η εγγραφή διαγράφηκε!")
                     st.rerun()
 
-    col_asort1, col_asort2, _ = st.columns([2, 1.8, 1.5])
+    # ΦΙΛΤΡΟ ΤΥΠΟΥ ΒΙΝΤΕΟ & ΤΑΞΙΝΟΜΗΣΗ
+    col_fil, col_asort1, col_asort2 = st.columns([1.5, 2, 1.5])
+    with col_fil:
+        filter_type = st.selectbox(
+            "🎬 Φίλτρο Τύπου:",
+            ["Όλα τα Βίντεο", "Long-form (16:9)", "Shorts (9:16)"],
+            key="an_filter_type"
+        )
     with col_asort1:
-        sort_by_an = st.selectbox("📊 Ταξινόμηση κατά:", ["Προβολές (Views)", "Watch Time", "CTR (%)", "Retention (%)", "New Subs", "Μοναδικοί Θεατές", "Τίτλος (Α-Ω)", "Ημερομηνία"], key="sort_by_an")
+        sort_by_an = st.selectbox(
+            "📊 Ταξινόμηση κατά:",
+            ["Προβολές (Views)", "Watch Time", "Likes", "Σχόλια", "CTR (%)", "Retention (%)", "New Subs", "Μοναδικοί Θεατές", "Ημερομηνία Δημοσίευσης", "Τίτλος (Α-Ω)"],
+            key="sort_by_an"
+        )
     with col_asort2:
         sort_dir_an = st.radio("Σειρά:", ["Φθίνουσα ⬇️", "Αύξουσα ⬆️"], horizontal=True, key="sort_dir_an")
 
-    is_a_desc = "Φθίνουσα" in sort_dir_an
-    sorted_analytics = list(analytics_list)
-    if "Προβολές" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("views", 0), reverse=is_a_desc)
-    elif "Watch Time" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("watchTime", 0.0), reverse=is_a_desc)
-    elif "CTR" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("ctr", 0.0), reverse=is_a_desc)
-    elif "Retention" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("retention", 0.0), reverse=is_a_desc)
-    elif "New Subs" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("new_subs", 0), reverse=is_a_desc)
-    elif "Μοναδικοί" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("unique_viewers", 0), reverse=is_a_desc)
-    elif "Τίτλος" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("title", "").lower(), reverse=not is_a_desc)
-    elif "Ημερομηνία" in sort_by_an: sorted_analytics = sorted(sorted_analytics, key=lambda x: x.get("date", ""), reverse=is_a_desc)
+    # Εφαρμογή Φίλτρου Τύπου
+    filtered_analytics = list(analytics_list)
+    if filter_type == "Long-form (16:9)":
+        filtered_analytics = [a for a in filtered_analytics if "Long" in a.get("type", "")]
+    elif filter_type == "Shorts (9:16)":
+        filtered_analytics = [a for a in filtered_analytics if "Shorts" in a.get("type", "")]
 
+    is_a_desc = "Φθίνουσα" in sort_dir_an
+    if "Προβολές" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("views", 0), reverse=is_a_desc)
+    elif "Watch Time" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("watchTime", 0.0), reverse=is_a_desc)
+    elif "Likes" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("likes", 0), reverse=is_a_desc)
+    elif "Σχόλια" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("comments", 0), reverse=is_a_desc)
+    elif "CTR" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("ctr", 0.0), reverse=is_a_desc)
+    elif "Retention" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("retention", 0.0), reverse=is_a_desc)
+    elif "New Subs" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("new_subs", 0), reverse=is_a_desc)
+    elif "Μοναδικοί" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("unique_viewers", 0), reverse=is_a_desc)
+    elif "Ημερομηνία Δημοσίευσης" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: str(x.get("upload_date", "")), reverse=is_a_desc)
+    elif "Τίτλος" in sort_by_an:
+        sorted_analytics = sorted(filtered_analytics, key=lambda x: x.get("title", "").lower(), reverse=not is_a_desc)
+    else:
+        sorted_analytics = filtered_analytics
+
+    # HTML Table Rendering
     if sorted_analytics:
         rows_an_list = []
         for a in sorted_analytics:
@@ -1164,6 +1218,7 @@ with tabs[8]:
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
 
+            # Stacked source badges
             src_str = a.get("sources", "—")
             if src_str != "—":
                 src_parts = [s.strip() for s in src_str.split(",") if s.strip()]
@@ -1174,6 +1229,7 @@ with tabs[8]:
             row_an = (
                 f'<tr>'
                 f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem; min-width:240px;">{a.get("title", "—")}</td>'
+                f'<td style="text-align:center; color:#cbd5e1; font-weight:700; min-width:110px; white-space:nowrap;">{a.get("upload_date", "—")}</td>'
                 f'<td style="text-align:center; min-width:115px; white-space:nowrap;">{typ_badge}</td>'
                 f'<td style="text-align:right; font-weight:800; color:#ffffff; min-width:95px;">{fmt(a.get("views", 0))}</td>'
                 f'<td style="text-align:right; font-weight:700; color:#cbd5e1; min-width:95px;">{fmt(a.get("unique_viewers", 0))}</td>'
@@ -1181,6 +1237,10 @@ with tabs[8]:
                 f'<td style="text-align:center; min-width:95px;">{ret_badge}</td>'
                 f'<td style="text-align:center; font-weight:700; color:#38bdf8; min-width:105px; white-space:nowrap;">{a.get("avd", "—")}</td>'
                 f'<td style="text-align:center; min-width:85px;">{subs_badge}</td>'
+                f'<td style="text-align:right; font-weight:700; color:#10b981; min-width:85px;">{fmt(a.get("likes", 0))}</td>'
+                f'<td style="text-align:right; font-weight:700; color:#facc15; min-width:85px;">{fmt(a.get("comments", 0))}</td>'
+                f'<td style="text-align:center; font-weight:700; color:#cbd5e1; min-width:85px;">{a.get("desc_links", 0)}</td>'
+                f'<td style="text-align:right; font-weight:700; color:#cbd5e1; min-width:90px;">{fmt(a.get("desc_words", 0))}</td>'
                 f'<td style="text-align:right; font-weight:800; color:#38bdf8; min-width:100px; white-space:nowrap;">{a.get("watchTime", 0.0)} h</td>'
                 f'<td style="text-align:left; min-width:230px;">{src_html}</td>'
                 f'</tr>'
@@ -1192,6 +1252,7 @@ with tabs[8]:
             '<table class="custom-table">'
             '<thead><tr>'
             '<th style="text-align:left;">ΤΙΤΛΟΣ ΒΙΝΤΕΟ</th>'
+            '<th style="text-align:center;">ΗΜΕΡΟΜΗΝΙΑ</th>'
             '<th style="text-align:center;">ΤΥΠΟΣ</th>'
             '<th style="text-align:right;">ΠΡΟΒΟΛΕΣ</th>'
             '<th style="text-align:right;">ΜΟΝ. ΘΕΑΤΕΣ</th>'
@@ -1199,6 +1260,10 @@ with tabs[8]:
             '<th style="text-align:center;">RETENTION (%)</th>'
             '<th style="text-align:center;">ΜΕΣΗ ΔΙΑΡΚΕΙΑ (AVD)</th>'
             '<th style="text-align:center;">NEW SUBS</th>'
+            '<th style="text-align:right;">LIKES</th>'
+            '<th style="text-align:right;">ΣΧΟΛΙΑ</th>'
+            '<th style="text-align:center;">DESC LINKS</th>'
+            '<th style="text-align:right;">DESC WORDS</th>'
             '<th style="text-align:right;">WATCH TIME</th>'
             '<th style="text-align:left;">ΠΗΓΕΣ (ΩΡΕΣ & %)</th>'
             '</tr></thead>'
@@ -1207,7 +1272,7 @@ with tabs[8]:
         )
         st.markdown(table_an_html, unsafe_allow_html=True)
     else:
-        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει στατιστικά βίντεο ακόμα. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν βρέθηκαν στατιστικά βίντεο για το επιλεγμένο φίλτρο. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
 # 10. KEYWORDS & TAG SCORE INTELLIGENCE
@@ -1452,7 +1517,7 @@ with tabs[13]:
         st.code("High-impact YouTube thumbnail, dramatic lighting, intense composition, vivid neon highlights (#facc15, #ef4444), photorealistic detail, 8k resolution, cinematic depth of field, bold text safe zone on left third --ar 16:9 --v 6.0", language="text")
 
 # ------------------------------------------
-# 15. TRANSCRIPT EXTRACTOR (FIXED & UPGRADED)
+# 15. TRANSCRIPT EXTRACTOR
 # ------------------------------------------
 with tabs[14]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📝 YouTube Transcript Extractor</h3>", unsafe_allow_html=True)

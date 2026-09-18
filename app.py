@@ -240,9 +240,6 @@ def format_transcript_text(transcript_data):
             lines.append(item)
     return " ".join(lines)
 
-# ==========================================
-# GITHUB AUTO-SAVE (ΜΟΝΙΜΗ ΑΠΟΘΗΚΕΥΣΗ)
-# ==========================================
 def save_to_github(content_dict):
     if not GITHUB_TOKEN or not GITHUB_REPO:
         return False
@@ -640,7 +637,7 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
 
 # ------------------------------------------
-# 2-5. STRATEGY TABS
+# 2-5. STRATEGY TABS (INLINE EDIT & DELETE)
 # ------------------------------------------
 strat_map = [("yt", tabs[1], "🎬 YouTube Long-Form"), ("shorts", tabs[2], "📱 YouTube Shorts"), ("meta", tabs[3], "📸 FB & IG Reels"), ("tiktok", tabs[4], "🎵 TikTok")]
 for key, t_view, t_title in strat_map:
@@ -951,7 +948,7 @@ with tabs[7]:
     st.markdown(table_intl_html, unsafe_allow_html=True)
 
 # ------------------------------------------
-# 9. ANALYTICS & VIDEO HISTORY (UPGRADED)
+# 9. ANALYTICS & VIDEO HISTORY (ΜΕ YOUTUBE ANALYTICS OAUTH)
 # ------------------------------------------
 with tabs[8]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>📈 Analytics & Video History</h3>", unsafe_allow_html=True)
@@ -966,17 +963,19 @@ with tabs[8]:
             
             c_auth1, c_auth2 = st.columns([2, 1])
             with c_auth1:
-                uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας:", type=["json"], key="oauth_secret_file")
+                uploaded_secret = st.file_uploader("Ανεβάστε το `client_secret.json` σας (Web Application):", type=["json"], key="oauth_secret_file")
                 if uploaded_secret is not None:
                     try:
-                        client_secret_dict = json.load(uploaded_secret)
-                        st.session_state.db["client_secret_dict"] = client_secret_dict
+                        raw_dict = json.load(uploaded_secret)
+                        # Υποστήριξη αυτόματης διόρθωσης δομής client_secret
+                        st.session_state.db["client_secret_dict"] = raw_dict
+                        client_secret_dict = raw_dict
                         save_data(st.session_state.db)
                         st.success("✅ Το client_secret αποθηκεύτηκε!")
                     except Exception as e:
                         st.error(f"Σφάλμα ανάγνωσης JSON: {e}")
 
-            # Έλεγχος αυτόματης επαναφοράς Token αν υπάρχει
+            # Έλεγχος αυτόματης επαναφοράς Token
             if "google_creds" not in st.session_state and client_secret_dict and st.session_state.db.get("google_refresh_token"):
                 try:
                     c_info = client_secret_dict.get("web", {}) or client_secret_dict.get("installed", {})
@@ -991,7 +990,7 @@ with tabs[8]:
                 except Exception:
                     pass
 
-            # Έλεγχος OAuth Redirect με Code
+            # Έλεγχος OAuth Redirect
             if "code" in st.query_params and client_secret_dict:
                 auth_code = st.query_params.get("code")
                 try:
@@ -1010,7 +1009,7 @@ with tabs[8]:
                     st.success("✅ Συνδεθήκατε επιτυχώς με το Google!")
                     st.rerun()
                 except Exception as e:
-                    st.error(f"Σφάλμα εξαργύρωσης κωδικού: {e}")
+                    st.error(f"Σφάλμα σύνδεσης: {e}")
 
             col_d1, col_d2 = st.columns(2)
             with col_d1:
@@ -1029,7 +1028,7 @@ with tabs[8]:
                         auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
                         st.markdown(f'<a href="{auth_url}" target="_self"><button style="padding:12px 24px; background:#ef4444; color:#fff; border-radius:10px; border:none; font-weight:800; cursor:pointer; font-size:1rem; box-shadow:0 4px 14px rgba(239,68,68,0.4);">🔗 1. Πατήστε Εδώ για Σύνδεση με Google (YouTube Analytics) ↗</button></a>', unsafe_allow_html=True)
                     except Exception as e:
-                        st.error(f"Σφάλμα παραγωγής συνδέσμου OAuth: {e}")
+                        st.error(f"Σφάλμα OAuth: {e}")
                 else:
                     st.info("ℹ️ Ανεβάστε πρώτα το `client_secret.json` παραπάνω.")
             else:

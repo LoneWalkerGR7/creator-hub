@@ -300,6 +300,7 @@ def load_data():
             if "keywords" not in data: data["keywords"] = []
             if "analytics" not in data: data["analytics"] = []
             if "goals" not in data: data["goals"] = []
+            if "ideas" not in data: data["ideas"] = []
             return data
     except Exception:
         return get_default_data()
@@ -316,7 +317,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 # ==========================================
-# ULTRA HIGH CONTRAST, BOLD & BIG METRICS CSS
+# ULTRA HIGH CONTRAST & BOLD CSS (15 TABS)
 # ==========================================
 CUSTOM_CSS = """
 <style>
@@ -341,7 +342,6 @@ html, body, [class*="css"], .stApp {
     font-weight: 700 !important;
 }
 
-/* TABS */
 .stTabs, [data-testid="stTabs"] { width: 100% !important; }
 .stTabs [data-baseweb="tab-list"], [data-testid="stTabs"] [data-baseweb="tab-list"], div[role="tablist"] {
     display: flex !important;
@@ -405,6 +405,8 @@ button[data-baseweb="tab"]:nth-of-type(13)[aria-selected="true"] { background: l
 button[data-baseweb="tab"]:nth-of-type(14)[aria-selected="true"] { background: linear-gradient(135deg, #831843 0%, #db2777 100%) !important; border: 2px solid #f472b6 !important; box-shadow: 0 4px 14px rgba(219, 39, 119, 0.6) !important; }
 button[data-baseweb="tab"]:nth-of-type(15)[aria-selected="true"] { background: linear-gradient(135deg, #065f46 0%, #10b981 100%) !important; border: 2px solid #6ee7b7 !important; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6) !important; }
 
+button[data-baseweb="tab"][aria-selected="true"] * { color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 0 10px rgba(255,255,255,0.7) !important; }
+
 /* LABELS */
 label, label p, [data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p {
     color: #38bdf8 !important;
@@ -423,7 +425,7 @@ input, textarea, select, [data-baseweb="select"] {
     font-size: 0.95rem !important;
 }
 
-/* METRICS - ΜΕΓΑΛΑ ΝΟΥΜΕΡΑ ΜΕ ΛΑΜΨΗ */
+/* METRICS */
 [data-testid="stMetric"] {
     background: #151c2c !important;
     border: 1px solid rgba(56, 189, 248, 0.35) !important;
@@ -435,15 +437,13 @@ input, textarea, select, [data-baseweb="select"] {
     color: #38bdf8 !important;
     font-weight: 800 !important;
     font-size: 1.05rem !important;
-    letter-spacing: 0.02em !important;
 }
 [data-testid="stMetricValue"], [data-testid="stMetricValue"] * {
     color: #ffffff !important;
     font-weight: 800 !important;
-    font-size: 2.8rem !important; /* ΠΟΛΥ ΜΕΓΑΛΑ ΝΟΥΜΕΡΑ */
+    font-size: 2.8rem !important;
     line-height: 1.1 !important;
     text-shadow: 0 2px 14px rgba(255,255,255,0.3) !important;
-    letter-spacing: -0.02em !important;
 }
 
 [data-testid="stExpander"], div[data-testid="stExpander"] {
@@ -625,7 +625,7 @@ tabs = st.tabs([
 ])
 
 # ------------------------------------------
-# 1. DASHBOARD (ΜΕΓΑΛΑ ΝΟΥΜΕΡΑ & ΠΡΟΟΔΟΣ ΣΤΟΧΩΝ)
+# 1. DASHBOARD (ΜΟΝΟ ΕΛΛΗΝΙΚΑ ΚΑΝΑΛΙΑ)
 # ------------------------------------------
 with tabs[0]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🏠 Επισκόπηση Καναλιού & Ελληνικού Ανταγωνισμού</h3>", unsafe_allow_html=True)
@@ -636,12 +636,11 @@ with tabs[0]:
     avg_subs_gr = round(sum(c.get("subs", 0) for c in synced_gr) / len(synced_gr)) if synced_gr else 0
     avg_views_gr = round(sum(c.get("avgViews", 0) for c in synced_gr) / len(synced_gr)) if synced_gr else 0
     
-    # Μετρικές με πολύ μεγάλα νούμερα
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.metric("📺 Το Κανάλι Μου (Subs)", fmt(my_ch.get('subs', 0)), f"{my_ch.get('name', 'Tsouros Marine')}")
     with c2:
-        st.metric("👥 Μ.Ο. Subs (Ελληνικά)", fmt(avg_subs_gr), f"{len(comps_gr)} κανάλια")
+        st.metric("👥 Μ.Ο. Subs (Ελληνικά)", fmt(avg_subs_gr), f"{len(comps_gr)} ελληνικά κανάλια")
     with c3:
         st.metric("👀 Μ.Ο. Avg Views (Ελληνικά)", fmt(avg_views_gr))
     with c4:
@@ -649,7 +648,6 @@ with tabs[0]:
 
     st.markdown("---")
 
-    # ΠΡΟΟΔΟΣ ΣΤΟΧΩΝ ΤΡΕΧΟΝΤΟΣ ΜΗΝΑ
     curr_month_str = datetime.date.today().strftime("%Y-%m")
     goals_list = st.session_state.db.get("goals", [])
     curr_goal = next((g for g in goals_list if g.get("month", "").startswith(curr_month_str) or g.get("month", "") == curr_month_str), None)
@@ -658,7 +656,6 @@ with tabs[0]:
     with col_dash_left:
         st.markdown(f"<h4 style='color:#38bdf8; font-weight:800;'>🎯 Στόχος Τρέχοντος Μήνα ({curr_month_str})</h4>", unsafe_allow_html=True)
         if curr_goal:
-            # Υπολογισμοί πραγματικών δεδομένων μήνα
             sched_items = st.session_state.db.get("schedule", [])
             published_month = len([s for s in sched_items if s.get("status") == "Published" and s.get("date", "").startswith(curr_month_str)])
             
@@ -666,22 +663,18 @@ with tabs[0]:
             t_views = int(curr_goal.get("views", 0))
             t_uploads = int(curr_goal.get("uploads", 0))
 
-            # Progress Subs
             st.markdown(f"**➕ Στόχος Subs:** `{t_subs:,}`", unsafe_allow_html=True)
             st.markdown('<div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #ec4899, #a855f7);"></div></div>', unsafe_allow_html=True)
 
-            # Progress Views
             st.markdown(f"**👀 Στόχος Views:** `{t_views:,}`", unsafe_allow_html=True)
             st.markdown('<div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #3b82f6, #06b6d4);"></div></div>', unsafe_allow_html=True)
 
-            # Progress Uploads
             up_pct = min(100, round((published_month / t_uploads) * 100)) if t_uploads > 0 else 0
             st.markdown(f"**🎬 Δημοσιεύσεις (Uploads):** `{published_month}` / `{t_uploads}` ({up_pct}%)", unsafe_allow_html=True)
             st.markdown(f'<div class="goal-bar-track"><div class="goal-bar-fill" style="width:{up_pct}%; background:linear-gradient(90deg, #10b981, #22c55e);"></div></div>', unsafe_allow_html=True)
         else:
             st.info(f"ℹ️ Δεν έχει οριστεί στόχος για τον μήνα {curr_month_str}. Ορίστε έναν στην καρτέλα 🎯 Στόχοι!")
 
-        # Επόμενα Προγραμματισμένα
         st.markdown("<h4 style='color:#38bdf8; font-weight:800; margin-top:15px;'>📅 Επόμενα Προγραμματισμένα</h4>", unsafe_allow_html=True)
         sched = st.session_state.db.get("schedule", [])
         if sched:
@@ -1061,7 +1054,8 @@ with tabs[7]:
         '<th style="text-align:left;">CHANNEL</th><th style="text-align:left;">ΧΩΡΑ</th>'
         '<th style="text-align:right;">SUBSCRIBERS (ΑΚΡΙΒΗΣ)</th><th style="text-align:right;">TOTAL VIEWS</th>'
         '<th style="text-align:right;">VIDEOS</th><th style="text-align:right;">AVG VIEWS</th>'
-        '<th style="text-align:right;">VIEWS/SUB</th><th style="text-align:right;">EFFICIENCY</th><th style="text-align:center;">GROWTH</th>'
+        '<th style="text-align:right;">VIEWS/SUB</th><th style="text-align:right;">EFFICIENCY</th>'
+        '<th style="text-align:center;">GROWTH</th>'
         '</tr></thead><tbody>' + "".join(rows_intl_list) + '</tbody></table></div>'
     )
     st.markdown(table_intl_html, unsafe_allow_html=True)
@@ -1113,7 +1107,6 @@ with tabs[8]:
                                 pct_1 = round((hours_1 / wt) * 100, 1)
                                 sources_list.append(f"{src_1}: {hours_1}h ({pct_1}%)")
                             elif src_1 != "— Καμία —": sources_list.append(src_1)
-                            
                             if src_2 != "— Καμία —" and hours_2 > 0:
                                 pct_2 = round((hours_2 / wt) * 100, 1)
                                 sources_list.append(f"{src_2}: {hours_2}h ({pct_2}%)")
@@ -1212,22 +1205,14 @@ with tabs[8]:
         for a in sorted_analytics:
             typ_label = a.get("type", "Long-form")
             typ_badge = '<span style="background:rgba(244,63,94,0.25); color:#f43f5e; border:1px solid rgba(244,63,94,0.4); padding:4px 12px; border-radius:12px; font-weight:800; white-space:nowrap; display:inline-block; min-width:95px; text-align:center;">Shorts</span>' if "Shorts" in typ_label else '<span style="background:rgba(59,130,246,0.25); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); padding:4px 12px; border-radius:12px; font-weight:800; white-space:nowrap; display:inline-block; min-width:95px; text-align:center;">Long-form</span>'
-            
             ctr_val = a.get("ctr", 0.0)
             ctr_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ctr_val}%</span>' if ctr_val >= 5.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ctr_val}%</span>'
-
             ret_val = a.get("retention", 0.0)
             ret_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ret_val}%</span>' if ret_val >= 40.0 else f'<span style="background:rgba(234,179,8,0.2); color:#fde047; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">{ret_val}%</span>'
-
             subs_count = a.get("new_subs", 0)
             subs_badge = f'<span style="background:rgba(16,185,129,0.2); color:#10b981; padding:3px 8px; border-radius:8px; font-weight:800; white-space:nowrap;">+{subs_count}</span>' if subs_count > 0 else f'<span style="color:#94a3b8; white-space:nowrap;">{subs_count}</span>'
-
             src_str = a.get("sources", "—")
-            if src_str != "—":
-                src_parts = [s.strip() for s in src_str.split(",") if s.strip()]
-                src_html = '<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">' + "".join([f'<span class="source-badge">{p}</span>' for p in src_parts]) + '</div>'
-            else:
-                src_html = '<span style="color:#94a3b8;">—</span>'
+            src_html = '<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">' + "".join([f'<span class="source-badge">{p}</span>' for p in [s.strip() for s in src_str.split(",") if s.strip()]]) + '</div>' if src_str != "—" else '<span style="color:#94a3b8;">—</span>'
 
             row_an = (
                 f'<tr>'
@@ -1415,30 +1400,86 @@ with tabs[9]:
         st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει Tags / Keywords ακόμα. Προσθέστε ένα παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
-# 11. IDEAS
+# 11. IDEAS (DARK TABLE, EDIT & DELETE)
 # ------------------------------------------
 with tabs[10]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>💡 Ιδέες για Βίντεο</h3>", unsafe_allow_html=True)
-    with st.form("idea_form_add", clear_on_submit=True):
-        txt = st.text_area("Ιδέα", height=90)
-        tags = st.text_input("Tags")
-        if st.form_submit_button("➕ Προσθήκη"):
-            if txt:
-                if "ideas" not in st.session_state.db: st.session_state.db["ideas"] = []
-                st.session_state.db["ideas"].append({
-                    "id": str(datetime.datetime.now().timestamp()), "text": txt,
-                    "tags": [t.strip() for t in tags.split(",") if t.strip()], "date": str(datetime.date.today())
-                })
-                save_data(st.session_state.db)
-                st.rerun()
+    ideas_list = st.session_state.db.get("ideas", [])
 
-    for i in st.session_state.db.get("ideas", []):
-        st.markdown(f"**💡 {i['text']}**")
-        st.caption(f"🏷️ {', '.join(i.get('tags', []))} | 📅 {i.get('date')}")
-        st.markdown("---")
+    col_i_add, col_i_edit, col_i_del = st.columns(3)
+    with col_i_add:
+        with st.expander("➕ Προσθήκη Νέας Ιδέας"):
+            with st.form("idea_form_add", clear_on_submit=True):
+                txt = st.text_area("Περιγραφή Ιδέας", height=90)
+                tags = st.text_input("Tags (χωρισμένα με κόμμα)")
+                if st.form_submit_button("➕ Προσθήκη"):
+                    if txt:
+                        if "ideas" not in st.session_state.db: st.session_state.db["ideas"] = []
+                        st.session_state.db["ideas"].append({
+                            "id": str(datetime.datetime.now().timestamp()), "text": txt,
+                            "tags": [t.strip() for t in tags.split(",") if t.strip()], "date": str(datetime.date.today())
+                        })
+                        save_data(st.session_state.db)
+                        st.success("✅ Η ιδέα προστέθηκε!")
+                        st.rerun()
+
+    with col_i_edit:
+        with st.expander("✏️ Επεξεργασία Ιδέας"):
+            if ideas_list:
+                i_titles = [i.get("text", "Ιδέα")[:45] + "..." for i in ideas_list]
+                sel_i_edit = st.selectbox("Επιλέξτε Ιδέα:", i_titles, key="sel_i_edit")
+                target_i = next((i for i in ideas_list if (i.get("text", "")[:45] + "...") == sel_i_edit), None)
+                if target_i:
+                    with st.form("edit_idea_form"):
+                        e_itxt = st.text_area("Ιδέα", value=target_i.get("text", ""), height=90)
+                        e_itags = st.text_input("Tags", value=", ".join(target_i.get("tags", [])))
+                        if st.form_submit_button("💾 Αποθήκευση Αλλαγών"):
+                            target_i["text"] = e_itxt
+                            target_i["tags"] = [t.strip() for t in e_itags.split(",") if t.strip()]
+                            save_data(st.session_state.db)
+                            st.success("Η ιδέα ενημερώθηκε!")
+                            st.rerun()
+
+    with col_i_del:
+        with st.expander("🗑️ Διαγραφή Ιδέας"):
+            if ideas_list:
+                i_titles = [i.get("text", "Ιδέα")[:45] + "..." for i in ideas_list]
+                sel_i_del = st.selectbox("Επιλέξτε για διαγραφή:", i_titles, key="sel_i_del")
+                if st.button("🗑️ Διαγραφή Επιλεγμένης", key="btn_del_i", type="primary"):
+                    st.session_state.db["ideas"] = [i for i in ideas_list if (i.get("text", "")[:45] + "...") != sel_i_del]
+                    save_data(st.session_state.db)
+                    st.success("Η ιδέα διαγράφηκε!")
+                    st.rerun()
+
+    # Πίνακας Ιδεών (Dark HTML Table)
+    if ideas_list:
+        rows_ideas_list = []
+        for i in ideas_list:
+            tags_arr = i.get("tags", [])
+            tags_badges = "".join([f'<span class="source-badge">#{t}</span> ' for t in tags_arr]) if tags_arr else '<span style="color:#94a3b8;">—</span>'
+            
+            row_i = (
+                f'<tr>'
+                f'<td style="font-weight:700; color:#ffffff; font-size:0.95rem; min-width:300px;">{i.get("text", "—")}</td>'
+                f'<td style="min-width:180px;">{tags_badges}</td>'
+                f'<td style="text-align:center; color:#38bdf8; font-weight:700; min-width:110px; white-space:nowrap;">{i.get("date", "—")}</td>'
+                f'</tr>'
+            )
+            rows_ideas_list.append(row_i)
+
+        table_ideas_html = (
+            '<div class="data-table-container"><table class="custom-table"><thead><tr>'
+            '<th style="text-align:left;">ΤΙΤΛΟΣ / ΠΕΡΙΓΡΑΦΗ ΙΔΕΑΣ</th>'
+            '<th style="text-align:left;">TAGS</th>'
+            '<th style="text-align:center;">ΗΜΕΡΟΜΗΝΙΑ</th>'
+            '</tr></thead><tbody>' + "".join(rows_ideas_list) + '</tbody></table></div>'
+        )
+        st.markdown(table_ideas_html, unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='text-align: center; color: #38bdf8; font-weight:800; padding: 40px 0;'>Δεν έχετε καταχωρήσει ιδέες ακόμα. Προσθέστε μία παραπάνω!</div>", unsafe_allow_html=True)
 
 # ------------------------------------------
-# 12. GOALS (DARK TABLE & VISUAL CARDS)
+# 12. GOALS (DARK TABLE & VISUAL CARDS - FIXED)
 # ------------------------------------------
 with tabs[11]:
     st.markdown("<h3 style='color:#38bdf8; font-weight:800;'>🎯 Μηνιαίοι Στόχοι & Παρακολούθηση</h3>", unsafe_allow_html=True)
@@ -1496,7 +1537,7 @@ with tabs[11]:
                     st.success("Ο στόχος διαγράφηκε!")
                     st.rerun()
 
-    # ΟΠΤΙΚΕΣ ΚΑΡΤΕΣ ΠΡΟΟΔΟΥ ΑΝΑ ΜΗΝΑ
+    # ΟΠΤΙΚΕΣ ΚΑΡΤΕΣ ΠΡΟΟΔΟΥ ΑΝΑ ΜΗΝΑ (ΚΑΘΑΡΟ HTML ΧΩΡΙΣ ΚΩΔΙΚΑ)
     if goals_list:
         st.markdown("<h4 style='color:#38bdf8; font-weight:800; margin-top:20px;'>📊 Κάρτες Προόδου Στόχων</h4>", unsafe_allow_html=True)
         for g in goals_list:
@@ -1505,33 +1546,31 @@ with tabs[11]:
             t_views = int(g.get("views", 0))
             t_uploads = int(g.get("uploads", 0))
             
-            # Υπολογισμός δημοσιευμένων από το πρόγραμμα
             published_month = len([s for s in sched_items if s.get("status") == "Published" and s.get("date", "").startswith(m_str)])
             up_pct = min(100, round((published_month / t_uploads) * 100)) if t_uploads > 0 else 0
 
-            st.markdown(f"""
-            <div class="goal-card-box">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <h3 style="margin:0; color:#38bdf8; font-weight:800;">🎯 Μήνας: {m_str}</h3>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.9rem;">
-                    <span>➕ Στόχος Subs:</span><span>{t_subs:,}</span>
-                </div>
-                <div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #ec4899, #a855f7);"></div></div>
-                
-                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.9rem;">
-                    <span>👀 Στόχος Views:</span><span>{t_views:,}</span>
-                </div>
-                <div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #3b82f6, #06b6d4);"></div></div>
-                
-                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.9rem;">
-                    <span>🎬 Δημοσιεύσεις (Uploads):</span><span>{published_month} / {t_uploads} ({up_pct}%)</span>
-                </div>
-                <div class="goal-bar-track"><div class="goal-bar-fill" style="width:{up_pct}%; background:linear-gradient(90deg, #10b981, #22c55e);"></div></div>
-            </div>
-            """, unsafe_allow_html=True)
+            # Κατασκευή χωρίς κενά στην αρχή γραμμής
+            card_html = (
+                '<div class="goal-card-box">'
+                f'<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">'
+                f'<h3 style="margin:0; color:#38bdf8; font-weight:800;">🎯 Μήνας: {m_str}</h3>'
+                f'</div>'
+                f'<div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.92rem; margin-bottom:2px;">'
+                f'<span>➕ Στόχος Subs:</span><span>{t_subs:,}</span>'
+                f'</div>'
+                f'<div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #ec4899, #a855f7);"></div></div>'
+                f'<div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.92rem; margin-bottom:2px;">'
+                f'<span>👀 Στόχος Views:</span><span>{t_views:,}</span>'
+                f'</div>'
+                f'<div class="goal-bar-track"><div class="goal-bar-fill" style="width:100%; background:linear-gradient(90deg, #3b82f6, #06b6d4);"></div></div>'
+                f'<div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.92rem; margin-bottom:2px;">'
+                f'<span>🎬 Δημοσιεύσεις (Uploads):</span><span>{published_month} / {t_uploads} ({up_pct}%)</span>'
+                f'</div>'
+                f'<div class="goal-bar-track"><div class="goal-bar-fill" style="width:{up_pct}%; background:linear-gradient(90deg, #10b981, #22c55e);"></div></div>'
+                f'</div>'
+            )
+            st.markdown(card_html, unsafe_allow_html=True)
 
-        # Πίνακας Στόχων (Dark HTML Table)
         rows_g_list = []
         for g in goals_list:
             row_g = (

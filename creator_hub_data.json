@@ -5,11 +5,11 @@
     "handle": "UC5cxxXjrQcHnWqh_KtiCpDg",
     "resolvedId": "UC5cxxXjrQcHnWqh_KtiCpDg",
     "subs": 9500,
-    "totalViews": 1878321,
+    "totalViews": 1882393,
     "videos": 139,
-    "avgViews": 13513,
-    "viewsPerSub": 1.42,
-    "efficiency": 1422.4,
+    "avgViews": 13542,
+    "viewsPerSub": 1.43,
+    "efficiency": 1425.5,
     "growth": 0.0
   },
   "competitors_gr": [
@@ -17,12 +17,12 @@
       "name": "ZAVRAS FISHING",
       "handle": "@ZavrasFishing",
       "subs": 104000,
-      "totalViews": 41376944,
+      "totalViews": 41430089,
       "videos": 487,
-      "avgViews": 84963,
+      "avgViews": 85072,
       "viewsPerSub": 0.82,
-      "efficiency": 817.0,
-      "growth": 0.97,
+      "efficiency": 818.0,
+      "growth": 0.0,
       "resolvedId": "UC0YNIZgZ_b72kdHMXHKfw_Q",
       "history": [
         {
@@ -100,6 +100,10 @@
         {
           "date": "2026-09-25",
           "subs": 104000
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 104000
         }
       ]
     },
@@ -107,9 +111,9 @@
       "name": "sotosvasi",
       "handle": "@sotosvasi",
       "subs": 82200,
-      "totalViews": 51123913,
+      "totalViews": 51130004,
       "videos": 1144,
-      "avgViews": 44689,
+      "avgViews": 44694,
       "viewsPerSub": 0.54,
       "efficiency": 543.7,
       "growth": 0.0,
@@ -190,6 +194,10 @@
         {
           "date": "2026-09-25",
           "subs": 82200
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 82200
         }
       ]
     },
@@ -197,12 +205,12 @@
       "name": "Μάρκος Βιδάλης",
       "handle": "@MarkosVidalis",
       "subs": 69000,
-      "totalViews": 17661971,
-      "videos": 587,
-      "avgViews": 30089,
+      "totalViews": 17675904,
+      "videos": 588,
+      "avgViews": 30061,
       "viewsPerSub": 0.44,
-      "efficiency": 436.1,
-      "growth": 0.15,
+      "efficiency": 435.7,
+      "growth": 0.0,
       "resolvedId": "UCJef4iuCvuyX5dPpuzsqE0Q",
       "history": [
         {
@@ -280,18 +288,22 @@
         {
           "date": "2026-09-25",
           "subs": 69000
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 69000
         }
       ]
     },
     {
       "name": "Giannis Mastrogiannakis",
       "handle": "@giannismastrogiannakis",
-      "subs": 70700,
-      "totalViews": 2115927,
+      "subs": 71100,
+      "totalViews": 2123649,
       "videos": 201,
-      "avgViews": 10527,
+      "avgViews": 10565,
       "viewsPerSub": 0.15,
-      "efficiency": 148.9,
+      "efficiency": 148.6,
       "growth": 0.57,
       "resolvedId": "UCmZAZvjULVJ8FW-2vWuisgQ",
       "history": [
@@ -370,6 +382,10 @@
         {
           "date": "2026-09-25",
           "subs": 70700
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 71100
         }
       ]
     },
@@ -377,11 +393,11 @@
       "name": "Kostas Antoniadis",
       "handle": "@TheKwstasantoniadis",
       "subs": 44300,
-      "totalViews": 9991060,
+      "totalViews": 9993725,
       "videos": 240,
-      "avgViews": 41629,
+      "avgViews": 41641,
       "viewsPerSub": 0.94,
-      "efficiency": 939.7,
+      "efficiency": 940.0,
       "growth": 0.0,
       "resolvedId": "UCOJHT-ZgMVSyD0Ehaomi1tQ",
       "history": [
@@ -460,6 +476,10 @@
         {
           "date": "2026-09-25",
           "subs": 44300
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 44300
         }
       ]
     },
@@ -467,9 +487,9 @@
       "name": "michael trifo",
       "handle": "@michaeltrifo6610",
       "subs": 34500,
-      "totalViews": 21449054,
-      "videos": 4841,
-      "avgViews": 4431,
+      "totalViews": 21458417,
+      "videos": 4844,
+      "avgViews": 4430,
       "viewsPerSub": 0.13,
       "efficiency": 128.4,
       "growth": 0.0,
@@ -550,6 +570,10 @@
         {
           "date": "2026-09-25",
           "subs": 34500
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 34500
         }
       ]
     },
@@ -557,11 +581,11 @@
       "name": "Milonakis Kayak Fishing",
       "handle": "UCw9pG7yAviPN8RluqZJ7Uiw",
       "subs": 31100,
-      "totalViews": 7527976,
-      "videos": 770,
-      "avgViews": 9777,
+      "totalViews": 7537549,
+      "videos": 772,
+      "avgViews": 9764,
       "viewsPerSub": 0.31,
-      "efficiency": 314.4,
+      "efficiency": 314.0,
       "growth": 0.0,
       "resolvedId": "UCw9pG7yAviPN8RluqZJ7Uiw",
       "history": [
@@ -640,19 +664,23 @@
         {
           "date": "2026-09-25",
           "subs": 31100
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 31100
         }
       ]
     },
     {
       "name": "Giorgos Kazoulis",
       "handle": "@giorgoskazoulis4928",
-      "subs": 24800,
-      "totalViews": 12534041,
-      "videos": 192,
-      "avgViews": 65281,
-      "viewsPerSub": 2.63,
-      "efficiency": 2632.3,
-      "growth": 0.0,
+      "subs": 24900,
+      "totalViews": 12642520,
+      "videos": 194,
+      "avgViews": 65168,
+      "viewsPerSub": 2.62,
+      "efficiency": 2617.2,
+      "growth": 0.4,
       "resolvedId": "UCXZ_02oECxHkKOTbqyur7fQ",
       "history": [
         {
@@ -730,6 +758,10 @@
         {
           "date": "2026-09-25",
           "subs": 24800
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 24900
         }
       ]
     },
@@ -737,11 +769,11 @@
       "name": "Spinning By Tyrikos",
       "handle": "UC08kPE-YyUVe2gQac8nCqqw",
       "subs": 20900,
-      "totalViews": 4223900,
+      "totalViews": 4228535,
       "videos": 238,
-      "avgViews": 17747,
+      "avgViews": 17767,
       "viewsPerSub": 0.85,
-      "efficiency": 849.1,
+      "efficiency": 850.1,
       "growth": 0.0,
       "resolvedId": "UC08kPE-YyUVe2gQac8nCqqw",
       "history": [
@@ -820,6 +852,10 @@
         {
           "date": "2026-09-25",
           "subs": 20900
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 20900
         }
       ]
     },
@@ -827,11 +863,11 @@
       "name": "SifisFishing",
       "handle": "@SifisFishing",
       "subs": 20700,
-      "totalViews": 4253836,
-      "videos": 166,
-      "avgViews": 25626,
-      "viewsPerSub": 1.24,
-      "efficiency": 1238.0,
+      "totalViews": 4286413,
+      "videos": 168,
+      "avgViews": 25514,
+      "viewsPerSub": 1.23,
+      "efficiency": 1232.6,
       "growth": 0.0,
       "resolvedId": "UCErFq9E7Ts4PY9JF7pY6oZg",
       "history": [
@@ -910,6 +946,10 @@
         {
           "date": "2026-09-25",
           "subs": 20700
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 20700
         }
       ]
     },
@@ -917,11 +957,11 @@
       "name": "Tsouros Marine",
       "handle": "UC5cxxXjrQcHnWqh_KtiCpDg",
       "subs": 9500,
-      "totalViews": 1878321,
+      "totalViews": 1882393,
       "videos": 139,
-      "avgViews": 13513,
-      "viewsPerSub": 1.42,
-      "efficiency": 1422.4,
+      "avgViews": 13542,
+      "viewsPerSub": 1.43,
+      "efficiency": 1425.5,
       "growth": 0.0,
       "resolvedId": "UC5cxxXjrQcHnWqh_KtiCpDg",
       "history": [
@@ -1000,19 +1040,23 @@
         {
           "date": "2026-09-25",
           "subs": 9500
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 9500
         }
       ]
     },
     {
       "name": "Owrka",
       "handle": "UCpy-2GjgEjnx97N_aan0XFQ",
-      "subs": 5260,
-      "totalViews": 1567050,
-      "videos": 80,
-      "avgViews": 19588,
-      "viewsPerSub": 3.72,
-      "efficiency": 3724.0,
-      "growth": 0.19,
+      "subs": 5280,
+      "totalViews": 1578722,
+      "videos": 81,
+      "avgViews": 19490,
+      "viewsPerSub": 3.69,
+      "efficiency": 3691.3,
+      "growth": 0.38,
       "resolvedId": "UCpy-2GjgEjnx97N_aan0XFQ",
       "history": [
         {
@@ -1090,6 +1134,10 @@
         {
           "date": "2026-09-25",
           "subs": 5260
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 5280
         }
       ]
     },
@@ -1097,11 +1145,11 @@
       "name": "Paraktios Fishing",
       "handle": "@paraktiosfishing",
       "subs": 16000,
-      "totalViews": 5030168,
+      "totalViews": 5034162,
       "videos": 242,
-      "avgViews": 20786,
+      "avgViews": 20802,
       "viewsPerSub": 1.3,
-      "efficiency": 1299.1,
+      "efficiency": 1300.1,
       "growth": 0.0,
       "resolvedId": "UC3PLyNG6z4q-r0IC33NkSOA",
       "history": [
@@ -1180,6 +1228,10 @@
         {
           "date": "2026-09-25",
           "subs": 16000
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 16000
         }
       ]
     },
@@ -1187,11 +1239,11 @@
       "name": "NerdFishing",
       "handle": "@Nerd-Fishing",
       "subs": 5190,
-      "totalViews": 454756,
+      "totalViews": 455551,
       "videos": 66,
-      "avgViews": 6890,
+      "avgViews": 6902,
       "viewsPerSub": 1.33,
-      "efficiency": 1327.6,
+      "efficiency": 1329.9,
       "growth": 0.0,
       "resolvedId": "UCgyWFDsoZBlCxPhgiecAewg",
       "history": [
@@ -1270,6 +1322,10 @@
         {
           "date": "2026-09-25",
           "subs": 5190
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 5190
         }
       ]
     },
@@ -1277,12 +1333,12 @@
       "name": " GB Luring",
       "handle": "@gb_luring",
       "subs": 6890,
-      "totalViews": 1918966,
-      "videos": 349,
-      "avgViews": 5498,
+      "totalViews": 1924843,
+      "videos": 350,
+      "avgViews": 5500,
       "viewsPerSub": 0.8,
-      "efficiency": 798.0,
-      "growth": 0.15,
+      "efficiency": 798.3,
+      "growth": 0.0,
       "resolvedId": "UCEapwJES4ymi9NoYI0eOKWw",
       "history": [
         {
@@ -1360,19 +1416,23 @@
         {
           "date": "2026-09-25",
           "subs": 6890
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 6890
         }
       ]
     },
     {
       "name": " Aris Karlas",
       "handle": "@ariskarlas",
-      "subs": 9810,
-      "totalViews": 1765414,
+      "subs": 9820,
+      "totalViews": 1769827,
       "videos": 98,
-      "avgViews": 18014,
+      "avgViews": 18059,
       "viewsPerSub": 1.84,
-      "efficiency": 1836.3,
-      "growth": 0.2,
+      "efficiency": 1839.0,
+      "growth": 0.1,
       "resolvedId": "UC-JhcS1zP-t1OLf2r92MoNA",
       "history": [
         {
@@ -1450,6 +1510,10 @@
         {
           "date": "2026-09-25",
           "subs": 9810
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 9820
         }
       ]
     },
@@ -1457,11 +1521,11 @@
       "name": " Manos Hortarias",
       "handle": "@hortisman-fishing",
       "subs": 8500,
-      "totalViews": 823791,
+      "totalViews": 824828,
       "videos": 93,
-      "avgViews": 8858,
+      "avgViews": 8869,
       "viewsPerSub": 1.04,
-      "efficiency": 1042.1,
+      "efficiency": 1043.4,
       "growth": 0.0,
       "resolvedId": "UCNiq1IXmxf9hFS6gNeSL3HA",
       "history": [
@@ -1540,6 +1604,10 @@
         {
           "date": "2026-09-25",
           "subs": 8500
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 8500
         }
       ]
     },
@@ -1547,11 +1615,11 @@
       "name": "George Prasinos",
       "handle": "@GeorgePrasinos",
       "subs": 14400,
-      "totalViews": 4495577,
+      "totalViews": 4506557,
       "videos": 312,
-      "avgViews": 14409,
+      "avgViews": 14444,
       "viewsPerSub": 1.0,
-      "efficiency": 1000.6,
+      "efficiency": 1003.1,
       "growth": 0.0,
       "resolvedId": "UCqINdFBUbMKZ3bn1YcsQlvg",
       "history": [
@@ -1630,6 +1698,10 @@
         {
           "date": "2026-09-25",
           "subs": 14400
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 14400
         }
       ]
     },
@@ -1637,12 +1709,12 @@
       "name": "Fish Run And Fun",
       "handle": "@Kasteras",
       "subs": 9380,
-      "totalViews": 4650910,
+      "totalViews": 4653308,
       "videos": 453,
-      "avgViews": 10267,
-      "viewsPerSub": 1.09,
-      "efficiency": 1094.6,
-      "growth": 0.11,
+      "avgViews": 10272,
+      "viewsPerSub": 1.1,
+      "efficiency": 1095.1,
+      "growth": 0.0,
       "resolvedId": "UCIXjNhyuCFSfJw35dT6WIxA",
       "history": [
         {
@@ -1720,19 +1792,23 @@
         {
           "date": "2026-09-25",
           "subs": 9380
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 9380
         }
       ]
     },
     {
       "name": "Katsel Spinner - Fishing Adventures",
       "handle": "@katselspinner5823",
-      "subs": 8230,
-      "totalViews": 2453119,
+      "subs": 8240,
+      "totalViews": 2454270,
       "videos": 299,
-      "avgViews": 8204,
+      "avgViews": 8208,
       "viewsPerSub": 1.0,
-      "efficiency": 996.8,
-      "growth": -0.12,
+      "efficiency": 996.1,
+      "growth": 0.12,
       "resolvedId": "UCndE2IbPF8C4wcu7T0WRXuA",
       "history": [
         {
@@ -1810,18 +1886,22 @@
         {
           "date": "2026-09-25",
           "subs": 8230
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 8240
         }
       ]
     },
     {
       "name": "Tsourmas Fishing",
       "handle": "@tsourmasfishing",
-      "subs": 4030,
-      "totalViews": 1102517,
+      "subs": 4040,
+      "totalViews": 1108979,
       "videos": 220,
-      "avgViews": 5011,
-      "viewsPerSub": 1.24,
-      "efficiency": 1243.4,
+      "avgViews": 5041,
+      "viewsPerSub": 1.25,
+      "efficiency": 1247.8,
       "growth": 0.25,
       "resolvedId": "UC345ISRgvIaAEjgTwACpnBw",
       "history": [
@@ -1900,6 +1980,10 @@
         {
           "date": "2026-09-25",
           "subs": 4030
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 4040
         }
       ]
     },
@@ -1907,11 +1991,11 @@
       "name": "FISHBITE",
       "handle": "@fishbite",
       "subs": 1890,
-      "totalViews": 828299,
+      "totalViews": 828502,
       "videos": 130,
-      "avgViews": 6372,
+      "avgViews": 6373,
       "viewsPerSub": 3.37,
-      "efficiency": 3371.4,
+      "efficiency": 3372.0,
       "growth": 0.0,
       "resolvedId": "UC3zxYOEOjoWIOuZTrz8SS5Q",
       "history": [
@@ -1990,19 +2074,23 @@
         {
           "date": "2026-09-25",
           "subs": 1890
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 1890
         }
       ]
     },
     {
       "name": "Argy fishing ",
       "handle": "@Argy_fishing",
-      "subs": 1400,
-      "totalViews": 139634,
+      "subs": 1450,
+      "totalViews": 145148,
       "videos": 42,
-      "avgViews": 3325,
+      "avgViews": 3456,
       "viewsPerSub": 2.38,
-      "efficiency": 2375.0,
-      "growth": 0.0,
+      "efficiency": 2383.4,
+      "growth": 3.57,
       "resolvedId": "UCXriKebajNhE1unM98JQ4hQ",
       "history": [
         {
@@ -2080,18 +2168,22 @@
         {
           "date": "2026-09-25",
           "subs": 1400
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 1450
         }
       ]
     },
     {
       "name": "Fishnofish ",
       "handle": "@Fishnofish-ioulios",
-      "subs": 8900,
-      "totalViews": 4719039,
+      "subs": 8910,
+      "totalViews": 4724338,
       "videos": 367,
-      "avgViews": 12858,
+      "avgViews": 12873,
       "viewsPerSub": 1.44,
-      "efficiency": 1444.7,
+      "efficiency": 1444.8,
       "growth": 0.11,
       "resolvedId": "UCdeqWv8Pgd8bX7ak-yAHgBQ",
       "history": [
@@ -2170,19 +2262,23 @@
         {
           "date": "2026-09-25",
           "subs": 8900
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 8910
         }
       ]
     },
     {
       "name": "Salt & Cast",
       "handle": "@SaltAndCast",
-      "subs": 151,
-      "totalViews": 75817,
+      "subs": 153,
+      "totalViews": 76396,
       "videos": 24,
-      "avgViews": 3159,
-      "viewsPerSub": 20.92,
-      "efficiency": 20920.5,
-      "growth": 0.67,
+      "avgViews": 3183,
+      "viewsPerSub": 20.8,
+      "efficiency": 20803.9,
+      "growth": 1.32,
       "resolvedId": "UCIeJ3-HYSblDHskyoj1VJ2g",
       "history": [
         {
@@ -2260,19 +2356,23 @@
         {
           "date": "2026-09-25",
           "subs": 151
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 153
         }
       ]
     },
     {
       "name": "Giannis Morfonios",
       "handle": "@john-morf",
-      "subs": 876,
-      "totalViews": 100170,
-      "videos": 40,
-      "avgViews": 2504,
-      "viewsPerSub": 2.86,
-      "efficiency": 2858.4,
-      "growth": 0.34,
+      "subs": 885,
+      "totalViews": 100651,
+      "videos": 41,
+      "avgViews": 2455,
+      "viewsPerSub": 2.77,
+      "efficiency": 2774.0,
+      "growth": 1.03,
       "resolvedId": "UCyiXPqbi_cezP1JpDJYTaSQ",
       "history": [
         {
@@ -2350,19 +2450,23 @@
         {
           "date": "2026-09-25",
           "subs": 876
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 885
         }
       ]
     },
     {
       "name": " Adventures with Atsi",
       "handle": "@atsiadventures",
-      "subs": 3780,
-      "totalViews": 1351193,
+      "subs": 3790,
+      "totalViews": 1352815,
       "videos": 165,
-      "avgViews": 8189,
-      "viewsPerSub": 2.17,
-      "efficiency": 2166.4,
-      "growth": 0.0,
+      "avgViews": 8199,
+      "viewsPerSub": 2.16,
+      "efficiency": 2163.3,
+      "growth": 0.26,
       "resolvedId": "UCkBFwueSm1MhQpQ4jMH8-kQ",
       "history": [
         {
@@ -2440,19 +2544,23 @@
         {
           "date": "2026-09-25",
           "subs": 3780
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 3790
         }
       ]
     },
     {
       "name": "The Salty Stalker ",
       "handle": "@TheSaltyStalker",
-      "subs": 1910,
-      "totalViews": 126595,
-      "videos": 80,
-      "avgViews": 1582,
-      "viewsPerSub": 0.83,
-      "efficiency": 828.3,
-      "growth": 0.0,
+      "subs": 1920,
+      "totalViews": 127606,
+      "videos": 81,
+      "avgViews": 1575,
+      "viewsPerSub": 0.82,
+      "efficiency": 820.3,
+      "growth": 0.52,
       "resolvedId": "UCbR77TAApBk4MBdvSL8Onhg",
       "history": [
         {
@@ -2530,6 +2638,10 @@
         {
           "date": "2026-09-25",
           "subs": 1910
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 1920
         }
       ]
     },
@@ -2537,11 +2649,11 @@
       "name": "Fishing in Greece - We Fish Together",
       "handle": "@FishinginGreeceWeFishTogether",
       "subs": 16100,
-      "totalViews": 4648946,
+      "totalViews": 4659379,
       "videos": 613,
-      "avgViews": 7584,
+      "avgViews": 7601,
       "viewsPerSub": 0.47,
-      "efficiency": 471.1,
+      "efficiency": 472.1,
       "growth": 0.0,
       "resolvedId": "UC1Gu-DLFcdYDYl7bis-DcBQ",
       "history": [
@@ -2620,6 +2732,10 @@
         {
           "date": "2026-09-25",
           "subs": 16100
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 16100
         }
       ]
     },
@@ -2627,11 +2743,11 @@
       "name": "DARIVIANAKIS FISHING STORE",
       "handle": "@darivianakis-fishingstore",
       "subs": 12800,
-      "totalViews": 1271562,
+      "totalViews": 1276247,
       "videos": 329,
-      "avgViews": 3865,
+      "avgViews": 3879,
       "viewsPerSub": 0.3,
-      "efficiency": 302.0,
+      "efficiency": 303.0,
       "growth": 0.0,
       "resolvedId": "UC8uFiFnZr17rMhttyV6D-fw",
       "history": [
@@ -2710,6 +2826,10 @@
         {
           "date": "2026-09-25",
           "subs": 12800
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 12800
         }
       ]
     },
@@ -2717,12 +2837,12 @@
       "name": "Anglermania Trading LTD TV",
       "handle": "@AnglermaniaTV",
       "subs": 2670,
-      "totalViews": 487412,
+      "totalViews": 487644,
       "videos": 37,
-      "avgViews": 13173,
-      "viewsPerSub": 4.93,
-      "efficiency": 4933.7,
-      "growth": 0.38,
+      "avgViews": 13180,
+      "viewsPerSub": 4.94,
+      "efficiency": 4936.3,
+      "growth": 0.0,
       "resolvedId": "UCzluYA1YfdRmurIweM69N9w",
       "history": [
         {
@@ -2800,6 +2920,10 @@
         {
           "date": "2026-09-25",
           "subs": 2670
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 2670
         }
       ]
     },
@@ -2807,12 +2931,12 @@
       "name": "Skalis Outdoor",
       "handle": "@skalis.outdoor",
       "subs": 5550,
-      "totalViews": 937635,
+      "totalViews": 938477,
       "videos": 119,
-      "avgViews": 7879,
+      "avgViews": 7886,
       "viewsPerSub": 1.42,
-      "efficiency": 1419.6,
-      "growth": 0.18,
+      "efficiency": 1420.9,
+      "growth": 0.0,
       "resolvedId": "UCNjaSKF3UpLIbAaKa-Ub3Iw",
       "history": [
         {
@@ -2890,18 +3014,22 @@
         {
           "date": "2026-09-25",
           "subs": 5550
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 5550
         }
       ]
     },
     {
       "name": "Vaggelis Tsiakiris Fishing For Fun",
       "handle": "@VaggelisTsiakirisFishingForFun",
-      "subs": 7660,
-      "totalViews": 1120380,
-      "videos": 282,
-      "avgViews": 3973,
-      "viewsPerSub": 0.52,
-      "efficiency": 518.7,
+      "subs": 7670,
+      "totalViews": 1121337,
+      "videos": 284,
+      "avgViews": 3948,
+      "viewsPerSub": 0.51,
+      "efficiency": 514.7,
       "growth": 0.13,
       "resolvedId": "UCG93jOpOQcwGd6BmuqdJVhA",
       "history": [
@@ -2980,6 +3108,10 @@
         {
           "date": "2026-09-25",
           "subs": 7660
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 7670
         }
       ]
     },
@@ -2987,12 +3119,12 @@
       "name": "Thrace Fishing Adventures ",
       "handle": "@ThraceFishingAdventures",
       "subs": 3700,
-      "totalViews": 666914,
+      "totalViews": 668085,
       "videos": 124,
-      "avgViews": 5378,
-      "viewsPerSub": 1.45,
-      "efficiency": 1453.5,
-      "growth": 0.27,
+      "avgViews": 5388,
+      "viewsPerSub": 1.46,
+      "efficiency": 1456.2,
+      "growth": 0.0,
       "resolvedId": "UCrjNlMj08vGSuVVHc_-l26A",
       "history": [
         {
@@ -3070,19 +3202,23 @@
         {
           "date": "2026-09-25",
           "subs": 3700
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 3700
         }
       ]
     },
     {
       "name": "Fishing LABoratory",
       "handle": "@fishinglaboratory7696",
-      "subs": 8310,
-      "totalViews": 11281358,
-      "videos": 405,
-      "avgViews": 27855,
+      "subs": 8320,
+      "totalViews": 11320571,
+      "videos": 406,
+      "avgViews": 27883,
       "viewsPerSub": 3.35,
-      "efficiency": 3352.0,
-      "growth": 0.24,
+      "efficiency": 3351.3,
+      "growth": 0.12,
       "resolvedId": "UCH8RO3fykH0Bit3xuadMIRA",
       "history": [
         {
@@ -3160,19 +3296,23 @@
         {
           "date": "2026-09-25",
           "subs": 8310
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 8320
         }
       ]
     },
     {
       "name": "Harry's fishing",
       "handle": "@Harrysfishing1982",
-      "subs": 2240,
-      "totalViews": 850547,
-      "videos": 102,
-      "avgViews": 8339,
-      "viewsPerSub": 3.72,
-      "efficiency": 3722.8,
-      "growth": 1.36,
+      "subs": 2270,
+      "totalViews": 858174,
+      "videos": 103,
+      "avgViews": 8332,
+      "viewsPerSub": 3.67,
+      "efficiency": 3670.5,
+      "growth": 1.34,
       "resolvedId": "UCnMA2MDPCSFAfDvaGGyPk7Q",
       "history": [
         {
@@ -3250,19 +3390,23 @@
         {
           "date": "2026-09-25",
           "subs": 2240
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 2270
         }
       ]
     },
     {
       "name": "Jigging Zone",
       "handle": "@JiggingZone",
-      "subs": 5580,
-      "totalViews": 8357881,
-      "videos": 1578,
-      "avgViews": 5297,
-      "viewsPerSub": 0.95,
-      "efficiency": 949.3,
-      "growth": 0.72,
+      "subs": 5630,
+      "totalViews": 8390715,
+      "videos": 1589,
+      "avgViews": 5281,
+      "viewsPerSub": 0.94,
+      "efficiency": 938.0,
+      "growth": 0.9,
       "resolvedId": "UCTvjGSXY5sCAJv_qCR2yfng",
       "history": [
         {
@@ -3340,6 +3484,10 @@
         {
           "date": "2026-09-25",
           "subs": 5580
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 5630
         }
       ]
     },
@@ -3347,12 +3495,12 @@
       "name": "GT LRF MADNESS",
       "handle": "@gtlrfmadness3944",
       "subs": 5480,
-      "totalViews": 1872056,
+      "totalViews": 1878466,
       "videos": 309,
-      "avgViews": 6058,
+      "avgViews": 6079,
       "viewsPerSub": 1.11,
-      "efficiency": 1105.5,
-      "growth": 0.18,
+      "efficiency": 1109.3,
+      "growth": 0.0,
       "resolvedId": "UCZGTz-B0NLfTttRmu9VjGMQ",
       "history": [
         {
@@ -3430,19 +3578,23 @@
         {
           "date": "2026-09-25",
           "subs": 5480
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 5480
         }
       ]
     },
     {
       "name": "Vasilis Argi",
       "handle": "@vasilisargi",
-      "subs": 6900,
-      "totalViews": 2061237,
-      "videos": 233,
-      "avgViews": 8847,
+      "subs": 6910,
+      "totalViews": 2070021,
+      "videos": 234,
+      "avgViews": 8846,
       "viewsPerSub": 1.28,
-      "efficiency": 1282.2,
-      "growth": 0.29,
+      "efficiency": 1280.2,
+      "growth": 0.14,
       "history": [
         {
           "date": "2026-09-19",
@@ -3463,6 +3615,10 @@
         {
           "date": "2026-09-25",
           "subs": 6900
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 6910
         }
       ],
       "resolvedId": "UC1QdjRyIJwG8VEkslnHpHqQ"
@@ -3471,11 +3627,11 @@
       "name": "LureWaltz",
       "handle": "@LureWaltz",
       "subs": 2250,
-      "totalViews": 1716346,
+      "totalViews": 1720081,
       "videos": 91,
-      "avgViews": 18861,
-      "viewsPerSub": 8.38,
-      "efficiency": 8382.7,
+      "avgViews": 18902,
+      "viewsPerSub": 8.4,
+      "efficiency": 8400.9,
       "growth": 0.0,
       "history": [
         {
@@ -3496,6 +3652,10 @@
         },
         {
           "date": "2026-09-25",
+          "subs": 2250
+        },
+        {
+          "date": "2026-09-28",
           "subs": 2250
         }
       ],
@@ -3527,6 +3687,10 @@
         {
           "date": "2026-09-25",
           "subs": 487
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 487
         }
       ],
       "resolvedId": "UC4oa-Kr8XDgbN7w5vBqbaYA"
@@ -3535,11 +3699,11 @@
       "name": "Incomigos Fishing Team",
       "handle": "@incomigos_fishing",
       "subs": 5560,
-      "totalViews": 667079,
+      "totalViews": 668543,
       "videos": 122,
-      "avgViews": 5468,
-      "viewsPerSub": 0.98,
-      "efficiency": 983.5,
+      "avgViews": 5480,
+      "viewsPerSub": 0.99,
+      "efficiency": 985.6,
       "growth": 0.0,
       "history": [
         {
@@ -3557,6 +3721,10 @@
         {
           "date": "2026-09-25",
           "subs": 5560
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 5560
         }
       ],
       "resolvedId": "UCW0Zk0QwnQoYTTJ1X9oO_5w"
@@ -3564,12 +3732,12 @@
     {
       "name": "Valandis Fishing",
       "handle": "@ValandisFishing",
-      "subs": 4120,
-      "totalViews": 333757,
+      "subs": 4130,
+      "totalViews": 335398,
       "videos": 107,
-      "avgViews": 3119,
+      "avgViews": 3135,
       "viewsPerSub": 0.76,
-      "efficiency": 757.0,
+      "efficiency": 759.1,
       "growth": 0.24,
       "history": [
         {
@@ -3583,6 +3751,10 @@
         {
           "date": "2026-09-25",
           "subs": 4120
+        },
+        {
+          "date": "2026-09-28",
+          "subs": 4130
         }
       ],
       "resolvedId": "UCEhf_hSONc62cee2ucVk5SA"
@@ -3591,12 +3763,12 @@
       "name": "Apostolos Drakopoulos",
       "handle": "@funky_fish",
       "subs": 15000,
-      "totalViews": 4621497,
-      "videos": 292,
-      "avgViews": 15827,
-      "viewsPerSub": 1.06,
-      "efficiency": 1055.1,
-      "growth": 0.67,
+      "totalViews": 4636456,
+      "videos": 294,
+      "avgViews": 15770,
+      "viewsPerSub": 1.05,
+      "efficiency": 1051.3,
+      "growth": 0.0,
       "history": [
         {
           "date": "2026-09-22",
@@ -3604,6 +3776,10 @@
         },
         {
           "date": "2026-09-25",
+          "subs": 15000
+        },
+        {
+          "date": "2026-09-28",
           "subs": 15000
         }
       ],
